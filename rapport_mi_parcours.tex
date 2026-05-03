@@ -1,0 +1,951 @@
+\documentclass[12pt,a4paper]{report}
+
+% ============================================================
+% PACKAGES
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{tocloft}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{pifont}
+
+% ============================================================
+% CONFIGURATION
+% ============================================================
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\setstretch{1.3}
+
+% Colors
+\definecolor{attijariOrange}{HTML}{F7941D}
+\definecolor{attijariDark}{HTML}{1A1A1E}
+\definecolor{attijariGray}{HTML}{6B6C78}
+\definecolor{codeBackground}{HTML}{F5F6F8}
+\definecolor{greenCheck}{HTML}{16A34A}
+\definecolor{blueProgress}{HTML}{2563EB}
+
+% Hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=attijariDark,
+    urlcolor=attijariOrange,
+    citecolor=attijariDark,
+}
+
+% Section formatting
+\titleformat{\chapter}[display]
+    {\normalfont\Large\bfseries\color{attijariDark}}
+    {\chaptertitlename\ \thechapter}{14pt}{\LARGE}
+\titleformat{\section}
+    {\normalfont\large\bfseries\color{attijariDark}}
+    {\thesection}{1em}{}
+\titleformat{\subsection}
+    {\normalfont\normalsize\bfseries\color{attijariDark}}
+    {\thesubsection}{1em}{}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{attijariGray}{Rapport de Mi-Parcours --- PFE 2026}}
+\fancyhead[R]{\small\textcolor{attijariGray}{Attijari bank}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Code listing style
+\lstset{
+    backgroundcolor=\color{codeBackground},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{attijariGray!30},
+    tabsize=2,
+    captionpos=b,
+}
+
+% Custom checkmark and progress symbols
+\newcommand{\done}{\textcolor{greenCheck}{\ding{51}}}
+\newcommand{\inprog}{\textcolor{blueProgress}{$\circlearrowright$}}
+
+% ============================================================
+% DOCUMENT START
+% ============================================================
+\begin{document}
+
+% ============================================================
+% TITLE PAGE
+% ============================================================
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\large\textbf{République Tunisienne}}\\
+    {\large\textbf{Ministère de l'Enseignement Supérieur}}\\[0.3cm]
+    {\large\textbf{et de la Recherche Scientifique}}\\[1.5cm]
+    
+    \rule{\textwidth}{1.5pt}\\[0.4cm]
+    {\Huge\bfseries\textcolor{attijariDark}{Rapport de Mi-Parcours}}\\[0.2cm]
+    {\Large\bfseries\textcolor{attijariDark}{Projet de Fin d'Études}}\\[0.3cm]
+    \rule{\textwidth}{1.5pt}\\[1cm]
+    
+    {\LARGE\bfseries\textcolor{attijariOrange}{Système de Détection d'Opportunités}}\\[0.2cm]
+    {\LARGE\bfseries\textcolor{attijariOrange}{d'Amélioration Continue des Processus}}\\[0.2cm]
+    {\LARGE\bfseries\textcolor{attijariOrange}{Bancaires via l'Intelligence Artificielle}}\\[0.2cm]
+    {\LARGE\bfseries\textcolor{attijariOrange}{et la RPA}}\\[1.5cm]
+    
+    \begin{tabular}{ll}
+        \textbf{Organisme d'accueil :} & Attijari bank Tunisie \\[0.2cm]
+        \textbf{Sujet :} & Sujet 21 \\[0.2cm]
+        \textbf{Spécialité :} & Génie Logiciel \\[0.2cm]
+        \textbf{Durée :} & 8 semaines (23 Mars -- 17 Mai 2026) \\[0.2cm]
+        \textbf{Équipe :} & Rationalisation, Reengineering \\
+        & \& Efficacité Opérationnelle \\
+    \end{tabular}
+    
+    \vfill
+    
+    {\large\textcolor{attijariGray}{Année Universitaire 2025 -- 2026}}
+    
+\end{titlepage}
+
+% ============================================================
+% TABLE OF CONTENTS
+% ============================================================
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+% ============================================================
+% CHAPTER 1: INTRODUCTION
+% ============================================================
+\chapter{Introduction}
+
+Le secteur bancaire tunisien connaît une transformation numérique profonde, portée par des exigences croissantes en matière d'efficacité opérationnelle, de qualité de service et de conformité réglementaire. Dans ce contexte hautement concurrentiel, les établissements bancaires cherchent à optimiser leurs processus internes, à réduire les délais de traitement des incidents et à améliorer continuellement la satisfaction de leurs clients et collaborateurs.
+
+Le présent rapport constitue le bilan de mi-parcours du projet de fin d'études réalisé au sein de l'équipe \textbf{Rationalisation, Reengineering et Efficacité Opérationnelle} d'Attijari bank Tunisie, filiale du groupe Attijariwafa bank --- leader bancaire panafricain présent dans plus de 25 pays.
+
+Ce projet vise à concevoir et développer un \textbf{système intelligent de détection et d'amélioration continue des processus bancaires}, exploitant les technologies d'intelligence artificielle (NLP, LSTM, KNN) et d'automatisation robotisée des processus (RPA).
+
+Attijari bank enregistre quotidiennement des centaines de réclamations issues de ses clients et collaborateurs internes. Ces réclamations documentent des problèmes variés : erreurs lors du traitement de virements SWIFT, timeouts sur les plateformes de paiement, anomalies dans les systèmes d'information, ou encore dysfonctionnements dans les processus de gestion des comptes. L'historique cumulé de ces réclamations et de leurs actions correctives constitue un corpus de données considérable, mais demeurant largement sous-exploité.
+
+\vspace{0.5cm}
+\noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule}{
+\textbf{Problématique centrale :} Comment exploiter intelligemment l'historique des réclamations bancaires et des actions correctives associées afin de détecter automatiquement les anomalies dans les processus, de prédire les incidents avant qu'ils n'impactent les clients, de recommander les actions correctives les plus adaptées, et d'en automatiser l'exécution --- le tout accessible via une interface web sécurisée pour les équipes opérationnelles d'Attijari bank~?
+}}
+\vspace{0.5cm}
+
+La solution développée repose sur une architecture complète couvrant l'ensemble de la chaîne de valeur~: un backend Python intégrant des techniques avancées de traitement du langage naturel (NLP), d'apprentissage profond (LSTM) et d'automatisation robotisée des processus (RPA), et un frontend développé en HTML, CSS et JavaScript offrant aux équipes opérationnelles une interface web intuitive, sécurisée et accessible.
+
+Ce rapport rend compte de l'avancement des travaux réalisés Durant les \textbf{quatre premières semaines} du stage (23 mars -- 17 avril 2026), soit la moitié de la durée totale du projet.
+
+% ============================================================
+% CHAPTER 2: TRAVAUX RÉALISÉS — AXE DÉVELOPPEMENT
+% ============================================================
+\chapter{Travaux Réalisés --- Axe Développement}
+
+L'axe développement constitue le pilier technique sur lequel repose l'ensemble de la solution. Les travaux réalisés au cours des quatre premières semaines couvrent la conception de l'architecture frontend, la mise en place de la base de données, l'implémentation du système d'authentification, et le développement du tableau de bord opérationnel.
+
+\section{Architecture et Technologies Adoptées}
+
+L'architecture de développement repose sur une approche multi-couche évolutive, conçue pour évoluer progressivement d'un prototype fonctionnel vers une architecture industrielle~:
+
+\begin{table}[H]
+\centering
+\caption{Stack technologique retenue}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Couche} & \textbf{Technologie} & \textbf{Justification} \\
+\hline
+Frontend (Prototype) & HTML5 · CSS3 · JS & Rapidité de prototypage, validation des maquettes \\
+\hline
+Frontend (Production) & Angular 21 · TypeScript & Architecture SPA modulaire, routing avancé \\
+\hline
+Backend (Prototype) & PHP 8 · Sessions & Déploiement rapide sur XAMPP \\
+\hline
+Backend (Production) & Spring Boot 3.4 · JPA & Robustesse, écosystème Java, JWT natif \\
+\hline
+Backend IA & Python · FastAPI & Pipeline NLP, modèles IA, API REST \\
+\hline
+Base de données & MySQL (InnoDB) & Support transactionnel, contraintes FK \\
+\hline
+Design System & Inter · CSS Variables & Identité visuelle premium Attijari \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Développement du Prototype Frontend}
+
+Le prototype initial a été développé en HTML5, CSS3 et JavaScript Vanilla afin de valider rapidement les maquettes d'interface avec l'encadrant bancaire. Ce prototype comprend \textbf{six pages complètes}.
+
+\subsection{Page d'Accueil}
+
+La page d'accueil constitue le point d'entrée de la plateforme. Elle comprend~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Section Hero} avec animations dynamiques (orbes, grille de fond, gradient text), statistiques clés (70\% d'automatisation, disponibilité 24/7, -45\% volume d'appels)
+    \item \textbf{Slider interactif} à 3 slides avec navigation par flèches et indicateurs à points~: présentation du projet, mockup mobile, et service client virtuel
+    \item \textbf{Grille de 6 fonctionnalités}~: Chatbot Intelligent, Routage Intelligent, Tableau de Bord, Disponibilité 24/7, Sécurité Bancaire, Intégration API
+    \item \textbf{Section processus} illustrant le flux en 4 étapes~: Contact Client $\rightarrow$ Analyse NLP $\rightarrow$ Résolution Auto $\rightarrow$ Escalade Agent
+    \item \textbf{Section engagement} avec 6 cartes de proposition de valeur (Intelligence, Sécurité, Disponibilité, Rapidité, Flexibilité, Simplicité)
+    \item \textbf{Footer} avec branding Attijari bank et liens de navigation
+    \item \textbf{Design responsive}~: support mobile avec menu hamburger dédié
+\end{itemize}
+
+\subsection{Interface Chatbot}
+
+Le chatbot constitue le composant central de l'interface utilisateur, développé sous forme d'une \textbf{classe JavaScript orientée objet} (\texttt{AttijariChat}) intégrant~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Moteur de détection d'intention}~: classification par correspondance de patterns sur 8 catégories (Solde, Blocage, Transaction, Réclamation, Agence, Agent, Crédit, Salutation), avec calcul d'un score de confiance dynamique
+    \item \textbf{Architecture prête pour l'API backend}~: configuration permettant le basculement du mode démonstration vers l'API réelle FastAPI (\texttt{http://localhost:8000/chat}), avec gestion des en-têtes JWT et traitement des erreurs
+    \item \textbf{Gestion multi-sessions}~: création, suppression, persistance en \texttt{localStorage} isolée par utilisateur, renommage automatique des sessions basé sur le premier message
+    \item \textbf{Panneau de contexte client} (panneau droit)~: affichage en temps réel du profil utilisateur authentifié, intention détectée, analyse de sentiment, barre de confiance colorée
+    \item \textbf{Sidebar latérale}~: sessions actives, boutons de demandes rapides (Solde, Bloquer carte, Transactions, Virement, Agences, Agent), indicateurs de statut
+    \item \textbf{Réponses enrichies}~: templates avec placeholders dynamiques pour les données bancaires réelles de l'utilisateur connecté (soldes, numéro de carte, historique de transactions)
+    \item \textbf{Carte d'escalade}~: interface visuelle de transfert vers agent humain avec file d'attente estimée
+    \item \textbf{Indicateur de frappe animé} avec délai aléatoire réaliste
+    \item \textbf{Panneaux rétractables}~: sidebar gauche et panneau contexte droit avec animation fluide
+\end{itemize}
+
+\subsection{Tableau de Bord Opérationnel}
+
+Le dashboard analytique est un composant complexe développé \textbf{entièrement en Canvas 2D natif}, sans aucune bibliothèque externe de graphiques~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{6 cartes KPI animées} avec compteur incrémental~: Total Interactions, Résolus par IA, Escaladés Agent, Satisfaction Client, Temps de Réponse Moyen, Taux d'Automatisation
+    \item \textbf{Graphique en courbes} (Line/Area)~: Volume d'Interactions sur 24h, double série (Chatbot IA vs Agents Humains) avec remplissage en gradient
+    \item \textbf{Graphique en barres horizontales}~: Top Intentions Détectées (6 catégories triées)
+    \item \textbf{Graphique Donut}~: Taux de Résolution IA vs Agents avec valeur centrale dynamique
+    \item \textbf{Graphique en barres empilées}~: Analyse de Sentiment sur 7 jours (Positif, Neutre, Négatif)
+    \item \textbf{Flux en temps réel} (Live Feed)~: événements toutes les 2,5--4,5 secondes avec indicateur \texttt{LIVE} pulsant
+    \item \textbf{Table des agents}~: 5 agents avec statut, file d'attente et compteur de résolutions
+    \item \textbf{Filtres temporels} (Aujourd'hui, 7 jours, 30 jours) avec rechargement dynamique
+    \item \textbf{Graphiques adaptatifs} au redimensionnement de la fenêtre
+\end{itemize}
+
+\subsection{Authentification et Inscription}
+
+Le système d'authentification comprend~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Page de connexion}~: formulaire CIN + mot de passe, appel asynchrone (\texttt{fetch}) vers l'API, gestion des erreurs avec messages visuels, redirection post-connexion
+    \item \textbf{Page d'inscription complète}~: formulaire en 3 sections (Informations Personnelles, Données Bancaires, Sécurité) avec validation côté client
+    \item \textbf{Module d'authentification partagé} (\texttt{auth.js})~: vérification automatique de session à chaque chargement de page, contrôle d'accès basé sur les rôles (RBAC --- \texttt{admin} pour le dashboard, \texttt{user} pour le chatbot), gestion de déconnexion sécurisée
+    \item \textbf{Synchronisation inter-composants}~: événement personnalisé \texttt{userAuthenticated} pour partager l'état d'authentification entre les modules
+\end{itemize}
+
+\section{API Backend}
+
+L'API REST a été développée pour assurer les opérations CRUD et l'authentification. Elle comprend 6 endpoints~:
+
+\begin{table}[H]
+\centering
+\caption{Endpoints de l'API REST}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Endpoint} & \textbf{Méthode} & \textbf{Fonctionnalité} \\
+\hline
+\texttt{/config} & --- & Configuration base de données (PDO), CORS, sessions \\
+\hline
+\texttt{/login} & POST & Authentification CIN + mot de passe, vérification bcrypt \\
+\hline
+\texttt{/register} & POST & Inscription avec validation (CIN unique, 8 chiffres, mdp $\geq$ 8 car.) \\
+\hline
+\texttt{/check\_auth} & GET & Vérification de session active, retour du rôle et profil \\
+\hline
+\texttt{/get\_user} & GET & Profil complet avec soldes et 5 dernières transactions (JOIN) \\
+\hline
+\texttt{/logout} & GET & Destruction de session \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Base de Données}
+
+Le schéma de base de données comprend 2 tables principales avec relations et contraintes~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Table \texttt{users}}~: identifiant CIN unique, informations personnelles, mot de passe haché (bcrypt, coût 12), données bancaires (carte, soldes courant et épargne), rôle (\texttt{user}/\texttt{admin}), métadonnées temporelles
+    \item \textbf{Table \texttt{transactions}}~: historique financier lié par clé étrangère \texttt{user\_id}, description, montant (DECIMAL 15,3), marchand, date, type (crédit/débit), suppression en cascade
+    \item \textbf{Encodage}~: \texttt{utf8mb4\_unicode\_ci} pour le support complet des caractères arabes et français
+    \item \textbf{Données de test}~: 2 utilisateurs (administrateur + utilisateur démo) et 10 transactions
+\end{itemize}
+
+\section{Migration vers Architecture Moderne}
+
+En parallèle du prototype fonctionnel, une migration architecturale a été amorcée~:
+
+\subsection{Frontend Angular 21}
+
+Le prototype a été restructuré en Single Page Application (SPA) Angular~:
+
+\begin{itemize}[noitemsep]
+    \item 5 composants de pages~: \texttt{HomeComponent}, \texttt{LoginComponent}, \texttt{RegisterComponent}, \texttt{DashboardComponent}, \texttt{ChatComponent}
+    \item 2 composants réutilisables~: \texttt{NavbarComponent}, \texttt{FooterComponent}
+    \item 2 services injectables~: \texttt{AuthService}, \texttt{ChatService}
+    \item Routing complet (\texttt{app.routes.ts}) avec 5 routes et wildcard redirect
+\end{itemize}
+
+\subsection{Backend Spring Boot 3.4}
+
+La migration backend vers Java 17 + Spring Boot a été initiée~:
+
+\begin{itemize}[noitemsep]
+    \item Spring Boot Starter Web pour l'API REST
+    \item Spring Data JPA pour la couche d'accès aux données
+    \item Spring Security pour l'authentification
+    \item MySQL Connector/J pour la connexion à la base existante
+    \item Architecture de packages~: \texttt{com.attijari.backend}
+\end{itemize}
+
+\section{Design System}
+
+Un design system complet a été élaboré, intégrant~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Palette Attijari}~: Orange primaire (\texttt{\#F7941D}), fond sombre (\texttt{\#141416}), textes hiérarchisés
+    \item \textbf{Typographie}~: Inter de Google Fonts, 7 graisses (300--900)
+    \item \textbf{Effets visuels}~: glassmorphism (\texttt{backdrop-filter: blur}), gradients, ombres multicouches
+    \item \textbf{Micro-animations}~: transitions hover, compteurs animés, indicateurs pulsants
+    \item \textbf{Responsivité}~: breakpoints mobile, tablette, desktop
+    \item \textbf{Variables CSS}~: système de tokens pour les couleurs, espacements, transitions
+\end{itemize}
+
+
+% ============================================================
+% CHAPTER 3: TRAVAUX RÉALISÉS — AXE IA & DONNÉES
+% ============================================================
+\chapter{Travaux Réalisés --- Axe Intelligence Artificielle \& Données}
+
+L'axe Intelligence Artificielle constitue le c\oe ur analytique de la solution. Il s'agit de transformer les données brutes de réclamations bancaires en intelligence opérationnelle exploitable.
+
+\section{Réception et Exploration des Données}
+
+Le fichier CSV de réclamations fourni par la banque a été réceptionné en début de projet. Une exploration initiale a permis d'identifier la structure du dataset, les colonnes disponibles, les types de données, et les premières statistiques descriptives.
+
+\section{Traitement et Nettoyage des Données}
+
+Le pipeline de nettoyage, développé en Python avec les bibliothèques \texttt{pandas} et \texttt{numpy}, a été appliqué selon les étapes suivantes~:
+
+\begin{table}[H]
+\centering
+\caption{Pipeline de nettoyage des données}
+\begin{tabularx}{\textwidth}{|c|X|l|}
+\hline
+\textbf{Étape} & \textbf{Opération} & \textbf{Outil} \\
+\hline
+1 & Suppression des enregistrements dupliqués & pandas \\
+\hline
+2 & Traitement des valeurs manquantes (NaN) par colonne & pandas \\
+\hline
+3 & Correction des types de données (dates, numériques, catégories) & pandas \\
+\hline
+4 & Normalisation des descriptions textuelles (casse, accents, ponctuation) & regex \\
+\hline
+5 & Détection des valeurs aberrantes (méthode IQR) & numpy · scipy \\
+\hline
+6 & Analyse exploratoire (EDA) avec graphiques & matplotlib · seaborn \\
+\hline
+\end{tabularx}
+\end{table}
+
+\noindent Les résultats du nettoyage sont~:
+
+\begin{table}[H]
+\centering
+\caption{Résultats du nettoyage}
+\begin{tabularx}{\textwidth}{|X|l|l|}
+\hline
+\textbf{Métrique} & \textbf{Avant} & \textbf{Après} \\
+\hline
+Enregistrements dupliqués & Présents & Supprimés \\
+\hline
+Valeurs manquantes & Multiples colonnes & Traitées \\
+\hline
+Types incohérents & Dates en string & Corrigés \\
+\hline
+Valeurs aberrantes & Non traitées & Détectées et traitées (IQR) \\
+\hline
+Descriptions textuelles & Casse mixte & Normalisées \\
+\hline
+\end{tabularx}
+\end{table}
+
+Le dataset nettoyé a été stocké dans la base de données, prêt pour l'indexation et l'entraînement des modèles.
+
+\section{Pipeline NLP (En cours)}
+
+Le traitement du langage naturel permet au système de comprendre le contenu sémantique de chaque réclamation bancaire~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Pipeline spaCy}~: tokenisation, lemmatisation, extraction d'entités nommées (NER) pour identifier les types d'opérations, montants, dates et références
+    \item \textbf{Embeddings BERT}~: génération de vecteurs de 768 dimensions par réclamation via \texttt{sentence-transformers}, capturant le sens profond du texte
+    \item \textbf{Score d'anomalie}~: calcul par similarité cosinus entre chaque nouvelle réclamation et l'historique, permettant d'identifier les cas atypiques
+    \item \textbf{Indexation Elasticsearch}~: recherche full-text sur le corpus de réclamations pour l'interface de filtre et de recherche
+\end{itemize}
+
+Le moteur de détection d'intention implémenté côté frontend sert de \textbf{couche de transition} vers le modèle NLP complet du backend. L'architecture du chatbot permet de basculer du mode démonstration vers l'API réelle en modifiant un paramètre de configuration unique.
+
+\section{Modèle Prédictif LSTM (En cours)}
+
+Le modèle de prédiction LSTM (Long Short-Term Memory) constitue la valeur ajoutée majeure du projet~:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Architecture}~: réseau LSTM entraîné sur des séquences temporelles de réclamations glissant sur 30 jours
+    \item \textbf{Sortie}~: score de risque entre 0 et 1 pour les 24 heures à venir, par type de processus bancaire
+    \item \textbf{Seuil d'alerte}~: configurable (défaut~: 0.75) --- déclenche une notification si dépassé
+    \item \textbf{Versioning}~: chaque modèle entraîné sera versionné dans MLflow avec ses métriques
+    \item \textbf{Framework}~: TensorFlow avec optimisation par grille des hyperparamètres
+\end{itemize}
+
+\section{Sécurité des Données}
+
+La sécurité des données bancaires est assurée par plusieurs mécanismes~:
+
+\begin{table}[H]
+\centering
+\caption{Mécanismes de sécurité implémentés}
+\begin{tabularx}{\textwidth}{|l|X|c|}
+\hline
+\textbf{Mécanisme} & \textbf{Implémentation} & \textbf{Statut} \\
+\hline
+Hachage mots de passe & bcrypt (coût 12) & \done \\
+\hline
+Authentification & Sessions sécurisées, migration JWT prévue & \done \\
+\hline
+Contrôle d'accès & RBAC~: admin, utilisateur & \done \\
+\hline
+Chiffrement en base & AES-256 pour données sensibles & \done \\
+\hline
+Audit trail & Journalisation des actions & \inprog \\
+\hline
+Sauvegarde & Backup quotidien automatique (prévu) & \inprog \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+% ============================================================
+% CHAPTER 4: OBJECTIFS
+% ============================================================
+\chapter{Objectifs}
+
+\section{Objectifs Globaux du Projet}
+
+\begin{table}[H]
+\centering
+\caption{Objectifs globaux}
+\begin{tabularx}{\textwidth}{|c|l|X|}
+\hline
+\textbf{\#} & \textbf{Objectif} & \textbf{Description} \\
+\hline
+O1 & Analyser les réclamations & Extraction d'informations par NLP/BERT sur le texte \\
+\hline
+O2 & Prédire les incidents & Modèle LSTM anticipant les incidents 24h à l'avance \\
+\hline
+O3 & Recommander les actions & Moteur KNN suggérant les solutions basées sur l'historique \\
+\hline
+O4 & Automatiser l'exécution & Robots RPA (UiPath) pour les corrections P1-P2 \\
+\hline
+O5 & Interface web sécurisée & Tableau de bord interactif pour les équipes opérationnelles \\
+\hline
+O6 & Apprentissage continu & Réentraînement hebdomadaire avec les nouveaux cas \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Bilan de Mi-Parcours (Semaines 1--4)}
+
+\begin{table}[H]
+\centering
+\caption{État d'avancement à mi-parcours}
+\begin{tabularx}{\textwidth}{|X|c|l|}
+\hline
+\textbf{Objectif mi-parcours} & \textbf{Statut} & \textbf{Avancement} \\
+\hline
+Prototype frontend complet (6 pages) & \done & 100\% \\
+\hline
+Base de données opérationnelle & \done & 100\% \\
+\hline
+API REST fonctionnelle (6 endpoints) & \done & 100\% \\
+\hline
+Design system complet (responsive, animations) & \done & 100\% \\
+\hline
+Système d'authentification RBAC & \done & 100\% \\
+\hline
+Nettoyage et stockage des données bancaires & \done & 100\% \\
+\hline
+Migration Angular amorcée & \inprog & 70\% \\
+\hline
+Pipeline NLP (spaCy + BERT) & \inprog & En cours \\
+\hline
+Modèle prédictif LSTM & \inprog & En cours \\
+\hline
+Migration Spring Boot amorcée & \inprog & 40\% \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Objectifs des Semaines 5--8}
+
+\begin{table}[H]
+\centering
+\caption{Objectifs pour la seconde moitié du projet}
+\begin{tabularx}{\textwidth}{|X|l|c|}
+\hline
+\textbf{Objectif} & \textbf{Semaines} & \textbf{Priorité} \\
+\hline
+Finaliser le pipeline NLP et le modèle LSTM & S5 & Haute \\
+\hline
+Développer le moteur de recommandations KNN & S5 & Haute \\
+\hline
+Intégrer UiPath Orchestrator pour l'automatisation RPA & S5--S6 & Haute \\
+\hline
+Développer l'API FastAPI complète avec WebSocket & S5--S6 & Haute \\
+\hline
+Connecter le frontend aux données réelles de l'API IA & S5--S6 & Haute \\
+\hline
+Finaliser la migration Angular et Spring Boot & S6--S7 & Moyenne \\
+\hline
+Tests unitaires et tests de sécurité & S7 & Haute \\
+\hline
+Rédaction du rapport final et préparation soutenance & S7--S8 & Haute \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+% ============================================================
+% CHAPTER 5: MÉTHODOLOGIE
+% ============================================================
+\chapter{Méthodologie}
+
+\section{Approche de Développement}
+
+Le projet adopte une \textbf{méthodologie agile adaptée} au contexte académique, organisée en 4 phases itératives sur 8 semaines. Chaque phase produit un livrable concret validable par l'encadrant et se termine par un jalon de contrôle.
+
+\begin{table}[H]
+\centering
+\caption{Phases du projet}
+\begin{tabularx}{\textwidth}{|c|l|X|l|}
+\hline
+\textbf{Phase} & \textbf{Période} & \textbf{Activités} & \textbf{Livrable} \\
+\hline
+1 & 23 Mars -- 5 Avril & Prototype frontend conforme Attijari · Création BDD · Nettoyage données · Stockage & Prototype + BDD \\
+\hline
+2 & 6 Avril -- 19 Avril & Python NLP + Prédictions · Frontend avancé & Pipeline NLP + LSTM \\
+\hline
+3 & 20 Avril -- 3 Mai & UiPath (robots RPA) · Frontend + API FastAPI & RPA + API \\
+\hline
+4 & 4 Mai -- 17 Mai & Finalisation · Tests · Rapport · Soutenance & Projet complet \\
+\hline
+\end{tabularx}
+\end{table}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[x=0.85cm]
+    % Timeline
+    \draw[thick, ->, attijariDark] (0,0) -- (17.5,0);
+    
+    % Phase boxes
+    \fill[attijariOrange!20] (0,-0.4) rectangle (5.2,0.4);
+    \fill[attijariOrange!35] (5.4,-0.4) rectangle (10.2,0.4);
+    \fill[attijariOrange!15] (10.4,-0.4) rectangle (14.2,0.4);
+    \fill[attijariOrange!10] (14.4,-0.4) rectangle (17.2,0.4);
+    
+    % Phase labels
+    \node[font=\scriptsize\bfseries] at (2.6,0) {Phase 1};
+    \node[font=\scriptsize\bfseries] at (7.8,0) {Phase 2};
+    \node[font=\scriptsize\bfseries] at (12.3,0) {Phase 3};
+    \node[font=\scriptsize\bfseries] at (15.8,0) {Phase 4};
+    
+    % Dates
+    \node[font=\tiny, below] at (0,-0.5) {23/03};
+    \node[font=\tiny, below] at (5.3,-0.5) {05/04};
+    \node[font=\tiny, below] at (10.3,-0.5) {19/04};
+    \node[font=\tiny, below] at (14.3,-0.5) {03/05};
+    \node[font=\tiny, below] at (17.2,-0.5) {17/05};
+    
+    % Mi-parcours marker
+    \draw[thick, red, dashed] (8.5,-1) -- (8.5,1);
+    \node[font=\tiny\bfseries, red, above] at (8.5,1) {MI-PARCOURS};
+    \node[font=\tiny, red, below] at (8.5,-1) {17/04};
+\end{tikzpicture}
+\end{center}
+
+\section{Tâches Détaillées par Phase}
+
+\subsection{Phase 1 --- Prototype et Données (23 Mars -- 5 Avril) \done}
+
+\begin{enumerate}[noitemsep]
+    \item Analyser le sujet 21 en détail et identifier les livrables attendus
+    \item Rencontrer l'encadrant bancaire, clarifier les attentes et confirmer le périmètre
+    \item Concevoir les maquettes d'interface conformes à la charte graphique Attijari bank
+    \item Développer la page d'accueil avec hero, slider, fonctionnalités et processus
+    \item Développer l'interface chatbot avec détection d'intention et gestion multi-sessions
+    \item Développer le tableau de bord avec graphiques Canvas natifs et flux en temps réel
+    \item Développer les pages de connexion et d'inscription avec validation
+    \item Implémenter le module d'authentification RBAC partagé
+    \item Concevoir le schéma de la base de données MySQL (2 tables, contraintes FK)
+    \item Développer l'API REST (6 endpoints) avec authentification bcrypt
+    \item Réceptionner et explorer le fichier CSV de réclamations bancaires
+    \item Appliquer le pipeline de nettoyage (doublons, NaN, outliers, normalisation)
+    \item Stocker le dataset nettoyé en base de données
+    \item Élaborer le design system complet (palette, typographie, animations, responsive)
+\end{enumerate}
+
+\subsection{Phase 2 --- NLP, Prédictions et Frontend avancé (6 -- 19 Avril) \inprog}
+
+\begin{enumerate}[noitemsep, start=15]
+    \item Construire le pipeline NLP avec spaCy (tokenisation, NER, lemmatisation)
+    \item Générer les embeddings BERT (768 dimensions) pour chaque réclamation
+    \item Calculer les scores d'anomalie par similarité cosinus
+    \item Indexer les réclamations dans Elasticsearch
+    \item Préparer les séquences temporelles (fenêtre 30 jours) pour le LSTM
+    \item Entraîner le modèle LSTM avec TensorFlow
+    \item Amorcer la migration du frontend vers Angular 21 (5 pages, routing, services)
+    \item Amorcer la migration du backend vers Spring Boot 3.4
+\end{enumerate}
+
+\subsection{Phase 3 --- UiPath, Frontend et API (20 Avril -- 3 Mai)}
+
+\begin{enumerate}[noitemsep, start=23]
+    \item Configurer UiPath Orchestrator et créer les robots pour les actions P1-P2
+    \item Développer l'API FastAPI complète avec authentification JWT
+    \item Configurer les WebSockets pour les alertes temps réel
+    \item Documenter l'API via Swagger UI
+    \item Connecter le frontend Angular aux données réelles de l'API IA
+    \item Développer le moteur de recommandations KNN
+    \item Réaliser les tests d'intégration bout en bout
+\end{enumerate}
+
+\subsection{Phase 4 --- Finalisation (4 -- 17 Mai)}
+
+\begin{enumerate}[noitemsep, start=30]
+    \item Écrire les tests unitaires (couverture $>$ 70\%)
+    \item Tests de sécurité (injection SQL, XSS, validation JWT)
+    \item Rédiger la partie implémentation du rapport avec captures d'écran
+    \item Rédiger la conclusion et les perspectives d'évolution
+    \item Préparer et répéter la présentation de soutenance
+    \item Démonstration live du système complet
+\end{enumerate}
+
+\section{Outils et Environnement de Développement}
+
+\begin{table}[H]
+\centering
+\caption{Environnement technique}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Catégorie} & \textbf{Outil} \\
+\hline
+Éditeur de code & Visual Studio Code (extensions Angular, TypeScript, Python, GitLens) \\
+\hline
+Gestion de versions & Git avec GitHub (dépôt privé, branches fonctionnelles) \\
+\hline
+Serveur local & XAMPP (Apache + MySQL + PHP) \\
+\hline
+Base de données & MySQL · phpMyAdmin · MySQL Workbench \\
+\hline
+Build frontend & Angular CLI 21 · npm · TypeScript 5.9 \\
+\hline
+Build backend & Maven · Spring Boot 3.4 · Java 17 \\
+\hline
+Backend IA & Python · FastAPI · TensorFlow · spaCy · scikit-learn \\
+\hline
+Conteneurisation & Docker Desktop (Elasticsearch, Redis, MLflow) \\
+\hline
+Automatisation & UiPath Studio · UiPath Orchestrator \\
+\hline
+Documentation API & Swagger UI (auto-généré par FastAPI) \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+% ============================================================
+% CHAPTER 6-7: RÉSULTATS
+% ============================================================
+\chapter{Résultats --- Axe Développement}
+
+\section{Interface Utilisateur Livrée}
+
+L'ensemble de l'interface web du prototype est fonctionnel et opérationnel~:
+
+\begin{table}[H]
+\centering
+\caption{Bilan quantitatif du développement frontend}
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\textbf{Composant} & \textbf{Volume} & \textbf{Fonctionnalités clés} \\
+\hline
+\texttt{index.html} & 454 lignes & Hero animé, slider, 6 features, processus, footer \\
+\hline
+\texttt{chat.html} + \texttt{chat.js} & 970 lignes & Chatbot OOP, 8 intents, multi-sessions, contexte \\
+\hline
+\texttt{dashboard.html} + \texttt{dashboard.js} & 789 lignes & 6 KPI, 4 charts Canvas, live feed, agents \\
+\hline
+\texttt{login.html} & 182 lignes & Formulaire CIN, API async, gestion erreurs \\
+\hline
+\texttt{register.html} & 287 lignes & 3 sections, validation, inscription complète \\
+\hline
+\texttt{auth.js} & 160 lignes & RBAC, session check, événements custom \\
+\hline
+\texttt{styles.css} & $\sim$1200 lignes & Design system, responsive, animations \\
+\hline
+API (6 fichiers) & $\sim$500 lignes & CRUD, authentification bcrypt, transactions \\
+\hline
+\texttt{database.sql} & 86 lignes & Schéma complet, données de test, FK \\
+\hline
+\textbf{Total V1} & \textbf{$\sim$4\,600} & \textbf{Prototype full-stack fonctionnel} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Migration Architecturale}
+
+\begin{table}[H]
+\centering
+\caption{État de la migration Angular}
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\textbf{Composant} & \textbf{Statut} & \textbf{Détails} \\
+\hline
+\texttt{HomeComponent} & \done & Hero + features fidèle au prototype \\
+\hline
+\texttt{ChatComponent} & \done & Chatbot intégré en Angular \\
+\hline
+\texttt{DashboardComponent} & \done & Canvas charts migrés \\
+\hline
+\texttt{LoginComponent} & \done & Formulaire réactif \\
+\hline
+\texttt{RegisterComponent} & \done & Multi-sections \\
+\hline
+\texttt{NavbarComponent} & \done & Navigation SPA routerLink \\
+\hline
+\texttt{FooterComponent} & \done & Réutilisable \\
+\hline
+\texttt{AuthService} & \done & Gestion d'état, HTTPClient \\
+\hline
+\texttt{ChatService} & \done & Communication API \\
+\hline
+Routing & \done & 5 routes + wildcard \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Indicateurs de Qualité}
+
+\begin{table}[H]
+\centering
+\caption{Métriques de qualité}
+\begin{tabularx}{\textwidth}{|X|l|}
+\hline
+\textbf{Métrique} & \textbf{Valeur} \\
+\hline
+Pages développées (prototype + Angular) & 6 + 5 = 11 \\
+\hline
+Composants Angular & 7 (5 pages + 2 réutilisables) \\
+\hline
+Services Angular & 2 (Auth + Chat) \\
+\hline
+Endpoints API & 6 \\
+\hline
+Charts Canvas natifs & 4 (line, bar, donut, stacked) \\
+\hline
+Compatibilité navigateurs & Chrome, Firefox, Edge \\
+\hline
+Design responsive & Mobile, tablette, desktop \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+\chapter{Résultats --- Axe Intelligence Artificielle}
+
+\section{Nettoyage des Données}
+
+Le pipeline de nettoyage a été exécuté avec succès sur le dataset CSV de réclamations bancaires fourni par Attijari bank. Toutes les étapes de suppression des doublons, traitement des valeurs manquantes, correction des types, normalisation des textes et détection des outliers par la méthode IQR ont été complétées.
+
+Le dataset nettoyé a été importé et stocké dans la base de données, constituant la fondation pour l'entraînement des modèles d'intelligence artificielle.
+
+\section{Pipeline NLP}
+
+\begin{table}[H]
+\centering
+\caption{État du pipeline NLP}
+\begin{tabularx}{\textwidth}{|l|X|c|}
+\hline
+\textbf{Composant} & \textbf{Résultat} & \textbf{Statut} \\
+\hline
+Pipeline spaCy & Tokenisation, lemmatisation, NER opérationnels & \inprog \\
+\hline
+Embeddings BERT & Vecteurs 768 dimensions par réclamation & \inprog \\
+\hline
+Scores d'anomalie & Similarité cosinus avec historique & \inprog \\
+\hline
+Elasticsearch & Indexation pour recherche full-text & \inprog \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Modèle Prédictif LSTM}
+
+\begin{table}[H]
+\centering
+\caption{Avancement du modèle LSTM}
+\begin{tabularx}{\textwidth}{|X|c|}
+\hline
+\textbf{Aspect} & \textbf{État} \\
+\hline
+Préparation des séquences temporelles (fenêtre 30 jours) & \inprog \\
+\hline
+Architecture LSTM définie & \inprog \\
+\hline
+Entraînement initial avec TensorFlow & \inprog \\
+\hline
+Versioning MLflow (prévu) & Planifié \\
+\hline
+Score de risque 0$\rightarrow$1 par processus & \inprog \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+% ============================================================
+% CHAPTER 8: DIFFICULTÉS
+% ============================================================
+\chapter{Difficultés Rencontrées}
+
+\section{Difficultés Techniques}
+
+\begin{table}[H]
+\centering
+\caption{Difficultés techniques et solutions}
+\begin{tabularx}{\textwidth}{|l|X|X|}
+\hline
+\textbf{Difficulté} & \textbf{Impact} & \textbf{Solution adoptée} \\
+\hline
+Graphiques Canvas sans bibliothèque & Complexité élevée pour 4 types de charts en Canvas 2D natif & Développement de fonctions utilitaires réutilisables avec système de coordonnées abstrait \\
+\hline
+Synchronisation authentification & Le chatbot doit connaître l'utilisateur pour personnaliser les réponses & Système d'événements custom et variable globale partagée \\
+\hline
+Double migration architecturale & Maintenir le prototype PHP pendant la migration Angular + Spring Boot & Architecture en couches, API PHP conservée comme fallback \\
+\hline
+Données sensibles & Impossibilité d'utiliser des données client réelles & Données synthétiques réalistes \\
+\hline
+Qualité du CSV & Doublons, NaN, outliers, encodage incohérent & Pipeline en 6 étapes \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Difficultés Organisationnelles}
+
+\begin{table}[H]
+\centering
+\caption{Difficultés organisationnelles et solutions}
+\begin{tabularx}{\textwidth}{|l|X|X|}
+\hline
+\textbf{Difficulté} & \textbf{Impact} & \textbf{Solution adoptée} \\
+\hline
+Ampleur du périmètre & Le projet couvre frontend, backend, BDD, NLP, LSTM, KNN et RPA sur une seule personne & Planning serré avec priorisation stricte et itérations rapides \\
+\hline
+Disponibilité tardive des données & CSV fourni tardivement & Avancement du frontend en parallèle \\
+\hline
+Complexité technologique variée & Maîtrise simultanée de JavaScript, Python, Java, SQL & Documentation abondante et apprentissage continu \\
+\hline
+Coordination avec la banque & Contraintes de confidentialité et d'accès à l'intranet & Working sessions régulières avec l'encadrant \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+% ============================================================
+% CHAPTER 9: PERSPECTIVES
+% ============================================================
+\chapter{Perspectives}
+
+\section{Perspectives à Court Terme (Semaines 5--8)}
+
+\begin{table}[H]
+\centering
+\caption{Perspectives immédiates}
+\begin{tabularx}{\textwidth}{|X|l|}
+\hline
+\textbf{Perspective} & \textbf{Période} \\
+\hline
+Finalisation du modèle LSTM --- optimisation hyperparamètres, validation croisée, déploiement du meilleur modèle via MLflow & S5 \\
+\hline
+Développement du moteur de recommandations KNN --- calcul du taux de succès par action corrective & S5 \\
+\hline
+Intégration de l'automatisation RPA via UiPath Orchestrator --- robots pour les actions P1-P2 & S5--S6 \\
+\hline
+Développement de l'API FastAPI complète avec WebSocket pour les alertes temps réel & S5--S6 \\
+\hline
+Connexion du frontend aux données réelles --- basculement du mode démonstration vers l'API & S5--S6 \\
+\hline
+Enrichissement du dashboard avec les données LSTM réelles (score de risque, alertes, recommandations) & S6--S7 \\
+\hline
+Tests unitaires (couverture $>$ 70\%), tests de sécurité et d'intégration & S7 \\
+\hline
+Rédaction du rapport final et préparation de la soutenance & S7--S8 \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Perspectives d'Évolution Post-PFE}
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Application mobile}~: développement d'une application native (React Native / Flutter) pour l'accès client mobile
+    \item \textbf{NLP multilingue}~: extension du pipeline pour supporter l'arabe tunisien (dialecte) et l'arabe standard, en plus du français
+    \item \textbf{Intégration vocale}~: module de reconnaissance vocale pour le call center téléphonique
+    \item \textbf{Déploiement cloud}~: migration vers une infrastructure cloud (AWS / Azure) pour la scalabilité
+    \item \textbf{Tableau de bord prédictif avancé}~: carte de chaleur des processus à risque et module de simulation what-if
+    \item \textbf{Boucle d'apprentissage avancée}~: reinforcement learning pour optimiser automatiquement les seuils d'alerte
+    \item \textbf{Intégration omnicanale}~: extension vers les canaux SMS, WhatsApp et email pour une couverture complète
+\end{itemize}
+
+
+% ============================================================
+% CHAPTER 10: CONCLUSION
+% ============================================================
+\chapter{Conclusion}
+
+Ce rapport de mi-parcours rend compte de l'avancement significatif réalisé au cours des quatre premières semaines du projet de fin d'études au sein d'Attijari bank.
+
+Sur l'axe développement, un \textbf{prototype frontend complet et fonctionnel} a été livré, comprenant 6 pages, un chatbot intelligent avec gestion multi-sessions, un tableau de bord analytique avec 4 graphiques Canvas natifs, un système d'authentification RBAC, et une API REST opérationnelle avec 6 endpoints. La migration vers une architecture moderne (Angular 21 + Spring Boot 3.4) a été amorcée, avec 7 composants Angular et 2 services déjà opérationnels.
+
+Sur l'axe intelligence artificielle, les fondations sont solidement posées~: le pipeline de nettoyage des données est achevé, le dataset nettoyé est stocké en base, et le pipeline NLP (spaCy + BERT) ainsi que le modèle prédictif LSTM sont en cours de développement et d'optimisation.
+
+Les principales difficultés rencontrées --- complexité des graphiques Canvas sans bibliothèque, synchronisation de l'authentification inter-pages, migration double-stack, et ampleur du périmètre technique sur une seule personne --- ont été surmontées par des solutions techniques appropriées et une organisation rigoureuse du travail.
+
+Pour la seconde moitié du projet (semaines 5 à 8), les priorités sont clairement définies~: finalisation du modèle LSTM et du moteur de recommandations KNN, intégration de l'automatisation RPA via UiPath, développement de l'API FastAPI complète, connexion du frontend aux données réelles, et préparation du livrable final pour la soutenance.
+
+Le projet est dans l'ensemble \textbf{conforme au planning prévisionnel} et les objectifs de mi-parcours ont été atteints. La seconde phase s'annonce intensive mais réalisable dans les délais impartis, avec pour objectif la livraison d'un système complet et fonctionnel le 17 mai 2026.
+
+\vspace{1cm}
+\begin{center}
+\rule{0.5\textwidth}{0.4pt}\\[0.3cm]
+{\small\textcolor{attijariGray}{Document rédigé dans le cadre du PFE 2026}}\\
+{\small\textcolor{attijariGray}{Attijari bank --- Sujet 21}}\\
+{\small\textcolor{attijariGray}{Spécialité Génie Logiciel}}\\
+{\small\textcolor{attijariGray}{Rationalisation, Reengineering \& Efficacité Opérationnelle}}
+\end{center}
+
+\end{document}

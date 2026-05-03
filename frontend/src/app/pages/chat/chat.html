@@ -1,0 +1,123 @@
+<div class="chat-layout" [class.left-collapsed]="isLeftSidebarCollapsed" [class.right-collapsed]="isRightSidebarCollapsed">
+  
+  <!-- LEFT SIDEBAR: History -->
+  <aside class="chat-sidebar left">
+    <div class="sidebar-header">
+      <button class="btn-new-chat" (click)="newConversation()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Nouveau Chat
+      </button>
+    </div>
+
+    <div class="history-list">
+      <div class="history-group">
+        <p class="history-label">RÉCENT</p>
+        <div *ngFor="let conv of conversations" 
+             class="history-item" 
+             [class.active]="conv.id === activeConversationId"
+             (click)="selectConversation(conv.id)">
+          <div class="item-content">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span class="item-title">{{conv.title}}</span>
+          </div>
+          <button class="delete-btn" (click)="deleteConversation(conv.id, $event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-user" *ngIf="user">
+      <div class="user-avatar">{{user.nom.substring(0, 1)}}</div>
+      <div class="user-info">
+        <p class="user-name">{{user.nom}}</p>
+        <p class="user-status">Connecté</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CHAT AREA -->
+  <main class="chat-main">
+    <div class="chat-header">
+      <div class="header-info">
+        <button class="header-btn" (click)="toggleLeftSidebar()" [class.active]="!isLeftSidebarCollapsed" title="Toggle Sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        </button>
+        <div class="header-title-wrapper">
+          <h2>Assistant AI</h2>
+          <span class="status-badge">En ligne</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn" (click)="toggleRightSidebar()" [class.active]="!isRightSidebarCollapsed" title="Toggle Details">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="15" y1="3" x2="15" y2="21"></line></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="messages-container" #scrollContainer>
+      <div *ngFor="let msg of messages" class="message-wrapper" [class.user]="msg.sender === 'user'">
+        <div class="message-bubble">
+          <p class="message-text">{{msg.text}}</p>
+          <span class="message-time">{{msg.time | date:'HH:mm'}}</span>
+        </div>
+      </div>
+      
+      <div *ngIf="isTyping" class="message-wrapper">
+        <div class="message-bubble typing">
+          <div class="dot-flashing"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="input-container">
+        <textarea 
+          placeholder="Envoyez un message..." 
+          [(ngModel)]="userInput" 
+          (keydown.enter)="onSend(); $event.preventDefault()"
+          rows="1">
+        </textarea>
+        <button class="send-btn" [disabled]="!userInput.trim() || isTyping" (click)="onSend()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+      <p class="input-hint">L'IA peut faire des erreurs. Vérifiez les informations importantes.</p>
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR: Info/Tools -->
+  <aside class="chat-sidebar right">
+    <div class="sidebar-header">
+      <h3>Détails du Compte</h3>
+    </div>
+
+    <div class="info-section">
+      <div class="user-profile-large" *ngIf="user">
+        <div class="user-avatar-large">{{user.nom.substring(0, 1)}}</div>
+        <div class="user-details">
+          <h4>{{user.nom}}</h4>
+          <span class="role-badge">{{user.role}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3>Détails du Chat</h3>
+      <div class="info-item">
+        <span class="label">ID Session</span>
+        <span class="value">#{{activeConversationId}}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Modèle</span>
+        <span class="value">FastAPI + NLP + LSTM</span>
+      </div>
+    </div>
+
+    <div class="security-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      Chiffré de bout en bout
+    </div>
+  </aside>
+
+</div>

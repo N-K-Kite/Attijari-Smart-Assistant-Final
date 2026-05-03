@@ -1,0 +1,42 @@
+<div class="auth-body">
+  <div class="auth-container">
+    <div class="auth-logo">
+      <img src="assets/attijari_logo.png" alt="Attijari Bank" style="width:40px;height:40px;object-fit:contain;border-radius:8px;"/>
+      <div style="text-align:left">
+        <div style="font-weight:800;font-size:16px;line-height:1.2;color:#1A1A1E">Attijari Bank</div>
+        <div style="font-size:11px;color:#F7941D;font-weight:700">SMART ASSISTANT</div>
+      </div>
+    </div>
+    
+    <h1 class="auth-title">Connexion</h1>
+    <p class="auth-subtitle">Accédez à votre espace bancaire intelligent</p>
+
+    <div class="error-msg" *ngIf="errorMsg">{{errorMsg}}</div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="input-group">
+        <label class="input-label" for="email">Email</label>
+        <input type="text" id="email" [(ngModel)]="email" name="email" class="input-field" placeholder="admin&#64;attijaribank.tn" required />
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label" for="password">Mot de Passe</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" class="input-field" placeholder="••••••••" required />
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="isLoading">
+        {{ isLoading ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;">
+      <button type="button" (click)="fillDemo('admin')" style="padding:6px 12px;border-radius:6px;border:1px solid #E4E4E7;background:white;font-size:11px;cursor:pointer;font-weight:600;color:#F7941D;">🔑 Admin</button>
+      <button type="button" (click)="fillDemo('responsable')" style="padding:6px 12px;border-radius:6px;border:1px solid #E4E4E7;background:white;font-size:11px;cursor:pointer;font-weight:600;color:#3B82F6;">🛡️ Resp. IT</button>
+      <button type="button" (click)="fillDemo('user')" style="padding:6px 12px;border-radius:6px;border:1px solid #E4E4E7;background:white;font-size:11px;cursor:pointer;font-weight:600;color:#10B981;">👤 Meriam</button>
+    </div>
+
+    <div class="auth-link">
+      Nouveau client ? <a routerLink="/register">Ouvrir un compte</a>
+    </div>
+  </div>
+</div>

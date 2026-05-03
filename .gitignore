@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/target/
+backend/.mvn/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# Build artifacts
+frontend/dist/
+main-*.js
+styles-*.css
+
+# Environment & secrets
+.env
+mdps.txt
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Angular cache
+frontend/.angular/
+
+# Java
+*.class
+*.jar
+*.war
+backend/target/
+
+# Logs
+*.log
+npm-debug.log*
+
+# LaTeX build files
+*.aux
+*.log
+*.toc
+*.out
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bbl
+*.blg

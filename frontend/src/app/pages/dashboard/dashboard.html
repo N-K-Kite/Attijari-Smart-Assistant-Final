@@ -1,0 +1,254 @@
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar">
+    <nav class="dash-nav">
+      <a class="dash-nav-item" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Tableau de Bord
+      </a>
+      <a class="dash-nav-item" [class.active]="activeTab === 'reclamations'" (click)="setTab('reclamations')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Réclamations
+      </a>
+      <a class="dash-nav-item" [class.active]="activeTab === 'alertes'" (click)="setTab('alertes')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Alertes UiPath
+      </a>
+    </nav>
+    <div class="dash-sidebar-footer">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>{{apiStatus}}</span>
+      </div>
+      <p class="last-update">Mis à jour: {{lastUpdateStr}}</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <!-- ═══ TAB: OVERVIEW ═══ -->
+    <div *ngIf="activeTab === 'overview'">
+      <div class="dash-topbar">
+        <div>
+          <h1 class="dash-title">Tableau de Bord — Données Réelles Attijari</h1>
+          <p class="dash-subtitle">1507 tickets IT — Février–Mars 2026</p>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpi-grid" *ngIf="stats">
+        <div class="kpi-card">
+          <div class="kpi-icon orange">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <p class="kpi-label">Total Tickets</p>
+            <p class="kpi-value">{{stats.total_tickets}}</p>
+            <p class="kpi-trend up">Données réelles</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon green">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <p class="kpi-label">Réclamations</p>
+            <p class="kpi-value">{{stats.reclamations}}</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <p class="kpi-label">Demandes de Service</p>
+            <p class="kpi-value">{{stats.demandes_service}}</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <p class="kpi-label">Durée Moy. Résolution</p>
+            <p class="kpi-value">{{stats.duree_moy_resolution}}min</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon" style="background:rgba(239,68,68,0.1);color:#EF4444;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <p class="kpi-label">Risque Élevé</p>
+            <p class="kpi-value">{{stats.tickets_risque_eleve}}</p>
+            <p class="kpi-trend down">Score ≥ 0.75</p>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon orange">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </div>
+          <div class="kpi-data">
+            <p class="kpi-label">En Retard SLA</p>
+            <p class="kpi-value">{{stats.en_retard_sla}} ({{stats.pct_retard_sla}}%)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUPES BAR CHART -->
+      <div class="charts-row" *ngIf="stats">
+        <div class="chart-card chart-wide">
+          <div class="chart-header">
+            <h3>Répartition par Type d'Opération</h3>
+          </div>
+          <div style="padding: 20px;">
+            <div *ngFor="let key of getGroupeKeys()" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+              <span style="width:160px;font-size:12px;font-weight:500;color:#6B7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{key}}</span>
+              <div style="flex:1;height:20px;background:#F3F4F6;border-radius:4px;overflow:hidden;">
+                <div [style.width.%]="(getGroupeCount(key) / getMaxGroupeCount()) * 100" style="height:100%;background:linear-gradient(90deg,#F7941D,#e68310);border-radius:4px;transition:width 0.5s;"></div>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:#1A1A1E;min-width:40px;text-align:right;">{{getGroupeCount(key)}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE FEED -->
+        <div class="live-feed-card" style="flex:1;">
+          <div class="chart-header">
+            <h3>Flux en Temps Réel</h3>
+            <span class="live-badge">LIVE</span>
+          </div>
+          <div class="feed-list">
+            <div class="feed-item" *ngFor="let event of liveEvents">
+              <span class="feed-dot" [ngClass]="event.type"></span>
+              <span class="feed-text" [innerHTML]="event.html"></span>
+              <span class="feed-time">{{event.time}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!stats" style="text-align:center;padding:60px;color:#9CA3AF;">
+        <p style="font-size:18px;">⏳ Chargement des données...</p>
+        <p style="font-size:13px;margin-top:8px;">Assurez-vous que le backend FastAPI tourne sur localhost:8000</p>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: RECLAMATIONS ═══ -->
+    <div *ngIf="activeTab === 'reclamations'">
+      <div class="dash-topbar">
+        <div>
+          <h1 class="dash-title">Réclamations</h1>
+          <p class="dash-subtitle">{{recTotal}} tickets au total</p>
+        </div>
+        <div>
+          <input [(ngModel)]="recSearch" placeholder="🔍 Rechercher..." style="padding:8px 14px;border:1px solid #E4E4E7;border-radius:8px;font-size:13px;font-family:inherit;width:250px;" />
+        </div>
+      </div>
+
+      <div *ngIf="recLoading" style="text-align:center;padding:40px;color:#9CA3AF;">Chargement...</div>
+
+      <div *ngIf="!recLoading && filteredReclamations.length > 0" style="padding:0 24px 24px;">
+        <table class="agents-table" style="width:100%;">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Objet</th>
+              <th>Sévérité</th>
+              <th>Statut</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of filteredReclamations">
+              <td style="font-size:12px;color:#6B7280;">{{r.date}}</td>
+              <td style="font-weight:600;font-size:12px;">{{r.type_operation}}</td>
+              <td style="font-size:12px;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{r.objet}}</td>
+              <td style="text-align:center;">
+                <span style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;"
+                  [style.background]="r.severite <= 2 ? '#FEF2F2' : '#F0FDF4'"
+                  [style.color]="r.severite <= 2 ? '#EF4444' : '#10B981'">
+                  {{r.severite}}
+                </span>
+              </td>
+              <td>
+                <span style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#FFF7ED;color:#F7941D;">
+                  {{r.statut}}
+                </span>
+              </td>
+              <td>
+                <span *ngIf="r.score_anomalie" [class]="niveauClass(r.score_anomalie)" style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">
+                  {{(r.score_anomalie * 100).toFixed(0)}}%
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ TAB: ALERTES ═══ -->
+    <div *ngIf="activeTab === 'alertes'">
+      <div class="dash-topbar">
+        <div>
+          <h1 class="dash-title">Alertes UiPath RPA</h1>
+          <p class="dash-subtitle">Tickets avec score anomalie ≥ seuil</p>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button *ngFor="let s of [0.50, 0.75, 0.85]"
+            (click)="alerteSeuil = s; loadAlertes()"
+            [style.background]="alerteSeuil === s ? '#F7941D' : 'white'"
+            [style.color]="alerteSeuil === s ? 'white' : '#6B7280'"
+            style="padding:6px 14px;border-radius:6px;border:1px solid #E4E4E7;font-size:12px;font-weight:600;cursor:pointer;">
+            ≥ {{s}}
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="alertesLoading" style="text-align:center;padding:40px;color:#9CA3AF;">Chargement...</div>
+
+      <div *ngIf="!alertesLoading && alertes.length > 0" style="padding:0 24px 24px;">
+        <div *ngFor="let a of alertes" style="background:white;border:1px solid #F3F4F6;border-radius:10px;padding:16px 20px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <p style="font-weight:700;font-size:13px;color:#1A1A1E;">{{a.type_operation || a.objet}}</p>
+            <p style="font-size:11px;color:#9CA3AF;margin-top:4px;">{{a.date}} · Sévérité: {{a.severite}}</p>
+          </div>
+          <div style="text-align:right;">
+            <span [class]="niveauClass(a.score_anomalie)" style="padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;">
+              {{niveauLabel(a.score_anomalie)}} — {{(a.score_anomalie * 100).toFixed(1)}}%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!alertesLoading && alertes.length === 0" style="text-align:center;padding:40px;color:#9CA3AF;">
+        Aucune alerte au seuil {{alerteSeuil}}
+      </div>
+    </div>
+
+  </main>
+</div>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscription – Attijari Bank Smart Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: #F5F6F8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .auth-container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      width: 100%;
+      max-width: 500px;
+    }
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .auth-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1A1A1E;
+      margin-bottom: 8px;
+    }
+    .auth-subtitle {
+      font-size: 14px;
+      color: #6B6C78;
+    }
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .form-col {
+      flex: 1;
+    }
+    .input-group {
+      margin-bottom: 16px;
+    }
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #3f3f46;
+      margin-bottom: 6px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #E4E4E7;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: 0.2s;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #F7941D;
+      box-shadow: 0 0 0 3px rgba(247,148,29,0.1);
+    }
+    select.input-field {
+      background: white;
+      cursor: pointer;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: #F7941D;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    .btn-submit:hover {
+      background: #e68310;
+    }
+    .auth-link {
+      text-align: center;
+      font-size: 13px;
+      color: #6B6C78;
+    }
+    .auth-link a {
+      color: #F7941D;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .auth-link a:hover {
+      text-decoration: underline;
+    }
+    .error-msg {
+      color: #EF4444;
+      font-size: 13px;
+      background: #FEF2F2;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .success-msg {
+      color: #10B981;
+      font-size: 13px;
+      background: #ECFDF5;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #A0A0AB;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #E4E4E7;
+      padding-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="auth-logo">
+      <img src="attijari_logo.png" alt="Attijari Bank" style="width:40px;height:40px;object-fit:contain;border-radius:8px;"/>
+      <div>
+        <div style="font-weight:800;font-size:16px;line-height:1.2;color:#1A1A1E">Attijari Bank</div>
+        <div style="font-size:11px;color:#F7941D;font-weight:700">SMART ASSISTANT</div>
+      </div>
+    </div>
+    
+    <div class="auth-header">
+      <h1 class="auth-title">Ouvrir un compte</h1>
+      <p class="auth-subtitle">Créez votre profil complet</p>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="success-msg" id="successMsg"></div>
+
+    <form id="registerForm">
+      
+      <div class="section-title">Informations Personnelles</div>
+      
+      <div class="form-row">
+        <div class="form-col">
+          <label class="input-label" for="first_name">Prénom</label>
+          <input type="text" id="first_name" class="input-field" required />
+        </div>
+        <div class="form-col">
+          <label class="input-label" for="last_name">Nom</label>
+          <input type="text" id="last_name" class="input-field" required />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="cin">Numéro CIN (Identifiant)</label>
+        <input type="text" id="cin" class="input-field" placeholder="8 chiffres" maxlength="8" required />
+      </div>
+
+      <div class="section-title">Données Bancaires</div>
+
+      <div class="input-group">
+        <label class="input-label" for="card_number">Numéro de Carte Bancaire</label>
+        <input type="text" id="card_number" class="input-field" placeholder="16 chiffres sans espaces" maxlength="16" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="input-label" for="card_expiry">Expiration (MM/AAAA)</label>
+          <input type="text" id="card_expiry" class="input-field" placeholder="12/2027" maxlength="7" />
+        </div>
+        <div class="form-col">
+          <label class="input-label" for="card_type">Type de Carte</label>
+          <select id="card_type" class="input-field">
+            <option value="Visa Gold">Visa Gold</option>
+            <option value="Mastercard">Mastercard</option>
+            <option value="Visa Premier">Visa Premier</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-title">Sécurité</div>
+
+      <div class="form-row">
+        <div class="form-col">
+          <label class="input-label" for="password">Mot de passe</label>
+          <input type="password" id="password" class="input-field" required />
+        </div>
+        <div class="form-col">
+          <label class="input-label" for="confirm_password">Confirmation</label>
+          <input type="password" id="confirm_password" class="input-field" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Créer mon compte</button>
+    </form>
+
+    <div class="auth-link">
+      Déjà client ? <a href="login.html">Se connecter</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const payload = {
+        first_name: document.getElementById('first_name').value,
+        last_name: document.getElementById('last_name').value,
+        cin: document.getElementById('cin').value,
+        card_number: document.getElementById('card_number').value,
+        card_expiry: document.getElementById('card_expiry').value,
+        card_type: document.getElementById('card_type').value,
+        password: document.getElementById('password').value,
+        confirm_password: document.getElementById('confirm_password').value
+      };
+
+      const errEl = document.getElementById('errorMsg');
+      const sucEl = document.getElementById('successMsg');
+      const btn = document.getElementById('submitBtn');
+
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+      btn.textContent = 'Création en cours...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('api/register.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById('registerForm').reset();
+          sucEl.textContent = data.message;
+          sucEl.style.display = 'block';
+          // Redirect to login after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2000);
+        } else {
+          if (data.errors) {
+            errEl.innerHTML = data.errors.join('<br>');
+          } else {
+            errEl.textContent = data.error || 'Erreur lors de l\'inscription';
+          }
+          errEl.style.display = 'block';
+        }
+      } catch (error) {
+        errEl.textContent = 'Erreur serveur. Assurez-vous d\'utiliser XAMPP (localhost).';
+        errEl.style.display = 'block';
+      } finally {
+        btn.textContent = 'Créer mon compte';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

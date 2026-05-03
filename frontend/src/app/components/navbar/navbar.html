@@ -1,0 +1,24 @@
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a routerLink="/" class="nav-logo">
+      <div class="logo-icon">
+        <img src="assets/attijari_logo.png" alt="Attijari Bank" style="width:32px;height:32px;object-fit:contain;border-radius:6px;"/>
+      </div>
+      <div class="logo-text">
+        <span class="logo-name">Attijari Bank Smart Assistant</span>
+        <span class="logo-sub">AI CALL CENTER</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Accueil</a></li>
+      <li *ngIf="isLoggedIn"><a routerLink="/chat" routerLinkActive="active" class="nav-link">Chatbot</a></li>
+      <li *ngIf="isLoggedIn && isAdminOrResp"><a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Tableau de Bord</a></li>
+      <li *ngIf="!isLoggedIn"><a routerLink="/login" class="nav-link">Connexion</a></li>
+      <li *ngIf="isLoggedIn"><a href="#" (click)="logout($event)" class="nav-link" style="color:#EF4444">Déconnexion ({{userName}})</a></li>
+    </ul>
+    <!-- CTA removed as requested -->
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>

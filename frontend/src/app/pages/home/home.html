@@ -1,0 +1,282 @@
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Prototype Sprint 1 – PFE 2026
+    </div>
+    <h1 class="hero-title">
+      Votre Call Center<br/>
+      <span class="gradient-text">Réinventé par l'IA</span>
+    </h1>
+    <p class="hero-description">
+      Automatisez les réclamations et demandes fréquentes avec un chatbot intelligent. 
+      Réduisez le volume d'appels et offrez une disponibilité <strong>24h/7j</strong> à vos clients.
+    </p>
+    <div class="hero-actions">
+      <!-- Bot launch removed as requested -->
+      <a routerLink="/dashboard" class="btn-ghost btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Voir le Dashboard
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-value">70%</span>
+        <span class="stat-label">Réclamations Automatisées</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-value">24/7</span>
+        <span class="stat-label">Disponibilité</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-value">-45%</span>
+        <span class="stat-label">Volume d'Appels</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="chat-preview">
+      <div class="preview-header">
+        <div class="preview-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <div>
+          <div class="preview-name">Attijari Assistant</div>
+          <div class="preview-status"><span class="online-dot"></span>En ligne</div>
+        </div>
+      </div>
+      <div class="preview-messages">
+        <div class="preview-msg bot">
+          <div class="msg-bubble">Bonjour ! Je suis votre assistant Attijari. Comment puis-je vous aider aujourd'hui ? 😊</div>
+        </div>
+        <div class="preview-msg user">
+          <div class="msg-bubble">Je veux bloquer ma carte bancaire</div>
+        </div>
+        <div class="preview-msg bot">
+          <div class="msg-bubble">Je comprends l'urgence. Je vais bloquer votre carte immédiatement...</div>
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="preview-input">
+        <span>Tapez votre message...</span>
+        <button class="preview-send">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="floating-card card-1">
+      <div class="fc-icon">🤖</div>
+      <div>
+        <div class="fc-title">IA Active</div>
+        <div class="fc-sub">Traitement Direct</div>
+      </div>
+    </div>
+    <div class="floating-card card-2">
+      <div class="fc-icon">📈</div>
+      <div>
+        <div class="fc-title">Efficacité +40%</div>
+        <div class="fc-sub">Temps gagné</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE SLIDER -->
+<section class="slider-section" id="sliderSection">
+  <div class="slider-wrapper">
+    <div class="slider-track" [style.transform]="'translateX(-' + currentSlide * 100 + '%)'">
+      <div class="slide active">
+        <div class="slide-inner">
+          <div class="slide-image-wrap">
+            <img src="assets/hero_image.jpg" alt="Attijari Bank Smart Assistant" class="slide-img" />
+            <div class="slide-img-overlay"></div>
+          </div>
+          <div class="slide-content">
+            <span class="slide-tag">Innovation Bancaire</span>
+            <h2 class="slide-title">Fini le temps où vous deviez <br/><span class="slide-highlight">quitter votre domicile</span> pour obtenir du support.</h2>
+            <p class="slide-desc">Gérez vos comptes, bloquez votre carte, faites vos virements et soumettez vos réclamations — directement depuis votre canapé.</p>
+            <a routerLink="/chat" class="btn-primary slide-cta">Essayer maintenant</a>
+          </div>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slide-inner">
+          <div class="slide-image-wrap">
+            <img src="assets/mobile_mockup.png" alt="Attijari Mobile" class="slide-img" />
+            <div class="slide-img-overlay"></div>
+          </div>
+          <div class="slide-content">
+            <span class="slide-tag">Mobilité Totale</span>
+            <h2 class="slide-title">Votre banque dans <br/><span class="slide-highlight">votre poche</span></h2>
+            <p class="slide-desc">Accédez à tous vos services bancaires depuis votre smartphone. L'assistant AI Attijari est conçu pour vous accompagner partout.</p>
+            <a routerLink="/chat" class="btn-primary slide-cta">Lancer sur Mobile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="slider-arrow slider-prev" (click)="prevSlide()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="slider-arrow slider-next" (click)="nextSlide()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="section-container">
+    <div class="section-header">
+      <span class="section-tag">Fonctionnalités</span>
+      <h2 class="section-title">Une solution complète pour votre Call Center</h2>
+      <p class="section-desc">Chaque fonctionnalité est conçue pour réduire la charge opérationnelle et améliorer l'expérience client.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon orange">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Chatbot Intelligent</h3>
+        <p>Traitement automatique des demandes fréquentes : solde, blocage de carte, réclamations simples via NLP avancé.</p>
+        <a routerLink="/chat" class="feature-link">Tester →</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon dark">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Routage Intelligent</h3>
+        <p>Transfert automatique vers un agent humain uniquement pour les cas complexes, avec résumé de la conversation.</p>
+        <span class="feature-link">Sprint 2 →</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon orange">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3>Tableau de Bord</h3>
+        <p>Analyse en temps réel du volume d'appels, taux de résolution, et satisfaction client avec Power BI intégré.</p>
+        <a routerLink="/dashboard" class="feature-link">Voir →</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon dark">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Disponibilité 24/7</h3>
+        <p>Le chatbot gère les demandes en dehors des heures ouvrées, assurant une satisfaction client continue.</p>
+        <span class="feature-link">Toujours actif</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon orange">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Sécurité Bancaire</h3>
+        <p>Authentification renforcée et chiffrement des données conformes aux normes bancaires Attijari.</p>
+        <span class="feature-link">Certifié</span>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon dark">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9"/></svg>
+        </div>
+        <h3>Intégration API</h3>
+        <p>Connexion au système bancaire core via API REST. Accès aux données client en temps réel.</p>
+        <span class="feature-link">En cours →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-container">
+    <div class="section-header">
+      <span class="section-tag">Processus</span>
+      <h2 class="section-title">Comment ça fonctionne ?</h2>
+    </div>
+    <div class="steps-flow">
+      <div class="step" id="step-1">
+        <div class="step-number">01</div>
+        <div class="step-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42A2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="step-content">
+          <h3>Contact Client</h3>
+          <p>Le client contacte le call center via le web, mobile ou téléphone.</p>
+        </div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step" id="step-2">
+        <div class="step-number">02</div>
+        <div class="step-icon orange">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="step-content">
+          <h3>Analyse NLP</h3>
+          <p>Le chatbot analyse l'intention grâce à BERT/GPT et identifie la demande.</p>
+        </div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step" id="step-3">
+        <div class="step-number">03</div>
+        <div class="step-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div class="step-content">
+          <h3>Résolution Auto</h3>
+          <p>70% des cas sont traités automatiquement sans intervention humaine.</p>
+        </div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step" id="step-4">
+        <div class="step-number">04</div>
+        <div class="step-icon orange">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="step-content">
+          <h3>Escalade Agent</h3>
+          <p>Les cas complexes sont transférés à un agent avec le contexte complet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH / VALUES -->
+<section class="tech-section" id="values">
+  <div class="section-container">
+    <div class="section-header">
+      <span class="section-tag">Engagement</span>
+      <h2 class="section-title">Pourquoi choisir notre Assistant AI ?</h2>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-badge">Intelligence</div>
+        <h4>IA Conversationnelle</h4>
+        <p>Un assistant qui comprend vos phrases comme un humain, sans codes compliqués.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-badge">Sécurité</div>
+        <h4>Protection Bancaire</h4>
+        <p>Toutes vos données sont chiffrées selon les standards de sécurité d'Attijari Bank.</p>
+      </div>
+      <div class="tech-card">
+        <div class="tech-badge">Disponibilité</div>
+        <h4>Ouvert 24h/24, 7j/7</h4>
+        <p>Posez vos questions même le dimanche ou à minuit. Nous sommes toujours là.</p>
+      </div>
+    </div>
+  </div>
+</section>
