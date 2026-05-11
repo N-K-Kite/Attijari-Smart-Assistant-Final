@@ -509,6 +509,7 @@ textarea:focus { outline: none; }
   color: #18181B;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -616,6 +617,9 @@ textarea:focus { outline: none; }
   color: #3F3F46;
   line-height: 1.4;
   font-weight: 500;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .no-replies-hint {
