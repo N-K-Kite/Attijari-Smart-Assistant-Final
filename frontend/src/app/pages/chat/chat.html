@@ -88,29 +88,71 @@
 
   <!-- RIGHT SIDEBAR: Info/Tools -->
   <aside class="chat-sidebar right">
-    <div class="sidebar-header">
-      <h3>Détails du Compte</h3>
-    </div>
+    <!-- USER TICKETS LIST (Default View) -->
+    <div class="info-section" *ngIf="!selectedTicket">
+      <div class="sidebar-header-row">
+        <h3>Mes Réclamations</h3>
+        <button class="btn-refresh-mini" (click)="loadUserTickets()" [class.spinning]="loadingTickets">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        </button>
+      </div>
 
-    <div class="info-section">
-      <div class="user-profile-large" *ngIf="user">
-        <div class="user-avatar-large">{{user.nom.substring(0, 1)}}</div>
-        <div class="user-details">
-          <h4>{{user.nom}}</h4>
-          <span class="role-badge">{{user.role}}</span>
+      <div class="ticket-list-mini" *ngIf="userTickets.length > 0">
+        <div *ngFor="let t of userTickets" class="ticket-item-mini" (click)="selectTicket(t)">
+          <div class="t-header">
+            <span class="t-id">#{{t.id.substring(0,8)}}</span>
+            <span class="t-status" [class]="t.statut.toLowerCase()">{{t.statut}}</span>
+          </div>
+          <div class="t-subject">{{t.objet}}</div>
+          <div class="t-footer">
+            <span class="t-date">{{t.date | date:'shortDate'}}</span>
+            <span class="t-replies" *ngIf="t.reponses?.length">💬 {{t.reponses.length}}</span>
+          </div>
         </div>
       </div>
+
+      <div class="empty-tickets" *ngIf="userTickets.length === 0 && !loadingTickets">
+        <p>Aucune réclamation enregistrée.</p>
+      </div>
     </div>
 
-    <div class="info-section">
-      <h3>Détails du Chat</h3>
-      <div class="info-item">
-        <span class="label">ID Session</span>
-        <span class="value">#{{activeConversationId}}</span>
+    <!-- TICKET DETAIL VIEW -->
+    <div class="info-section ticket-detail-view" *ngIf="selectedTicket">
+      <div class="detail-back">
+        <button (click)="closeTicketDetail()">← Retour à la liste</button>
       </div>
-      <div class="info-item">
-        <span class="label">Modèle</span>
-        <span class="value">FastAPI + NLP + LSTM</span>
+
+      <div class="ticket-full-info">
+        <div class="detail-title">#{{selectedTicket.id.substring(0,8)}}</div>
+        <div class="detail-subject">{{selectedTicket.objet}}</div>
+        
+        <div class="detail-meta">
+          <div class="meta-item">
+            <label>Statut</label>
+            <span class="t-status" [class]="selectedTicket.statut.toLowerCase()">{{selectedTicket.statut}}</span>
+          </div>
+          <div class="meta-item">
+            <label>Date</label>
+            <span>{{selectedTicket.date | date:'medium'}}</span>
+          </div>
+        </div>
+
+        <!-- REPLIES HISTORY -->
+        <div class="history-section">
+          <h4>Historique des réponses</h4>
+          <div class="reply-history-list" *ngIf="selectedTicket.reponses?.length > 0; else noReplies">
+            <div class="reply-bubble" *ngFor="let rep of selectedTicket.reponses">
+              <div class="reply-meta">
+                <strong>{{rep.auteur}}</strong>
+                <span class="reply-date">{{rep.date | date:'short'}}</span>
+              </div>
+              <div class="reply-msg">{{rep.message}}</div>
+            </div>
+          </div>
+          <ng-template #noReplies>
+            <p class="no-replies-hint">Aucune réponse pour le moment.</p>
+          </ng-template>
+        </div>
       </div>
     </div>
 

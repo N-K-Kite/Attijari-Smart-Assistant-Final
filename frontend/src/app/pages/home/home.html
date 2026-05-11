@@ -20,7 +20,7 @@
     </p>
     <div class="hero-actions">
       <!-- Bot launch removed as requested -->
-      <a routerLink="/dashboard" class="btn-ghost btn-lg">
+      <a *ngIf="isAdminOrResp" routerLink="/dashboard" class="btn-ghost btn-lg">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
           <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
@@ -169,7 +169,8 @@
         </div>
         <h3>Tableau de Bord</h3>
         <p>Analyse en temps réel du volume d'appels, taux de résolution, et satisfaction client avec Power BI intégré.</p>
-        <a routerLink="/dashboard" class="feature-link">Voir →</a>
+        <a *ngIf="isAdminOrResp" routerLink="/dashboard" class="feature-link">Voir →</a>
+        <span *ngIf="!isAdminOrResp" class="feature-link disabled">Accès Restreint</span>
       </div>
       <div class="feature-card">
         <div class="feature-icon dark">

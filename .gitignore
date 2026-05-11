@@ -1,45 +1,51 @@
 # Dependencies
 node_modules/
-frontend/node_modules/
-backend/target/
-backend/.mvn/
+**/node_modules/
+venv/
+**/venv/
+.venv/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
-# IDE
+# Build artifacts
+dist/
+**/dist/
+target/
+**/target/
+.angular/
+**/.angular/
+*.class
+*.jar
+*.war
+
+# Environment & secrets
+.env
+**/.env
+mdps.txt
+
+# IDE & OS
 .idea/
 .vscode/
 *.iml
 *.swp
 *.swo
-
-# Build artifacts
-frontend/dist/
-main-*.js
-styles-*.css
-
-# Environment & secrets
-.env
-mdps.txt
-
-# OS files
 Thumbs.db
 .DS_Store
 
-# Angular cache
-frontend/.angular/
-
-# Java
-*.class
-*.jar
-*.war
-backend/target/
-
-# Logs
+# Data & Logs
+data/raw/
+**/data/raw/
+backups/
+**/backups/
+mlruns/
+logs/*.log
 *.log
 npm-debug.log*
 
 # LaTeX build files
 *.aux
-*.log
 *.toc
 *.out
 *.fdb_latexmk
@@ -47,3 +53,8 @@ npm-debug.log*
 *.synctex.gz
 *.bbl
 *.blg
+
+# Python specific
+.ipynb_checkpoints/
+.coverage
+.pytest_cache/

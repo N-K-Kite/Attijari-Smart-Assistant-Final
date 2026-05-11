@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatMessage, Conversation } from '../../services/chat.service';
 import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -23,6 +24,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   isTyping: boolean = false;
   user: any = null;
 
+  // Ticket tracking
+  userTickets: any[] = [];
+  selectedTicket: any = null;
+  loadingTickets: boolean = false;
+
   isLeftSidebarCollapsed: boolean = false;
   isRightSidebarCollapsed: boolean = false;
 
@@ -31,6 +37,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private chatService: ChatService, 
     private authService: AuthService,
+    private apiService: ApiService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -51,7 +58,27 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.sub.add(this.authService.currentUser$.subscribe(u => {
       this.user = u;
+      if (u) this.loadUserTickets();
     }));
+  }
+
+  loadUserTickets(): void {
+    this.loadingTickets = true;
+    this.apiService.getMyReclamations().subscribe(res => {
+      this.userTickets = res?.data || [];
+      this.loadingTickets = false;
+      this.cdr.detectChanges();
+    });
+  }
+
+  selectTicket(ticket: any): void {
+    this.selectedTicket = ticket;
+    this.cdr.detectChanges();
+  }
+
+  closeTicketDetail(): void {
+    this.selectedTicket = null;
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {

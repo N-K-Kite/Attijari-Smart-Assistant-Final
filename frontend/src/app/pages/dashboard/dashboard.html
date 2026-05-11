@@ -2,253 +2,389 @@
 
   <!-- SIDEBAR -->
   <aside class="dash-sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-title">Attijari Bank IA</div>
+      <div class="brand-subtitle">Anomaly Detection</div>
+    </div>
+
     <nav class="dash-nav">
-      <a class="dash-nav-item" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-        </svg>
-        Tableau de Bord
+      <div class="nav-section-title">Principal</div>
+      <a class="dash-nav-item" [class.active]="activeTab === 'overview'" (click)="setTab('overview')"><span>📊</span> Dashboard</a>
+      <a class="dash-nav-item" [class.active]="activeTab === 'alertes'" (click)="setTab('alertes')">
+        <span style="color: #E05252">⚡</span> Alertes
+        <span class="nav-badge badge-red" *ngIf="stats?.tickets_risque_eleve">{{stats.tickets_risque_eleve}}</span>
       </a>
       <a class="dash-nav-item" [class.active]="activeTab === 'reclamations'" (click)="setTab('reclamations')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-        </svg>
-        Réclamations
+        <span>☰</span> Réclamations
+        <span class="nav-badge badge-blue" *ngIf="recTotal">{{recTotal}}</span>
       </a>
-      <a class="dash-nav-item" [class.active]="activeTab === 'alertes'" (click)="setTab('alertes')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-        </svg>
-        Alertes UiPath
-      </a>
+
+      <div class="nav-section-title">Intelligence IA</div>
+      <a class="dash-nav-item" [class.active]="activeTab === 'lstm'" (click)="setTab('lstm')"><span>◉</span> Prédictions LSTM</a>
+      <a class="dash-nav-item" [class.active]="activeTab === 'knn'" (click)="setTab('knn')"><span>◎</span> Recommandations KNN</a>
+      <a class="dash-nav-item" [class.active]="activeTab === 'analyse'" (click)="setTab('analyse')"><span>⋄</span> Analyser un ticket</a>
+
+      <div class="nav-section-title">Automatisation</div>
+      <a class="dash-nav-item" [class.active]="activeTab === 'rpa'" (click)="setTab('rpa')"><span>⬢</span> UiPath RPA</a>
+      <a class="dash-nav-item" [class.active]="activeTab === 'audit'" (click)="setTab('audit')"><span>▦</span> Audit Trail</a>
     </nav>
+
     <div class="dash-sidebar-footer">
-      <div class="live-indicator">
-        <span class="live-dot"></span>
-        <span>{{apiStatus}}</span>
+      <div class="user-profile">
+        <div class="user-avatar">RI</div>
+        <div class="user-info">
+          <span class="name">{{user?.username || 'Responsable IT'}}</span>
+          <span class="role">{{user?.role || 'responsable.it'}}</span>
+        </div>
       </div>
-      <p class="last-update">Mis à jour: {{lastUpdateStr}}</p>
     </div>
   </aside>
 
-  <!-- MAIN -->
+  <!-- MAIN AREA -->
   <main class="dash-main">
-
-    <!-- ═══ TAB: OVERVIEW ═══ -->
-    <div *ngIf="activeTab === 'overview'">
-      <div class="dash-topbar">
-        <div>
-          <h1 class="dash-title">Tableau de Bord — Données Réelles Attijari</h1>
-          <p class="dash-subtitle">1507 tickets IT — Février–Mars 2026</p>
-        </div>
+    <header class="dash-header">
+      <div class="header-title-wrap">
+        <h1 class="header-title">{{activeTab | titlecase}}</h1>
+        <p class="header-subtitle">Surveillance Intelligente — {{lastUpdateStr}}</p>
       </div>
-
-      <!-- KPI CARDS -->
-      <div class="kpi-grid" *ngIf="stats">
-        <div class="kpi-card">
-          <div class="kpi-icon orange">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-            </svg>
-          </div>
-          <div class="kpi-data">
-            <p class="kpi-label">Total Tickets</p>
-            <p class="kpi-value">{{stats.total_tickets}}</p>
-            <p class="kpi-trend up">Données réelles</p>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon green">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-            </svg>
-          </div>
-          <div class="kpi-data">
-            <p class="kpi-label">Réclamations</p>
-            <p class="kpi-value">{{stats.reclamations}}</p>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon blue">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-            </svg>
-          </div>
-          <div class="kpi-data">
-            <p class="kpi-label">Demandes de Service</p>
-            <p class="kpi-value">{{stats.demandes_service}}</p>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon purple">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-            </svg>
-          </div>
-          <div class="kpi-data">
-            <p class="kpi-label">Durée Moy. Résolution</p>
-            <p class="kpi-value">{{stats.duree_moy_resolution}}min</p>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon" style="background:rgba(239,68,68,0.1);color:#EF4444;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            </svg>
-          </div>
-          <div class="kpi-data">
-            <p class="kpi-label">Risque Élevé</p>
-            <p class="kpi-value">{{stats.tickets_risque_eleve}}</p>
-            <p class="kpi-trend down">Score ≥ 0.75</p>
-          </div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-icon orange">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-              <line x1="6" y1="20" x2="6" y2="14"/>
-            </svg>
-          </div>
-          <div class="kpi-data">
-            <p class="kpi-label">En Retard SLA</p>
-            <p class="kpi-value">{{stats.en_retard_sla}} ({{stats.pct_retard_sla}}%)</p>
-          </div>
-        </div>
+      <div class="header-actions">
+        <div class="status-tag" [ngClass]="apiStatusClass">{{apiStatus}}</div>
+        <button class="refresh-btn" (click)="loadOverview()">↻ Actualiser</button>
+        <div class="uipath-btn"><span>⬢</span> UiPath</div>
       </div>
+    </header>
 
-      <!-- GROUPES BAR CHART -->
-      <div class="charts-row" *ngIf="stats">
-        <div class="chart-card chart-wide">
-          <div class="chart-header">
-            <h3>Répartition par Type d'Opération</h3>
+    <div class="dash-content">
+
+      <!-- ═══ TAB: OVERVIEW ═══ -->
+      <div *ngIf="activeTab === 'overview'">
+        <div class="kpi-grid" *ngIf="stats">
+          <div class="kpi-card" style="--card-accent: #E05252">
+            <div class="kpi-label">Alertes Actives</div>
+            <div class="kpi-value" style="color: #E05252">{{stats.tickets_risque_eleve}}</div>
+            <div class="kpi-sub">Score seuil > 0.75</div>
           </div>
-          <div style="padding: 20px;">
-            <div *ngFor="let key of getGroupeKeys()" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-              <span style="width:160px;font-size:12px;font-weight:500;color:#6B7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{key}}</span>
-              <div style="flex:1;height:20px;background:#F3F4F6;border-radius:4px;overflow:hidden;">
-                <div [style.width.%]="(getGroupeCount(key) / getMaxGroupeCount()) * 100" style="height:100%;background:linear-gradient(90deg,#F7941D,#e68310);border-radius:4px;transition:width 0.5s;"></div>
+          <div class="kpi-card" style="--card-accent: #F5A623">
+            <div class="kpi-label">Score Max LSTM</div>
+            <div class="kpi-value" style="color: #F5A623">0.99</div>
+            <div class="kpi-sub">Modèle LSTM v2</div>
+          </div>
+          <div class="kpi-card" style="--card-accent: #00C2E0">
+            <div class="kpi-label">Total Tickets</div>
+            <div class="kpi-value" style="color: #00C2E0">{{stats.total_tickets}}</div>
+            <div class="kpi-sub">Fév–Mars 2026</div>
+          </div>
+          <div class="kpi-card" style="--card-accent: #28C78A">
+            <div class="kpi-label">Précision IA</div>
+            <div class="kpi-value" style="color: #28C78A">87%</div>
+            <div class="kpi-sub">AUC-ROC</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid" *ngIf="stats">
+          <div class="left-col">
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title">Risque par division IT</div>
+                <div class="panel-subtitle">Distribution des tickets par groupe d'exploitation</div>
               </div>
-              <span style="font-size:12px;font-weight:700;color:#1A1A1E;min-width:40px;text-align:right;">{{getGroupeCount(key)}}</span>
+              <div class="chart-container">
+                <div *ngFor="let key of getGroupeKeys(); let i = index" class="chart-bar" 
+                     [style.height.%]="(getGroupeCount(key) / getMaxGroupeCount()) * 85"
+                     [style.background]="getGroupeColor(i)">
+                  <span class="chart-bar-label">{{key.substring(0,10)}}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TREND GRAPH WITH MATCHING LABELS -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title">Tendance 7 jours</div>
+                <div class="panel-subtitle">Analyse temporelle des anomalies détectées</div>
+              </div>
+              <div class="trend-wrap">
+                <svg viewBox="0 0 400 120" class="trend-svg">
+                  <defs>
+                    <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#2A7DE1" stop-opacity="0.2" />
+                      <stop offset="100%" stop-color="#2A7DE1" stop-opacity="0" />
+                    </linearGradient>
+                    <filter id="glow">
+                      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                      <feMerge>
+                        <feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <!-- Background Layer (Second Wave) -->
+                  <path [attr.d]="getTrendFillPath(0.8)" fill="url(#waveGrad)" />
+                  <!-- Main Line -->
+                  <path [attr.d]="getTrendSmoothPath()" fill="none" stroke="#2A7DE1" stroke-width="4" stroke-linecap="round" filter="url(#glow)" />
+                  <!-- Interactive Points -->
+                  <circle *ngFor="let p of getTrendPoints()" 
+                          [attr.cx]="p.x" [attr.cy]="p.y" r="4" 
+                          [attr.fill]="p.isToday ? '#E05252' : '#ffffff'" 
+                          [attr.stroke]="p.isToday ? '#E05252' : '#2A7DE1'" 
+                          stroke-width="2" />
+                </svg>
+                <div class="trend-labels">
+                  <span *ngFor="let day of trendDays">{{day}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="right-col">
+            <div class="panel-card">
+              <div class="panel-header"><div class="panel-title">Sévérité d'alertes</div></div>
+              <div class="donut-wrap">
+                <div class="donut-container">
+                  <svg class="donut-svg" viewBox="0 0 100 100">
+                    <circle class="donut-bg" cx="50" cy="50" r="40" />
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#E05252" stroke-dasharray="62.8 188.4" stroke-dashoffset="0" />
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#F5A623" stroke-dasharray="75.4 175.8" stroke-dashoffset="-62.8" />
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#2A7DE1" stroke-dasharray="62.8 188.4" stroke-dashoffset="-138.2" />
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#28C78A" stroke-dasharray="50.2 201" stroke-dashoffset="-201" />
+                  </svg>
+                  <div class="donut-center-text">
+                    <div class="val">{{stats.tickets_risque_eleve}}</div>
+                    <div class="lbl">Alertes</div>
+                  </div>
+                </div>
+                <div class="donut-legend">
+                  <div class="legend-item"><span class="legend-color" style="background:#E05252"></span> Critique</div>
+                  <div class="legend-item"><span class="legend-color" style="background:#F5A623"></span> Haute</div>
+                  <div class="legend-item"><span class="legend-color" style="background:#2A7DE1"></span> Moyenne</div>
+                  <div class="legend-item"><span class="legend-color" style="background:#28C78A"></span> Faible</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-header"><div class="panel-title">Flux de Surveillance</div></div>
+              <div class="feed-list">
+                <div class="feed-item" *ngFor="let event of liveEvents">
+                  <span class="feed-dot" [ngClass]="event.type"></span>
+                  <div class="feed-text-wrap">
+                    <div class="feed-text" [innerHTML]="event.html"></div>
+                    <div style="font-size: 8px; color: #666; margin-top: 5px; font-weight: 700;">SYSTÈME ANALYTIQUE ACTIF</div>
+                  </div>
+                  <span class="feed-time">{{event.time}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TAB: RECLAMATIONS (BOITE DE MESSAGE) ═══ -->
+      <div *ngIf="activeTab === 'reclamations'" class="inbox-container">
+        
+        <!-- LEFT: TICKET LIST -->
+        <div class="inbox-list-panel">
+          <div class="inbox-header">
+            <div class="panel-title">Boîte de Réclamations</div>
+            <input [(ngModel)]="recSearch" class="inbox-search" placeholder="Rechercher un ticket..." />
+          </div>
+
+          <div *ngIf="recLoading" class="inbox-loader">
+             <div class="spinner"></div>
+             <span>Chargement...</span>
+          </div>
+
+          <div class="ticket-items" *ngIf="!recLoading">
+            <div *ngFor="let r of filteredReclamations" 
+                 class="ticket-item" 
+                 [class.active]="selectedTicket?.id === r.id"
+                 (click)="selectTicket(r)">
+              <div class="ticket-item-top">
+                <span class="ticket-id">{{r.id?.substring(0,8)}}</span>
+                <span class="ticket-date">{{r.date}}</span>
+              </div>
+              <div class="ticket-subject">{{r.objet}}</div>
+              <div class="ticket-footer">
+                <span class="tag" [style.background]="r.statut === 'Résolu' ? '#28C78A' : '#F0F2F5'">{{r.statut}}</span>
+                <span class="tag tag-surveillance">Prio {{r.severite}}</span>
+                <span *ngIf="r.score_anomalie" class="tag" [ngClass]="niveauClass(r.score_anomalie)">{{(r.score_anomalie*100).toFixed(0)}}%</span>
+              </div>
+            </div>
+            
+            <div *ngIf="filteredReclamations.length === 0" class="empty-state">
+              Aucun ticket trouvé.
             </div>
           </div>
         </div>
 
-        <!-- LIVE FEED -->
-        <div class="live-feed-card" style="flex:1;">
-          <div class="chart-header">
-            <h3>Flux en Temps Réel</h3>
-            <span class="live-badge">LIVE</span>
-          </div>
-          <div class="feed-list">
-            <div class="feed-item" *ngFor="let event of liveEvents">
-              <span class="feed-dot" [ngClass]="event.type"></span>
-              <span class="feed-text" [innerHTML]="event.html"></span>
-              <span class="feed-time">{{event.time}}</span>
+        <!-- RIGHT: TICKET DETAIL -->
+        <div class="inbox-detail-panel">
+          <div *ngIf="selectedTicket" class="detail-view">
+            <div class="detail-header">
+              <div class="detail-header-left">
+                <div class="detail-id">{{selectedTicket.id}}</div>
+                <div class="detail-user">
+                  <span>👤</span> {{selectedTicket.created_by_name || 'Utilisateur Anonyme'}} 
+                  <small>({{selectedTicket.created_by_email || 'no-email'}})</small>
+                </div>
+              </div>
+              <div class="detail-actions">
+                <button class="btn-resolve" 
+                        [class.resolved]="selectedTicket.statut === 'Résolu'"
+                        (click)="toggleStatus(selectedTicket)">
+                  {{selectedTicket.statut === 'Résolu' ? '✓ Résolu' : 'Marquer comme Résolu'}}
+                </button>
+              </div>
+            </div>
+
+            <div class="detail-body">
+              <div class="detail-info-grid">
+                <div class="info-item">
+                  <label>Groupe IT</label>
+                  <div>{{selectedTicket.type_operation}}</div>
+                </div>
+                <div class="info-item">
+                  <label>Catégorie</label>
+                  <div>{{selectedTicket.categorie || 'Non spécifiée'}}</div>
+                </div>
+                <div class="info-item">
+                  <label>Date de création</label>
+                  <div>{{selectedTicket.date}} {{selectedTicket.created_at ? '| ' + selectedTicket.created_at.split('T')[1] : ''}}</div>
+                </div>
+                <div class="info-item">
+                  <label>Score d'Anomalie (IA)</label>
+                  <div [ngClass]="niveauClass(selectedTicket.score_anomalie)">{{(selectedTicket.score_anomalie * 100).toFixed(1)}}%</div>
+                </div>
+              </div>
+
+              <div class="detail-description">
+                <h3>Description de la réclamation</h3>
+                <div class="desc-content">
+                  {{selectedTicket.full_description || selectedTicket.objet}}
+                </div>
+              </div>
+
+              <!-- RESPONSE HISTORY -->
+              <div class="detail-responses" *ngIf="selectedTicket.reponses?.length > 0">
+                <h3>Historique des échanges</h3>
+                <div class="response-list">
+                  <div class="response-item" *ngFor="let rep of selectedTicket.reponses">
+                    <div class="response-meta">
+                      <strong>{{rep.auteur}}</strong> — {{rep.date | date:'short'}}
+                    </div>
+                    <div class="response-text">{{rep.message}}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- REPLY FORM -->
+              <div class="detail-reply-box">
+                <h3>Répondre à l'utilisateur</h3>
+                <textarea [(ngModel)]="replyText" placeholder="Saisissez votre réponse ici..." rows="4"></textarea>
+                <div class="reply-actions">
+                  <button class="btn-send-reply" [disabled]="!replyText.trim() || replyLoading" (click)="sendReply()">
+                    <span *ngIf="!replyLoading">✉️ Envoyer la réponse</span>
+                    <span *ngIf="replyLoading" class="spinner"></span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="detail-footer-info">
+                <div *ngIf="selectedTicket.statut === 'Résolu'" class="resolution-badge">
+                  🚀 Ce ticket a été traité et résolu par l'administrateur.
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div *ngIf="!stats" style="text-align:center;padding:60px;color:#9CA3AF;">
-        <p style="font-size:18px;">⏳ Chargement des données...</p>
-        <p style="font-size:13px;margin-top:8px;">Assurez-vous que le backend FastAPI tourne sur localhost:8000</p>
-      </div>
-    </div>
-
-    <!-- ═══ TAB: RECLAMATIONS ═══ -->
-    <div *ngIf="activeTab === 'reclamations'">
-      <div class="dash-topbar">
-        <div>
-          <h1 class="dash-title">Réclamations</h1>
-          <p class="dash-subtitle">{{recTotal}} tickets au total</p>
-        </div>
-        <div>
-          <input [(ngModel)]="recSearch" placeholder="🔍 Rechercher..." style="padding:8px 14px;border:1px solid #E4E4E7;border-radius:8px;font-size:13px;font-family:inherit;width:250px;" />
-        </div>
-      </div>
-
-      <div *ngIf="recLoading" style="text-align:center;padding:40px;color:#9CA3AF;">Chargement...</div>
-
-      <div *ngIf="!recLoading && filteredReclamations.length > 0" style="padding:0 24px 24px;">
-        <table class="agents-table" style="width:100%;">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Objet</th>
-              <th>Sévérité</th>
-              <th>Statut</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let r of filteredReclamations">
-              <td style="font-size:12px;color:#6B7280;">{{r.date}}</td>
-              <td style="font-weight:600;font-size:12px;">{{r.type_operation}}</td>
-              <td style="font-size:12px;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{r.objet}}</td>
-              <td style="text-align:center;">
-                <span style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;"
-                  [style.background]="r.severite <= 2 ? '#FEF2F2' : '#F0FDF4'"
-                  [style.color]="r.severite <= 2 ? '#EF4444' : '#10B981'">
-                  {{r.severite}}
-                </span>
-              </td>
-              <td>
-                <span style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#FFF7ED;color:#F7941D;">
-                  {{r.statut}}
-                </span>
-              </td>
-              <td>
-                <span *ngIf="r.score_anomalie" [class]="niveauClass(r.score_anomalie)" style="padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;">
-                  {{(r.score_anomalie * 100).toFixed(0)}}%
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ═══ TAB: ALERTES ═══ -->
-    <div *ngIf="activeTab === 'alertes'">
-      <div class="dash-topbar">
-        <div>
-          <h1 class="dash-title">Alertes UiPath RPA</h1>
-          <p class="dash-subtitle">Tickets avec score anomalie ≥ seuil</p>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button *ngFor="let s of [0.50, 0.75, 0.85]"
-            (click)="alerteSeuil = s; loadAlertes()"
-            [style.background]="alerteSeuil === s ? '#F7941D' : 'white'"
-            [style.color]="alerteSeuil === s ? 'white' : '#6B7280'"
-            style="padding:6px 14px;border-radius:6px;border:1px solid #E4E4E7;font-size:12px;font-weight:600;cursor:pointer;">
-            ≥ {{s}}
-          </button>
-        </div>
-      </div>
-
-      <div *ngIf="alertesLoading" style="text-align:center;padding:40px;color:#9CA3AF;">Chargement...</div>
-
-      <div *ngIf="!alertesLoading && alertes.length > 0" style="padding:0 24px 24px;">
-        <div *ngFor="let a of alertes" style="background:white;border:1px solid #F3F4F6;border-radius:10px;padding:16px 20px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
-          <div>
-            <p style="font-weight:700;font-size:13px;color:#1A1A1E;">{{a.type_operation || a.objet}}</p>
-            <p style="font-size:11px;color:#9CA3AF;margin-top:4px;">{{a.date}} · Sévérité: {{a.severite}}</p>
-          </div>
-          <div style="text-align:right;">
-            <span [class]="niveauClass(a.score_anomalie)" style="padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;">
-              {{niveauLabel(a.score_anomalie)}} — {{(a.score_anomalie * 100).toFixed(1)}}%
-            </span>
+          <div *ngIf="!selectedTicket" class="detail-empty">
+            <div class="empty-icon">✉️</div>
+            <h3>Sélectionnez un ticket pour voir les détails</h3>
+            <p>Toutes les réclamations du chatbot et du système apparaissent ici.</p>
           </div>
         </div>
       </div>
 
-      <div *ngIf="!alertesLoading && alertes.length === 0" style="text-align:center;padding:40px;color:#9CA3AF;">
-        Aucune alerte au seuil {{alerteSeuil}}
+      <!-- ═══ OTHER TABS ═══ -->
+      <div *ngIf="activeTab === 'alertes'">
+        <div class="panel-card">
+          <div class="panel-header"><div class="panel-title">Alertes de Risque Élevé (> 0.75)</div></div>
+          <table class="dash-table">
+            <thead><tr><th>Date</th><th>Division</th><th>Risque</th><th>Priorité</th><th>Action RPA</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let a of alertes">
+                <td>{{a.date_detection | date:'short'}}</td>
+                <td style="font-weight:900;">{{a.type_operation}}</td>
+                <td><span class="tag tag-critique">{{(a.score_risque*100).toFixed(1)}}%</span></td>
+                <td><span class="tag" [style.background]="a.priorite === 1 ? '#E05252' : '#F5A623'" style="color:#fff;">P{{a.priorite}}</span></td>
+                <td><button class="uipath-btn">Lancer RPA</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
+      <div *ngIf="activeTab === 'lstm'">
+        <div class="panel-card">
+          <div class="panel-header"><div class="panel-title">Analyse Prédictive LSTM</div></div>
+          <table class="dash-table">
+            <thead><tr><th>ID</th><th>Prédiction</th><th>Confiance</th><th>Statut</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let p of predictions">
+                <td style="font-weight:800;">{{p.id?.substring(0,8)}}</td>
+                <td>Anomalie Détectée</td>
+                <td><span class="tag tag-normal">{{(p.score*100).toFixed(1)}}%</span></td>
+                <td>Traitement</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'knn'">
+        <div class="panel-card">
+          <div class="panel-header"><div class="panel-title">Moteur de Recommandation KNN</div></div>
+          <table class="dash-table">
+            <thead><tr><th>Cas</th><th>Solution</th><th>Similarité</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let k of recommandations">
+                <td style="font-weight:900;">{{k.reclamation_id}}</td>
+                <td style="color:#2A7DE1; font-weight:700;">{{k.action_suggeree}}</td>
+                <td><span class="tag tag-normal">{{(k.taux_succes*100).toFixed(0)}}%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'analyse'">
+        <div class="panel-card">
+          <div class="panel-header"><div class="panel-title">Analyse IA Temps Réel</div></div>
+          <textarea [(ngModel)]="analyseText" rows="6" style="width:100%; padding:20px; border:2px solid #E4E6EB; border-radius:12px; font-weight:800; font-size:14px; margin-bottom:20px;"></textarea>
+          <button class="uipath-btn" (click)="runAnalyse()" style="padding:15px 30px;">LANCER L'ANALYSE IA</button>
+          <div *ngIf="analyseResult" style="margin-top:30px; padding:25px; border:2px solid #2A7DE1; border-radius:12px; background:rgba(42,125,225,0.05);">
+            <div style="font-size:32px; font-weight:900; color:#28C78A;">{{(analyseResult.taux_succes*100).toFixed(0)}}% de confiance</div>
+            <div style="font-size:18px; font-weight:900; color:#2A7DE1; margin-top:10px;">{{analyseResult.action_suggeree}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'audit'">
+        <div class="panel-card">
+          <div class="panel-header"><div class="panel-title">Audit Trail Système</div></div>
+          <table class="dash-table">
+            <thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Détails</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let l of auditLogs">
+                <td style="color:#2A7DE1; font-weight:800;">{{l.timestamp | date:'short'}}</td>
+                <td style="font-weight:900;">{{l.utilisateur}}</td>
+                <td><span class="tag" style="background:#F0F2F5;">{{l.action}}</span></td>
+                <td>{{l.details}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
   </main>
 </div>

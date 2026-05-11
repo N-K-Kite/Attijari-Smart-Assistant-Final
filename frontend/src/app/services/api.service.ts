@@ -28,6 +28,11 @@ export class ApiService {
     ).pipe(catchError(() => of({ data: [], total: 0 })));
   }
 
+  getMyReclamations(): Observable<any> {
+    return this.http.get<any>(`${this.base}/reclamations/me`, this.headers)
+      .pipe(catchError(() => of({ data: [], total: 0 })));
+  }
+
   getReclamationStats(): Observable<any> {
     return this.http.get<any>(`${this.base}/reclamations/stats`, this.headers)
       .pipe(catchError(() => of(null)));
@@ -81,5 +86,39 @@ export class ApiService {
   predireRisque(data: { type_operation: string; severite: number }): Observable<any> {
     return this.http.post<any>(`${this.base}/api/predictions/predire`, data, this.headers)
       .pipe(catchError(() => of(null)));
+  }
+
+  // ── Audit Trail ────────────────────────────────────────────────
+  getAuditLogs(limit = 100): Observable<any> {
+    return this.http.get<any>(`${this.base}/api/audit/?limit=${limit}`, this.headers)
+      .pipe(catchError(() => of([])));
+  }
+
+  getAuditStats(): Observable<any> {
+    return this.http.get<any>(`${this.base}/api/audit/stats`, this.headers)
+      .pipe(catchError(() => of(null)));
+  }
+
+  // ── Update Ticket Status ────────────────────────────────────────
+  updateReclamationStatut(id: string, statut: string): Observable<any> {
+    return this.http.put<any>(
+      `${this.base}/reclamations/${id}/statut`,
+      { statut },
+      this.headers
+    ).pipe(catchError(err => {
+      console.error('Update status error:', err);
+      return of(null);
+    }));
+  }
+
+  repondreReclamation(id: string, message: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.base}/reclamations/${id}/repondre`,
+      { message },
+      this.headers
+    ).pipe(catchError(err => {
+      console.error('Reply error:', err);
+      return of(null);
+    }));
   }
 }

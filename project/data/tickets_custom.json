@@ -1,0 +1,164 @@
+[
+  {
+    "id": "TK-909404D6",
+    "date": "2026-05-11",
+    "type_operation": "Helpdesk",
+    "categorie": "Support Général",
+    "objet": "spam gmail",
+    "full_description": "spam gmail",
+    "action_effectuee": null,
+    "severite": 2,
+    "statut": "Résolu",
+    "priorite_orig": "Moyenne",
+    "type_demande": "Réclamation",
+    "en_retard": false,
+    "duree_resolution_min": 0.0,
+    "score_anomalie": 0.5,
+    "score_risque": 0.475,
+    "created_by_email": "responsable.it@attijaribank.tn",
+    "created_by_name": "Responsable IT",
+    "created_at": "2026-05-11T17:52:35",
+    "date_resolution": "2026-05-11T17:52:42",
+    "reponses": [
+      {
+        "id": "a85f4e20",
+        "auteur": "Administrateur",
+        "email_auteur": "admin@attijaribank.tn",
+        "message": "necissaire fait",
+        "date": "2026-05-11T18:25:26"
+      }
+    ]
+  },
+  {
+    "id": "TK-5366E04A",
+    "date": "2026-05-11",
+    "type_operation": "Helpdesk",
+    "categorie": "Support Général",
+    "objet": "probleme imprimante",
+    "full_description": "probleme imprimante",
+    "action_effectuee": null,
+    "severite": 2,
+    "statut": "Résolu",
+    "priorite_orig": "Moyenne",
+    "type_demande": "Réclamation",
+    "en_retard": false,
+    "duree_resolution_min": 0.0,
+    "score_anomalie": 0.3,
+    "score_risque": 0.285,
+    "created_by_email": "meriam@attijaribank.tn",
+    "created_by_name": "Meriam",
+    "created_at": "2026-05-11T18:00:26",
+    "reponses": [
+      {
+        "id": "39d4c453",
+        "auteur": "Administrateur",
+        "email_auteur": "admin@attijaribank.tn",
+        "message": "necissaire fait",
+        "date": "2026-05-11T18:13:30"
+      },
+      {
+        "id": "b173256b",
+        "auteur": "Responsable IT",
+        "email_auteur": "responsable.it@attijaribank.tn",
+        "message": "ncssaire fait",
+        "date": "2026-05-11T18:27:18"
+      }
+    ],
+    "date_resolution": "2026-05-11T18:31:37"
+  },
+  {
+    "id": "TK-77A88093",
+    "date": "2026-05-11",
+    "type_operation": "Helpdesk",
+    "categorie": "Support Général",
+    "objet": "test admin",
+    "full_description": "test admin",
+    "action_effectuee": null,
+    "severite": 2,
+    "statut": "Résolu",
+    "priorite_orig": "Moyenne",
+    "type_demande": "Réclamation",
+    "en_retard": false,
+    "duree_resolution_min": 0.0,
+    "score_anomalie": 0.3,
+    "score_risque": 0.285,
+    "created_by_email": "admin@attijaribank.tn",
+    "created_by_name": "Administrateur",
+    "created_at": "2026-05-11T18:23:07",
+    "reponses": [
+      {
+        "id": "0cc5d788",
+        "auteur": "Administrateur",
+        "email_auteur": "admin@attijaribank.tn",
+        "message": "tous vas bien",
+        "date": "2026-05-11T18:23:22"
+      },
+      {
+        "id": "bb151e0a",
+        "auteur": "Responsable IT",
+        "email_auteur": "responsable.it@attijaribank.tn",
+        "message": "tous est bien",
+        "date": "2026-05-11T18:23:56"
+      }
+    ],
+    "date_resolution": "2026-05-11T18:23:28"
+  },
+  {
+    "id": "TK-0BFD6106",
+    "date": "2026-05-11",
+    "type_operation": "Sécurité Opérationnelle",
+    "categorie": "Support Général",
+    "objet": "probleme access vpn",
+    "full_description": "probleme access vpn",
+    "action_effectuee": null,
+    "severite": 2,
+    "statut": "Ouvert",
+    "priorite_orig": "Moyenne",
+    "type_demande": "Réclamation",
+    "en_retard": false,
+    "duree_resolution_min": 0.0,
+    "score_anomalie": 0.5,
+    "score_risque": 0.475,
+    "created_by_email": "meriam@attijaribank.tn",
+    "created_by_name": "Meriam",
+    "created_at": "2026-05-11T18:31:58",
+    "reponses": [
+      {
+        "id": "aac2a128",
+        "auteur": "Responsable IT",
+        "email_auteur": "responsable.it@attijaribank.tn",
+        "message": "veuillez ressayez ",
+        "date": "2026-05-11T18:32:37"
+      }
+    ]
+  },
+  {
+    "id": "TK-ABB43A7A",
+    "date": "2026-05-11",
+    "type_operation": "Helpdesk",
+    "categorie": "Support Général",
+    "objet": "reseau inaccessible ",
+    "full_description": "reseau inaccessible ",
+    "action_effectuee": null,
+    "severite": 2,
+    "statut": "Ouvert",
+    "priorite_orig": "Moyenne",
+    "type_demande": "Réclamation",
+    "en_retard": false,
+    "duree_resolution_min": 0.0,
+    "score_anomalie": 0.3,
+    "score_risque": 0.285,
+    "created_by_email": "meriam@attijaribank.tn",
+    "created_by_name": "Meriam",
+    "created_at": "2026-05-11T18:46:23",
+    "reponses": [
+      {
+        "id": "08559639",
+        "auteur": "Administrateur",
+        "email_auteur": "admin@attijaribank.tn",
+        "message": "vous recevez un email pour  réinitialiser les credentiels",
+        "date": "2026-05-11T18:47:56"
+      }
+    ]
+  }
+]
