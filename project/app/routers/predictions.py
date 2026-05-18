@@ -99,37 +99,91 @@ async def get_predictions(
     alertes_seulmt: bool  = Query(default=False, description="Alertes uniquement (score ≥ 0.75)"),
     payload: dict = Depends(verifier_token),
 ):
-    """Prédictions calculées à partir des statistiques réelles Attijari bank."""
+    """Prédictions calculées dynamiquement sur les tickets récents."""
     version = "lstm_v1" if LSTM_MODEL else "regles_metier_v1"
     results = []
 
-    for groupe, score in SCORES_REELS.items():
-        if score < seuil:
-            continue
-        if alertes_seulmt and score < 0.75:
-            continue
+    # Import dynamique du DataFrame global
+    from app.routers.reclamations import DF_RECLAMATIONS
+    
+    if DF_RECLAMATIONS is not None and not DF_RECLAMATIONS.empty:
+        # Prendre les 50 tickets les plus récents
+        df_recent = DF_RECLAMATIONS.tail(50).copy()
+        
+        for _, row in df_recent.iterrows():
+            groupe = row.get("type_operation", "Inconnu")
+            
+            # Predict
+            score = 0.5
+            if version == "lstm_v1" and SCALER and LE:
+                import numpy as np
+                sev = row.get("severite", 2)
+                en_ret = 1 if row.get("en_retard") else 0
+                dur = row.get("duree_resolution_min", 0.0)
+                score_ano = row.get("score_anomalie", 0.5)
+                try:
+                    groupe_enc = LE.transform([groupe])[0]
+                except Exception:
+                    groupe_enc = 0
+                features = np.array([[sev, en_ret, dur, score_ano, groupe_enc]])
+                try:
+                    score = float(LSTM_MODEL.predict(SCALER.transform(features).reshape((1, 1, 5)), verbose=0)[0][0])
+                except Exception:
+                    score = SCORES_REELS.get(groupe, 0.5)
+            else:
+                score = SCORES_REELS.get(groupe, 0.5)
 
-        niveau  = "CRITIQUE" if score >= 0.75 else ("SURVEILLANCE" if score >= 0.50 else "NORMAL")
-        message = (
-            "Risque élevé — action corrective recommandée" if score >= 0.75
-            else "Surveillance recommandée" if score >= 0.50
-            else "Niveau de risque normal"
-        )
+            if score < seuil:
+                continue
+            if alertes_seulmt and score < 0.75:
+                continue
 
-        results.append({
-            "id":             f"PRED-{groupe[:6].replace(' ', '-').upper()}-{datetime.now().strftime('%H%M')}",
-            "type_operation": groupe,
-            "score_risque":   score,
-            "est_alerte":     score >= 0.75,
-            "niveau":         niveau,
-            "version_modele": version,
-            "date_prediction": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-            "message":        message,
-            "source":         "Données réelles Attijari bank — Fév–Mars 2026",
-        })
+            niveau  = "CRITIQUE" if score >= 0.75 else ("SURVEILLANCE" if score >= 0.50 else "NORMAL")
+            message = (
+                "Risque élevé — action corrective recommandée" if score >= 0.75
+                else "Surveillance recommandée" if score >= 0.50
+                else "Niveau de risque normal"
+            )
+
+            results.append({
+                "id":             str(row.get("id", f"PRED-{uuid.uuid4()}")),
+                "type_operation": groupe,
+                "score_risque":   round(score, 3),
+                "est_alerte":     score >= 0.75,
+                "niveau":         niveau,
+                "version_modele": version,
+                "date_prediction": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+                "message":        message,
+                "source":         "Prédiction Dynamique" if version == "lstm_v1" else "Fallback statique",
+            })
+            
+        # Dédoublonner par groupe en gardant le pire score
+        best_preds = {}
+        for r in results:
+            g = r["type_operation"]
+            if g not in best_preds or r["score_risque"] > best_preds[g]["score_risque"]:
+                best_preds[g] = r
+        results = list(best_preds.values())
+    else:
+        # Fallback si DF est vide
+        for groupe, score in SCORES_REELS.items():
+            if score < seuil or (alertes_seulmt and score < 0.75):
+                continue
+            niveau  = "CRITIQUE" if score >= 0.75 else ("SURVEILLANCE" if score >= 0.50 else "NORMAL")
+            results.append({
+                "id":             f"PRED-{groupe[:6].replace(' ', '-').upper()}-{datetime.now().strftime('%H%M')}",
+                "type_operation": groupe,
+                "score_risque":   score,
+                "est_alerte":     score >= 0.75,
+                "niveau":         niveau,
+                "version_modele": "regles_metier_v1",
+                "date_prediction": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+                "message":        "Niveau de risque normal",
+                "source":         "Données réelles Attijari bank — Fév–Mars 2026",
+            })
 
     results.sort(key=lambda x: x["score_risque"], reverse=True)
-    logger.debug("GET /predictions seuil={} → {} groupes ({} alertes)", seuil, len(results), sum(1 for r in results if r["est_alerte"]))
+    logger.debug("GET /predictions seuil={} → {} groupes", seuil, len(results))
     return results
 
 
@@ -137,6 +191,8 @@ async def get_predictions(
 @router.post("/predire", response_model=PredictionOut, summary="Score de risque pour un ticket")
 async def predire(req: PredictionRequest, payload: dict = Depends(verifier_token)):
     """Calcule le score de risque. Utilise LSTM si disponible, sinon règles métier."""
+    
+    # Valeurs par défaut si le modèle n'est pas chargé
     score_base = SCORES_REELS.get(req.type_operation, 0.50)
     score = score_base
 
@@ -147,11 +203,43 @@ async def predire(req: PredictionRequest, payload: dict = Depends(verifier_token
     if req.duree_moyenne_min and req.duree_moyenne_min > 300:
         score = min(score + 0.05, 0.99)
 
+    version = "regles_metier_v1"
+
+    # Inférence LSTM si le modèle est disponible
+    try:
+        if LSTM_MODEL and SCALER and LE:
+            import numpy as np
+            
+            # ["severite", "en_retard", "duree_resolution_min", "score_anomalie", "groupe_enc"]
+            sev = req.severite
+            en_ret = 1 if req.en_retard_historique else 0
+            dur = req.duree_moyenne_min or 0.0
+            score_ano = score_base # On utilise la moyenne du groupe comme score anomalie de base
+            
+            # Encodage du groupe
+            try:
+                groupe_enc = LE.transform([req.type_operation])[0]
+            except Exception:
+                groupe_enc = 0 # Fallback si nouveau groupe
+                
+            features = np.array([[sev, en_ret, dur, score_ano, groupe_enc]])
+            features_scaled = SCALER.transform(features)
+            
+            # Le LSTM s'attend à une shape (samples, time_steps, features)
+            # Puisque c'est une seule prédiction, time_steps = 1
+            features_3d = features_scaled.reshape((1, 1, 5))
+            
+            pred = LSTM_MODEL.predict(features_3d, verbose=0)
+            score = float(pred[0][0])
+            version = "lstm_v1"
+            logger.info("Prédiction LSTM réussie: {}", score)
+    except Exception as exc:
+        logger.warning("Erreur inférence LSTM, fallback règles métier : {}", exc)
+
     score   = round(score, 3)
     niveau  = "CRITIQUE" if score >= 0.75 else ("SURVEILLANCE" if score >= 0.50 else "NORMAL")
-    version = "lstm_v1" if LSTM_MODEL else "regles_metier_v1"
 
-    logger.info("Prédiction : groupe={} score={} niveau={}", req.type_operation, score, niveau)
+    logger.info("Prédiction : groupe={} score={} niveau={} (version={})", req.type_operation, score, niveau, version)
 
     return {
         "id":             str(uuid.uuid4()),
@@ -162,7 +250,7 @@ async def predire(req: PredictionRequest, payload: dict = Depends(verifier_token
         "version_modele": version,
         "date_prediction": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "message":        "Score calculé sur données réelles Attijari bank",
-        "source":         "Données réelles Attijari bank — Fév–Mars 2026",
+        "source":         "Modèle LSTM Attijari" if version == "lstm_v1" else "Données réelles Attijari bank — Fév–Mars 2026",
     }
 
 

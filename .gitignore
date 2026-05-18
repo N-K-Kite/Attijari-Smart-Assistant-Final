@@ -58,3 +58,21 @@ npm-debug.log*
 .ipynb_checkpoints/
 .coverage
 .pytest_cache/
+
+# UiPath temp files
+**/uipath/.local/
+**/uipath/.objects/
+**/uipath/.settings/
+**/uipath/.tmh/
+**/uipath/.project/
+
+# Temporary / Backup files
+back.txt
+
+# Presentation & Screenshots
+Presentation_PFE_Attijari.pptx
+presentation.html
+screenshots/
+sesame logo.jpeg
+
+

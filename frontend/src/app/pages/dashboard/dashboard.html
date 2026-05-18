@@ -12,7 +12,7 @@
       <a class="dash-nav-item" [class.active]="activeTab === 'overview'" (click)="setTab('overview')"><span>📊</span> Dashboard</a>
       <a class="dash-nav-item" [class.active]="activeTab === 'alertes'" (click)="setTab('alertes')">
         <span style="color: #E05252">⚡</span> Alertes
-        <span class="nav-badge badge-red" *ngIf="stats?.tickets_risque_eleve">{{stats.tickets_risque_eleve}}</span>
+        <span class="nav-badge badge-red" *ngIf="alertesStats?.alertes_critiques">{{alertesStats.alertes_critiques}}</span>
       </a>
       <a class="dash-nav-item" [class.active]="activeTab === 'reclamations'" (click)="setTab('reclamations')">
         <span>☰</span> Réclamations
@@ -142,21 +142,30 @@
                 <div class="donut-container">
                   <svg class="donut-svg" viewBox="0 0 100 100">
                     <circle class="donut-bg" cx="50" cy="50" r="40" />
-                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#E05252" stroke-dasharray="62.8 188.4" stroke-dashoffset="0" />
-                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#F5A623" stroke-dasharray="75.4 175.8" stroke-dashoffset="-62.8" />
-                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#2A7DE1" stroke-dasharray="62.8 188.4" stroke-dashoffset="-138.2" />
-                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#28C78A" stroke-dasharray="50.2 201" stroke-dashoffset="-201" />
+                    <!-- Segments computed dynamically from alertesStats -->
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#E05252"
+                            [attr.stroke-dasharray]="getDonutCritique()"
+                            [attr.stroke-dashoffset]="getDonutOffsetCritique()" />
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#F5A623"
+                            [attr.stroke-dasharray]="getDonutHaute()"
+                            [attr.stroke-dashoffset]="getDonutOffsetHaute()" />
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#2A7DE1"
+                            [attr.stroke-dasharray]="getDonutMoyenne()"
+                            [attr.stroke-dashoffset]="getDonutOffsetMoyenne()" />
+                    <circle class="donut-segment" cx="50" cy="50" r="40" stroke="#28C78A"
+                            [attr.stroke-dasharray]="getDonutFaible()"
+                            [attr.stroke-dashoffset]="getDonutOffsetFaible()" />
                   </svg>
                   <div class="donut-center-text">
-                    <div class="val">{{stats.tickets_risque_eleve}}</div>
-                    <div class="lbl">Alertes</div>
+                    <div class="val">{{donutCenterValue}}</div>
+                    <div class="lbl">Critiques</div>
                   </div>
                 </div>
                 <div class="donut-legend">
-                  <div class="legend-item"><span class="legend-color" style="background:#E05252"></span> Critique</div>
-                  <div class="legend-item"><span class="legend-color" style="background:#F5A623"></span> Haute</div>
-                  <div class="legend-item"><span class="legend-color" style="background:#2A7DE1"></span> Moyenne</div>
-                  <div class="legend-item"><span class="legend-color" style="background:#28C78A"></span> Faible</div>
+                  <div class="legend-item"><span class="legend-color" style="background:#E05252"></span> Critique <strong>{{alertesStats?.alertes_critiques || 0}}</strong></div>
+                  <div class="legend-item"><span class="legend-color" style="background:#F5A623"></span> Haute <strong>{{alertesStats?.alertes_haute || 0}}</strong></div>
+                  <div class="legend-item"><span class="legend-color" style="background:#2A7DE1"></span> Moyenne <strong>{{alertesStats?.alertes_moyenne || 0}}</strong></div>
+                  <div class="legend-item"><span class="legend-color" style="background:#28C78A"></span> Faible <strong>{{alertesStats?.alertes_faible || 0}}</strong></div>
                 </div>
               </div>
             </div>
@@ -307,16 +316,40 @@
       <!-- ═══ OTHER TABS ═══ -->
       <div *ngIf="activeTab === 'alertes'">
         <div class="panel-card">
-          <div class="panel-header"><div class="panel-title">Alertes de Risque Élevé (> 0.75)</div></div>
-          <table class="dash-table">
-            <thead><tr><th>Date</th><th>Division</th><th>Risque</th><th>Priorité</th><th>Action RPA</th></tr></thead>
+          <div class="panel-header">
+            <div class="panel-title">Alertes de Risque Élevé (&gt; 0.75)</div>
+            <div class="panel-subtitle" *ngIf="alertesStats">
+              <span style="color:#E05252;font-weight:900">{{alertesStats.alertes_critiques}}</span> critiques •
+              <span style="color:#F5A623;font-weight:900">{{alertesStats.alertes_haute}}</span> hautes —
+              {{alertesStats.tickets_total || 1507}} tickets au total
+            </div>
+            <div style="margin-top: 15px; display: flex; gap: 8px;">
+              <button style="padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; background: #fff; cursor: pointer;" [style.background]="alerteFilter === 'all' ? '#2A7DE1' : '#fff'" [style.color]="alerteFilter === 'all' ? '#fff' : '#333'" (click)="alerteFilter = 'all'">Toutes</button>
+              <button style="padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; background: #fff; cursor: pointer;" [style.background]="alerteFilter === 'high' ? '#E05252' : '#fff'" [style.color]="alerteFilter === 'high' ? '#fff' : '#333'" (click)="alerteFilter = 'high'">Critiques (&gt; 0.75)</button>
+              <button style="padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; background: #fff; cursor: pointer;" [style.background]="alerteFilter === 'medium' ? '#F5A623' : '#fff'" [style.color]="alerteFilter === 'medium' ? '#fff' : '#333'" (click)="alerteFilter = 'medium'">Hautes (0.50 - 0.75)</button>
+              <button style="padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; background: #fff; cursor: pointer;" [style.background]="alerteFilter === 'low' ? '#28C78A' : '#fff'" [style.color]="alerteFilter === 'low' ? '#fff' : '#333'" (click)="alerteFilter = 'low'">Normales (&lt; 0.50)</button>
+            </div>
+          </div>
+          <div *ngIf="alertesLoading" style="padding:20px;text-align:center;"><div class="spinner"></div></div>
+          <table class="dash-table" *ngIf="!alertesLoading">
+            <thead><tr><th>Date</th><th>Division</th><th>Risque</th><th>Priorité</th><th>Source</th><th>Action RPA</th></tr></thead>
             <tbody>
-              <tr *ngFor="let a of alertes">
+              <tr *ngFor="let a of displayedAlertes" [style.borderLeft]="a.score_risque >= 0.75 ? '3px solid #E05252' : (a.score_risque >= 0.50 ? '3px solid #F5A623' : '3px solid #28C78A')">
                 <td>{{a.date_detection | date:'short'}}</td>
                 <td style="font-weight:900;">{{a.type_operation}}</td>
-                <td><span class="tag tag-critique">{{(a.score_risque*100).toFixed(1)}}%</span></td>
-                <td><span class="tag" [style.background]="a.priorite === 1 ? '#E05252' : '#F5A623'" style="color:#fff;">P{{a.priorite}}</span></td>
-                <td><button class="uipath-btn">Lancer RPA</button></td>
+                <td><span class="tag" [ngClass]="{'tag-critique': a.score_risque >= 0.75, 'tag-surveillance': a.score_risque >= 0.50 && a.score_risque < 0.75, 'tag-normal': a.score_risque < 0.50}">{{(a.score_risque*100).toFixed(1)}}%</span></td>
+                <td><span class="tag" [style.background]="a.score_risque >= 0.75 ? '#E05252' : (a.score_risque >= 0.50 ? '#F5A623' : '#28C78A')" style="color:#fff;">P{{a.priorite}}</span></td>
+                <td>
+                  <span class="tag" [style.background]="a.source?.includes('chatbot') ? '#7C3AED' : '#F0F2F5'"
+                        [style.color]="a.source?.includes('chatbot') ? '#fff' : '#333'"
+                        style="font-size:10px;font-weight:800;">
+                    {{a.source?.includes('chatbot') ? '💬 Chatbot' : '📁 CSV'}}
+                  </span>
+                </td>
+                <td><button class="uipath-btn" *ngIf="a.score_risque >= 0.75">Lancer RPA</button></td>
+              </tr>
+              <tr *ngIf="displayedAlertes.length === 0">
+                <td colspan="6" style="text-align:center;color:#999;padding:20px;">Aucune alerte pour ce filtre</td>
               </tr>
             </tbody>
           </table>
@@ -344,12 +377,18 @@
         <div class="panel-card">
           <div class="panel-header"><div class="panel-title">Moteur de Recommandation KNN</div></div>
           <table class="dash-table">
-            <thead><tr><th>Cas</th><th>Solution</th><th>Similarité</th></tr></thead>
+            <thead><tr><th>ID</th><th>Date</th><th>Objet</th><th>Actions</th></tr></thead>
             <tbody>
               <tr *ngFor="let k of recommandations">
                 <td style="font-weight:900;">{{k.reclamation_id}}</td>
-                <td style="color:#2A7DE1; font-weight:700;">{{k.action_suggeree}}</td>
-                <td><span class="tag tag-normal">{{(k.taux_succes*100).toFixed(0)}}%</span></td>
+                <td style="color:#2A7DE1; font-weight:700;">{{k.date}}</td>
+                <td style="font-weight:600;">{{k.objet}}</td>
+                <td>
+                  <button class="tag" style="background:#2A7DE1; color:white; cursor:pointer; border:none; padding:4px 10px;" 
+                          (click)="selectRecommandation(k)">
+                    Analyser
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -362,8 +401,19 @@
           <textarea [(ngModel)]="analyseText" rows="6" style="width:100%; padding:20px; border:2px solid #E4E6EB; border-radius:12px; font-weight:800; font-size:14px; margin-bottom:20px;"></textarea>
           <button class="uipath-btn" (click)="runAnalyse()" style="padding:15px 30px;">LANCER L'ANALYSE IA</button>
           <div *ngIf="analyseResult" style="margin-top:30px; padding:25px; border:2px solid #2A7DE1; border-radius:12px; background:rgba(42,125,225,0.05);">
-            <div style="font-size:32px; font-weight:900; color:#28C78A;">{{(analyseResult.taux_succes*100).toFixed(0)}}% de confiance</div>
-            <div style="font-size:18px; font-weight:900; color:#2A7DE1; margin-top:10px;">{{analyseResult.action_suggeree}}</div>
+            <div style="font-size:32px; font-weight:900; color:#28C78A;">{{(analyseResult.taux_succes*100).toFixed(0)}}% de confiance globale</div>
+            <div style="font-size:18px; font-weight:900; color:#2A7DE1; margin-top:10px;">Suggestion : {{analyseResult.action_suggeree}}</div>
+            
+            <div style="margin-top:20px; border-top:1px solid #E4E6EB; padding-top:15px;">
+              <div style="font-weight:900; margin-bottom:10px; color:#1C1E21;">Cas Similaires (Top 5) :</div>
+              <div *ngFor="let c of analyseResult.cas_similaires_details" style="margin-bottom:12px; padding-left:10px; border-left:3px solid #28C78A;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-weight:800; font-size:13px;">📌 {{c.objet}}</div>
+                  <span class="tag tag-normal" style="font-size:10px; height:auto;">{{c.similarity}}% similarité</span>
+                </div>
+                <div style="color:#65676B; font-size:12px; margin-top:4px;">Solution historique : {{c.solution}}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

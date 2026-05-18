@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,6 +41,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   predictions: any[] = [];
   predLoading = false;
 
+  alerteFilter: string = 'all';
+
   recommandations: any[] = [];
   recoLoading = false;
 
@@ -62,6 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private clockInterval: any;
   private feedInterval: any;
   private pollInterval: any;
+  private ticketSub!: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -82,19 +85,43 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.startClock();
     this.checkApiHealth();
     this.loadOverview();
+    this.loadAlertes();
     this.startLiveFeed();
     
     // Auto-refresh stats and trends every 30s
     this.pollInterval = setInterval(() => {
       this.checkApiHealth();
       this.loadOverview();
+      this.loadAlertes(); // refresh alertes so new critical tickets appear
     }, 30000);
+
+    // Immediately refresh alertes + charts whenever a new ticket is created from chat
+    this.ticketSub = this.apiService.newTicketCreated$.subscribe(ticket => {
+      console.log('New ticket created, refreshing dashboard:', ticket?.reclamation_id);
+      // Small delay to ensure backend has written the file
+      setTimeout(() => {
+        this.loadOverview();
+        this.loadAlertes();
+        this.loadRecommandations();
+      }, 500);
+      // If it's critical, add it to live feed
+      if (ticket?.alerte_declenchee) {
+        this.liveEvents.unshift({
+          html: `<strong>${ticket.reclamation_id}</strong>: 🚨 Nouvelle alerte critique depuis le chatbot`,
+          type: 'critical',
+          time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+        });
+        if (this.liveEvents.length > 6) this.liveEvents.pop();
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   ngOnDestroy(): void {
     if (this.clockInterval) clearInterval(this.clockInterval);
     if (this.feedInterval) clearInterval(this.feedInterval);
     if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.ticketSub) this.ticketSub.unsubscribe();
   }
 
   setTab(tab: string): void {
@@ -123,7 +150,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (!this.stats) this.stats = { total_tickets: 0, tickets_risque_eleve: 0, groupes: {} }; 
       }
     });
-    this.apiService.getAlertesStats().subscribe(s => { if (s) this.alertesStats = s; });
+    this.apiService.getAlertesStats().subscribe(s => { 
+      if (s) { 
+        this.alertesStats = s;
+        this.cdr.detectChanges();
+      } 
+    });
     this.apiService.getAuditStats().subscribe(s => { if (s) this.auditStats = s; });
     this.loadReclamations();
   }
@@ -156,12 +188,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   loadAlertes(): void {
     this.alertesLoading = true;
-    this.apiService.getAlertes(0.50) // Lowered threshold from 0.75
+    this.apiService.getAlertes(0.0) // Show all alerts
       .pipe(finalize(() => { this.alertesLoading = false; this.cdr.detectChanges(); }))
       .subscribe(a => {
         this.alertes = a || [];
         console.log('Real Alertes loaded:', this.alertes.length);
       });
+  }
+
+  get displayedAlertes(): any[] {
+    if (this.alerteFilter === 'low') {
+      return this.alertes.filter(a => a.score_risque < 0.50);
+    } else if (this.alerteFilter === 'medium') {
+      return this.alertes.filter(a => a.score_risque >= 0.50 && a.score_risque < 0.75);
+    } else if (this.alerteFilter === 'high') {
+      return this.alertes.filter(a => a.score_risque >= 0.75);
+    }
+    return this.alertes;
   }
 
   loadAudit(): void {
@@ -185,12 +228,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe(r => this.recommandations = r || []);
   }
 
+  selectRecommandation(k: any): void {
+    if (!k || !k.description) return;
+    this.analyseText = k.description;
+    this.setTab('analyse');
+    this.runAnalyse();
+  }
+
   runAnalyse(): void {
     if (!this.analyseText.trim()) return;
     this.analyseLoading = true;
     this.apiService.analyserRecommandation(this.analyseText)
       .pipe(finalize(() => { this.analyseLoading = false; this.cdr.detectChanges(); }))
       .subscribe(res => this.analyseResult = res);
+  }
+
+  /** Called from chat or anywhere after a new ticket is posted */
+  refreshAfterNewTicket(): void {
+    this.loadOverview();
+    this.loadAlertes();
+    this.loadReclamations();
   }
 
   // ── Trend Graph Logic ────────────────────────────────────────
@@ -351,6 +408,49 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!this.stats?.groupes) return 1;
     return Math.max(...Object.values(this.stats.groupes) as number[]) || 1;
   }
+
+  // ── Donut chart helpers (severity) — dynamic from alertesStats ──
+  private get _totalSeverity(): number {
+    if (!this.alertesStats) return 1;
+    return (this.alertesStats.alertes_critiques || 0) +
+           (this.alertesStats.alertes_haute     || 0) +
+           (this.alertesStats.alertes_moyenne   || 0) +
+           (this.alertesStats.alertes_faible    || 0) || 1;
+  }
+  /** Returns stroke-dasharray string for a donut segment given pct (0..1) of circumference */
+  private _dashArray(pct: number): string {
+    const circ = 2 * Math.PI * 40; // r=40 → ≈251.3
+    const seg  = Math.round(pct * circ * 10) / 10;
+    const gap  = Math.round((circ - seg) * 10) / 10;
+    return `${seg} ${gap}`;
+  }
+  /** cumulative offset for stroke-dashoffset */
+  private _offset(cumulativePct: number): string {
+    const circ = 2 * Math.PI * 40;
+    return `${-Math.round(cumulativePct * circ * 10) / 10}`;
+  }
+
+  getDonutCritique()   { return this._dashArray((this.alertesStats?.alertes_critiques || 0) / this._totalSeverity); }
+  getDonutHaute()      { return this._dashArray((this.alertesStats?.alertes_haute     || 0) / this._totalSeverity); }
+  getDonutMoyenne()    { return this._dashArray((this.alertesStats?.alertes_moyenne   || 0) / this._totalSeverity); }
+  getDonutFaible()     { return this._dashArray((this.alertesStats?.alertes_faible    || 0) / this._totalSeverity); }
+
+  getDonutOffsetCritique() { return '0'; }
+  getDonutOffsetHaute()    { return this._offset((this.alertesStats?.alertes_critiques || 0) / this._totalSeverity); }
+  getDonutOffsetMoyenne()  {
+    const pct = ((this.alertesStats?.alertes_critiques || 0) + (this.alertesStats?.alertes_haute || 0)) / this._totalSeverity;
+    return this._offset(pct);
+  }
+  getDonutOffsetFaible()   {
+    const pct = ((this.alertesStats?.alertes_critiques || 0) +
+                 (this.alertesStats?.alertes_haute     || 0) +
+                 (this.alertesStats?.alertes_moyenne   || 0)) / this._totalSeverity;
+    return this._offset(pct);
+  }
+
+  // Count label in donut center
+  get donutCenterValue(): number { return this.alertesStats?.alertes_critiques || this.stats?.tickets_risque_eleve || 0; }
+
   niveauClass(score: number): string {
     if (score >= 0.75) return 'niveau-critique';
     if (score >= 0.50) return 'niveau-surveillance';

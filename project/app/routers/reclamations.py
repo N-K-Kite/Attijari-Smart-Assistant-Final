@@ -345,9 +345,15 @@ async def get_my_reclamations(payload: dict = Depends(verifier_token)):
         # But we might find them in custom tickets
         return {"total": 0, "data": []}
 
-    # Sort by date desc
+    # Sort by exact timestamp first, then date
+    sort_cols = []
+    if "created_at" in df.columns:
+        sort_cols.append("created_at")
     if "date" in df.columns:
-        df = df.sort_values(by="date", ascending=False)
+        sort_cols.append("date")
+        
+    if sort_cols:
+        df = df.sort_values(by=sort_cols, ascending=False)
 
     total = len(df)
     
@@ -571,21 +577,38 @@ async def repondre_reclamation(
 @router.post("/analyser", summary="Analyser un ticket via NLP")
 async def analyser_reclamation(req: AnalyseNLPIn, payload: dict = Depends(verifier_token)):
     """
-    Analyse un ticket avec score d'anomalie basé sur les règles métier
-    issues de l'analyse des données réelles Attijari bank.
+    Analyse un ticket avec score d'anomalie basé sur les modèles d'IA réels
+    (moyennes par groupe et KNN pour cas similaires).
     """
-    # Mots critiques identifiés dans les données réelles
-    mots_critiques = {
-        "compromission": 0.25, "firewall": 0.20, "spam": 0.20,
-        "blocage": 0.15, "western union": 0.15, "swift": 0.15,
-        "authentification": 0.10, "timeout": 0.10, "erreur": 0.05,
-    }
+    
+    # ── Étape 1 : Base score par groupe issue du modèle
+    from app.routers.predictions import SCORES_REELS
+    groupe = req.type_operation or "Helpdesk"
+    # Les scores_reels sont déjà très fidèles aux données d'entraînement.
+    score_base = SCORES_REELS.get(groupe, 0.40)
+    score = score_base
 
-    score = 0.2
+    # ── Étape 2 : Blend avec la prédiction KNN (cas similaires réels)
+    try:
+        from app.routers.recommandations import recommander_knn
+        rec_knn = recommander_knn(req.description, groupe, req.categorie or "")
+        # Si KNN trouve des cas similaires, on fusionne les scores (70% KNN, 30% Base)
+        if rec_knn.get("taux_succes", 0) > 0 and rec_knn.get("nb_cas_similaires", 0) > 0:
+            score = (score_base * 0.3) + (rec_knn["taux_succes"] * 0.7)
+    except Exception as e:
+        logger.warning(f"Impossible d'utiliser KNN pour le score : {e}")
+
+    # ── Étape 3 : Ajustements spécifiques
     if req.severite == 1:
-        score += 0.30
+        score += 0.15
     elif req.severite == 2:
-        score += 0.10
+        score += 0.05
+
+    mots_critiques = {
+        "compromission": 0.15, "firewall": 0.10, "spam": 0.10,
+        "blocage": 0.10, "western union": 0.15, "swift": 0.15,
+        "authentification": 0.05, "timeout": 0.05, "erreur": 0.02,
+    }
 
     desc_lower = req.description.lower()
     for mot, boost in mots_critiques.items():
@@ -593,8 +616,9 @@ async def analyser_reclamation(req: AnalyseNLPIn, payload: dict = Depends(verifi
             score += boost
 
     if "sécurité" in req.type_operation.lower() or "securite" in req.type_operation.lower():
-        score += 0.20
+        score += 0.10
 
+    # Normalisation finale
     score = round(min(score, 0.99), 3)
 
     systemes = [s for s in ["SWIFT", "Amplitude", "IDC", "Outlook", "VPN", "Firewall", "Redis", "NMR", "Tanit"]

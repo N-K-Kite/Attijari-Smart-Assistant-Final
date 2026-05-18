@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, catchError } from 'rxjs';
+import { Observable, of, catchError, Subject, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -8,6 +8,9 @@ import { AuthService } from './auth.service';
 })
 export class ApiService {
   private base = 'http://localhost:8000';
+
+  /** Emits whenever a new ticket is created via the chatbot analyser */
+  public newTicketCreated$ = new Subject<any>();
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
@@ -40,7 +43,12 @@ export class ApiService {
 
   analyserReclamation(data: { description: string; type_operation: string; severite: number }): Observable<any> {
     return this.http.post<any>(`${this.base}/reclamations/analyser`, data, this.headers)
-      .pipe(catchError(() => of(null)));
+      .pipe(
+        tap(res => {
+          if (res) this.newTicketCreated$.next(res);
+        }),
+        catchError(() => of(null))
+      );
   }
 
   // ── Alertes (UiPath) ──────────────────────────────────────────

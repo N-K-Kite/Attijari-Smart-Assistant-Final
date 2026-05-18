@@ -52,6 +52,9 @@ except Exception as exc:
 class RecommandationOut(BaseModel):
     id: str
     reclamation_id: str
+    date: Optional[str] = None
+    objet: Optional[str] = None
+    description: Optional[str] = None
     action_suggeree: str
     taux_succes: float
     nb_cas_similaires: int
@@ -88,8 +91,10 @@ def recommander_knn(texte: str, groupe: str = "", categorie: str = "") -> dict:
         df     = KNN_MODEL["df"]
         vec    = KNN_MODEL["vectorizer"]
 
-        texte_full = f"{texte} {categorie} {groupe}".strip()
+        # Use the original text construction (cleaner revert)
+        texte_full = f"{texte} {categorie} {groupe}".strip().lower()
         vecteur    = vec.transform([texte_full]).toarray()
+        
         dists, idxs = knn.kneighbors(vecteur)
 
         actions = [
@@ -102,22 +107,40 @@ def recommander_knn(texte: str, groupe: str = "", categorie: str = "") -> dict:
         if not actions:
             return {
                 "action_suggeree":   "Escalader au support technique",
-                "taux_succes":       0.50,
+                "taux_succes":       0.0,
                 "nb_cas_similaires": 0,
-                "cas_similaires":    objets[:3],
+                "cas_similaires":    [],
                 "priorite":          3,
             }
 
+        import re
+        def anonymiser(txt):
+            # Replace emails with "[votre email]"
+            return re.sub(r'[\w\.-]+@[\w\.-]+\.\w+', "votre email", str(txt))
+
         compteur = Counter(actions)
-        action   = compteur.most_common(1)[0][0]
-        taux     = compteur.most_common(1)[0][1] / len(actions)
-        action   = action.strip()[:200]
+        most_common_action, count = compteur.most_common(1)[0]
+        taux     = count / len(idxs[0])
+        action   = anonymiser(most_common_action.strip()[:200])
+
+        # Detailed similar cases (Top 5)
+        cas_similaires_objs = []
+        for d, i in zip(dists[0][:5], idxs[0][:5]):
+            # Partner's suggested similarity scale
+            sim_val = max(0, (1 - (d / 1.4)) * 100) 
+            
+            cas_similaires_objs.append({
+                "objet": anonymiser(df.iloc[i].get("objet", "")),
+                "solution": anonymiser(df.iloc[i].get("action_effectuee", "Action manuelle")),
+                "similarity": round(sim_val, 1)
+            })
 
         return {
             "action_suggeree":   action,
             "taux_succes":       round(taux, 2),
             "nb_cas_similaires": len(actions),
-            "cas_similaires":    objets[:3],
+            "cas_similaires":    [c["objet"] for c in cas_similaires_objs], # COMPATIBILITY: List of strings
+            "cas_similaires_details": cas_similaires_objs, # NEW: List of dicts for my UI
             "priorite":          1 if taux >= 0.8 else 2,
         }
 
@@ -139,19 +162,44 @@ async def get_recommandations(
     priorite: Optional[int] = Query(default=None, ge=1, le=3, description="Filtrer par priorité"),
     payload: dict = Depends(verifier_token),
 ):
-    """Recommandations en attente de validation — données réelles Attijari bank."""
-    exemples = [
-        ("REC-003", "Demande vérification email SPAM",            "Helpdesk",                "Securite et Habilitation SI"),
-        ("REC-007", "Blocage indicateurs compromission Firewall", "Sécurité Opérationnelle", "Securite et Habilitation SI"),
-        ("REC-012", "Problème accès Amplitude",                   "Système",                 "Amplitude"),
-    ]
+    """Recommandations dynamiques basées sur les tickets récents — données réelles Attijari bank."""
+    from app.routers.reclamations import DF_RECLAMATIONS
+    
+    # Base source for recommendations: either live tickets or the static bank examples
+    tickets_to_analyze = []
+    
+    if DF_RECLAMATIONS is not None and not DF_RECLAMATIONS.empty:
+        # Get the 10 most recent tickets (tail -10, then reversed)
+        latest = DF_RECLAMATIONS.tail(10).copy()
+        for _, row in latest.iloc[::-1].iterrows():
+            tickets_to_analyze.append({
+                "id": str(row.get("id", "REC-???")),
+                "texte": str(row.get("full_description", row.get("objet", ""))),
+                "groupe": str(row.get("type_operation", "")),
+                "cat": str(row.get("categorie", "")),
+                "objet": str(row.get("objet", "")),
+                "date": str(row.get("date", ""))
+            })
+    
+    # Fallback to standard examples if no tickets found
+    if not tickets_to_analyze:
+        exemples = [
+            ("REC-003", "Demande vérification email SPAM",            "Helpdesk",                "Securite et Habilitation SI"),
+            ("REC-007", "Blocage indicateurs compromission Firewall", "Sécurité Opérationnelle", "Securite et Habilitation SI"),
+            ("REC-012", "Problème accès Amplitude",                   "Système",                 "Amplitude"),
+        ]
+        for rid, txt, grp, ct in exemples:
+            tickets_to_analyze.append({"id": rid, "texte": txt, "groupe": grp, "cat": ct, "objet": txt, "date": "Exemple"})
 
     result = []
-    for rec_id, texte, groupe, cat in exemples:
-        r = recommander_knn(texte, groupe, cat)
+    for t in tickets_to_analyze:
+        r = recommander_knn(t["texte"], t["groupe"], t["cat"])
         entry = RecommandationOut(
             id=str(uuid.uuid4()),
-            reclamation_id=rec_id,
+            reclamation_id=t["id"],
+            date=t["date"],
+            objet=t["objet"],
+            description=t["texte"],
             action_suggeree=r["action_suggeree"],
             taux_succes=r["taux_succes"],
             nb_cas_similaires=r["nb_cas_similaires"],
@@ -239,6 +287,5 @@ async def valider_recommandation(
         "reco_id":     reco_id,
         "statut":      statut,
         "action":      action_label,
-        "commentaire": req.commentaire,
         "date":        datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
     }

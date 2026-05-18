@@ -30,23 +30,14 @@ def charger_donnees_et_embeddings():
         print("ERREUR : dataset introuvable.")
         exit(1)
 
-    # Sécurité : convertir les actions en chaînes de caractères pour éviter l'erreur 'float'
     df['action_effectuee'] = df['action_effectuee'].fillna("Action non spécifiée").astype(str)
     print(f"Dataset chargé : {len(df)} tickets")
 
-    # Initialiser le vectorizer pour le fallback ou la sauvegarde
     textes = (df['description'].fillna('') + ' ' + df['type_operation'].fillna('')).tolist()
-    vec = TfidfVectorizer(max_features=128, min_df=1)
+    vec = TfidfVectorizer(max_features=3000, min_df=1)
 
-    if os.path.exists(emb_path):
-        embeddings = np.load(emb_path)
-        vec.fit(textes) # On entraîne pour avoir le vocabulaire dans le .pkl
-        print(f"Embeddings chargés : {embeddings.shape}")
-    else:
-        print("Embeddings non trouvés — génération TF-IDF fallback...")
-        embeddings = vec.fit_transform(textes).toarray().astype(np.float32)
-        np.save(emb_path, embeddings)
-        print(f"Embeddings TF-IDF générés : {embeddings.shape}")
+    print("Génération TF-IDF robuste (3000 features)...")
+    embeddings = vec.fit_transform(textes).toarray().astype(np.float32)
 
     return df, embeddings, vec
 

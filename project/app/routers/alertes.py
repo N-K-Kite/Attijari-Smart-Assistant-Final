@@ -9,6 +9,7 @@ from collections import Counter
 from datetime import datetime
 from typing import List, Optional
 
+import json
 import os
 import pandas as pd
 import pickle
@@ -26,6 +27,24 @@ router = APIRouter()
 DF_DATA    = None
 KNN_MODEL  = None
 LSTM_MODEL = None
+
+# ── Path for custom tickets (same as reclamations router) ────
+_BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_CUSTOM_TICKETS_FILE = os.path.normpath(os.path.join(_BASE_DIR, "data", "tickets_custom.json"))
+
+
+def _load_custom_tickets_df() -> pd.DataFrame:
+    """Load custom tickets from disk and return as a DataFrame."""
+    if not os.path.exists(_CUSTOM_TICKETS_FILE):
+        return pd.DataFrame()
+    try:
+        with open(_CUSTOM_TICKETS_FILE, "r", encoding="utf-8") as f:
+            tickets = json.load(f)
+        if tickets:
+            return pd.DataFrame(tickets)
+    except Exception as e:
+        logger.error("❌ Alertes: Error loading custom tickets: {}", e)
+    return pd.DataFrame()
 
 
 def charger_ressources() -> None:
@@ -94,43 +113,51 @@ class CloturageRequest(BaseModel):
     statut_final:     str = Field(default="resolue", description="Statut final : resolue | rejetee")
 
 
-# ── Calcul alertes depuis les données réelles ─────────────────
+# ── Calcul alertes depuis les données réelles + custom tickets ─
 def calculer_alertes_reelles(seuil: float = 0.75) -> list:
-    if DF_DATA is None:
+    # Merge CSV data with custom tickets
+    frames = []
+    if DF_DATA is not None:
+        frames.append(DF_DATA)
+    
+    custom_df = _load_custom_tickets_df()
+    if not custom_df.empty:
+        frames.append(custom_df)
+
+    if not frames:
         logger.warning("Données non chargées — aucune alerte retournée")
         return []
 
-    col_score = "score_anomalie" if "score_anomalie" in DF_DATA.columns else None
+    df_all = pd.concat(frames, ignore_index=True) if len(frames) > 1 else frames[0]
+
+    col_score = "score_anomalie" if "score_anomalie" in df_all.columns else None
     if not col_score:
         return []
 
-    df_alertes = DF_DATA[DF_DATA[col_score] >= seuil].copy()
-    df_alertes = df_alertes.sort_values(col_score, ascending=False).head(20)
+    df_alertes = df_all[df_all[col_score] >= seuil].copy()
+    
+    # Sort new custom tickets to the top, then by score
+    df_alertes["is_custom"] = df_alertes["id"].astype(str).str.startswith("TK-")
+    df_alertes = df_alertes.sort_values(["is_custom", col_score], ascending=[False, False])
 
     alertes = []
     for _, row in df_alertes.iterrows():
         score  = float(row.get(col_score, 0))
-        action = str(row.get("action_effectuee", "") or "Escalader au support technique")
+        action = str(row.get("action_effectuee", "") or "Escalader au support technique")[:200]
 
-        if KNN_MODEL:
-            try:
-                vec    = KNN_MODEL["vectorizer"]
-                knn    = KNN_MODEL["knn"]
-                df_knn = KNN_MODEL["df"]
-                texte  = f"{row.get('objet','')} {row.get('categorie','')} {row.get('type_operation','')}"
-                v      = vec.transform([texte]).toarray()
-                _, idxs = knn.kneighbors(v)
-                actions = [
-                    df_knn.iloc[i]["action_effectuee"]
-                    for i in idxs[0]
-                    if df_knn.iloc[i]["action_effectuee"]
-                ]
-                if actions:
-                    action = Counter(actions).most_common(1)[0][0]
-            except Exception as exc:
-                logger.debug("KNN recommandation échouée : {}", exc)
+        # Detect if it came from a custom ticket
+        is_custom = bool(str(row.get("id", "")).startswith("TK-"))
 
-        action = str(action)[:200]
+        # Use "created_at" for precise timestamps (custom tickets), fallback to "date" (CSV)
+        created_at_val = row.get("created_at")
+        date_val = row.get("date")
+
+        if pd.notna(created_at_val) and str(created_at_val).strip() not in ("", "nan", "None"):
+            date_str = str(created_at_val)
+        elif pd.notna(date_val) and str(date_val).strip() not in ("", "nan", "None"):
+            date_str = str(date_val)
+        else:
+            date_str = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
         alertes.append({
             "id":                 str(row.get("id", "")),
@@ -138,10 +165,13 @@ def calculer_alertes_reelles(seuil: float = 0.75) -> list:
             "score_risque":       round(score, 3),
             "priorite":           1 if score >= 0.85 else 2,
             "action_recommandee": action,
-            "date_detection":     datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            "date_detection":     date_str,
             "statut":             "active",
-            "source":             "Données réelles Attijari bank — LSTM + KNN",
+            "source":             "Nouvelle réclamation chatbot" if is_custom else "Données réelles Attijari bank — LSTM + KNN",
         })
+
+    # Sort perfectly by date descending so newest tickets are chronologically at the top
+    alertes.sort(key=lambda x: x["date_detection"], reverse=True)
 
     return alertes
 
@@ -185,21 +215,43 @@ async def get_alertes(
 @router.get("/stats", summary="Statistiques alertes — Dashboard")
 async def get_stats_alertes(payload: dict = Depends(verifier_token)):
     """Statistiques temps réel pour le dashboard Chart.js du binôme."""
-    alertes_075 = calculer_alertes_reelles(0.60)
-    alertes_050 = calculer_alertes_reelles(0.40)
+    # Merge CSV + custom tickets for accurate stats
+    frames = []
+    if DF_DATA is not None:
+        frames.append(DF_DATA)
+    custom_df = _load_custom_tickets_df()
+    if not custom_df.empty:
+        frames.append(custom_df)
 
-    score_moyen = 0.0
-    if DF_DATA is not None and "score_anomalie" in DF_DATA.columns:
-        score_moyen = round(float(DF_DATA["score_anomalie"].mean()), 3)
+    df_all = pd.concat(frames, ignore_index=True) if len(frames) > 1 else (frames[0] if frames else pd.DataFrame())
+
+    score_col = "score_anomalie" if not df_all.empty and "score_anomalie" in df_all.columns else None
+
+    score_moyen = round(float(df_all[score_col].mean()), 3) if score_col else 0.0
+
+    # Severity breakdown based on score_anomalie thresholds
+    nb_critique    = int((df_all[score_col] >= 0.75).sum()) if score_col else 0
+    nb_haute       = int(((df_all[score_col] >= 0.50) & (df_all[score_col] < 0.75)).sum()) if score_col else 0
+    nb_moyenne     = int(((df_all[score_col] >= 0.25) & (df_all[score_col] < 0.50)).sum()) if score_col else 0
+    nb_faible      = int((df_all[score_col] < 0.25).sum()) if score_col else 0
+    total          = len(df_all)
+
+    # Group breakdown across all tickets
+    groupes = {}
+    if not df_all.empty and "type_operation" in df_all.columns:
+        groupes = df_all["type_operation"].value_counts().head(8).to_dict()
 
     return {
-        "alertes_critiques":    len(alertes_075),
-        "alertes_surveillance": len(alertes_050) - len(alertes_075),
-        "tickets_total":        len(DF_DATA) if DF_DATA is not None else 0,
+        "alertes_critiques":    nb_critique,
+        "alertes_haute":        nb_haute,
+        "alertes_moyenne":      nb_moyenne,
+        "alertes_faible":       nb_faible,
+        "alertes_surveillance": nb_haute + nb_moyenne,
+        "tickets_total":        total,
         "score_moyen":          score_moyen,
-        "groupes_critiques":    ["Sécurité Opérationnelle", "SWIFT", "Helpdesk"],
+        "groupes":              groupes,
         "derniere_maj":         datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-        "source":               "Données réelles Attijari bank Fév–Mars 2026",
+        "source":               "Données réelles Attijari bank Fév–Mars 2026 + tickets chatbot",
     }
 
 
