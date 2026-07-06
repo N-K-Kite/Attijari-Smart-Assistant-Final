@@ -31,7 +31,7 @@
 The system processes **1,507 real IT tickets** (Feb–Mar 2026) to provide predictive analytics, smart recommendations, and automated alerting — reducing mean resolution time and improving IT operational efficiency.
 
 Important:
-The backend is located in the "project file", please ignore the folder named "backend"
+The backend is located in the "project folder", please ignore the folder named "backend"
 
 ---
 
