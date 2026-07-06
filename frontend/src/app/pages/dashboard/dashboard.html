@@ -418,6 +418,137 @@
         </div>
       </div>
 
+      <!-- ═══ TAB: UiPath RPA ═══ -->
+      <div *ngIf="activeTab === 'rpa'">
+
+        <!-- Status Cards -->
+        <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin-bottom:25px;">
+          <div style="background:#fff; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+            <div style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#E7F3EF;color:#16A34A;">⬢</div>
+            <div><div style="font-size:10px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Statut Robot</div><div style="font-size:15px;font-weight:900;color:#16A34A;">Connecté</div></div>
+          </div>
+          <div style="background:#fff; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+            <div style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#EBF4FF;color:#2A7DE1;">⇋</div>
+            <div><div style="font-size:10px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">API FastAPI</div><div style="font-size:15px;font-weight:900;color:#2A7DE1;">localhost:8000</div></div>
+          </div>
+          <div style="background:#fff; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+            <div style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#FFEBEB;color:#E05252;">◉</div>
+            <div><div style="font-size:10px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Seuil Risque</div><div style="font-size:15px;font-weight:900;color:#E05252;">≥ 0.75</div></div>
+          </div>
+          <div style="background:#fff; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; align-items:center; gap:16px; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+            <div style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#FFF4E5;">🔐</div>
+            <div><div style="font-size:10px;font-weight:800;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Authentification</div><div style="font-size:15px;font-weight:900;color:#16A34A;">JWT Bearer</div></div>
+          </div>
+        </div>
+
+        <!-- Pipeline -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Pipeline d'Exécution RPA</div>
+            <div class="panel-subtitle">Séquence d'automatisation UiPath — Attijari bank DSI</div>
+          </div>
+          <div style="display:flex; align-items:stretch; gap:0;">
+
+            <div style="flex:1; background:#F8FAFC; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+              <div style="width:28px;height:28px;background:#2A7DE1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">1</div>
+              <div style="font-family:Consolas,monospace;font-size:12px;font-weight:800;color:#2A7DE1;background:#EBF4FF;padding:3px 8px;border-radius:4px;display:inline-block;width:fit-content;">Main.xaml</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;">Orchestrateur Principal</div>
+              <div style="font-size:11px;color:#64748b;line-height:1.5;font-weight:600;flex:1;">Point d'entrée du robot. Initialise les variables de connexion et lance séquentiellement les workflows enfants.</div>
+              <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:4px;background:#E7F3EF;color:#16A34A;width:fit-content;">Entry Point</div>
+            </div>
+
+            <div style="display:flex;align-items:center;font-size:22px;color:#CBD5E1;font-weight:900;padding:0 8px;">→</div>
+
+            <div style="flex:1; background:#F8FAFC; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+              <div style="width:28px;height:28px;background:#2A7DE1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">2</div>
+              <div style="font-family:Consolas,monospace;font-size:12px;font-weight:800;color:#2A7DE1;background:#EBF4FF;padding:3px 8px;border-radius:4px;display:inline-block;width:fit-content;">CheckAlerte.xaml</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;">Vérification des Alertes</div>
+              <div style="font-size:11px;color:#64748b;line-height:1.5;font-weight:600;flex:1;">Authentification JWT via POST /auth/login, puis récupération des alertes critiques via GET /api/alertes?seuil=0.75.</div>
+              <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:4px;background:#EBF4FF;color:#2A7DE1;width:fit-content;">REST API</div>
+            </div>
+
+            <div style="display:flex;align-items:center;font-size:22px;color:#CBD5E1;font-weight:900;padding:0 8px;">→</div>
+
+            <div style="flex:1; background:#F8FAFC; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+              <div style="width:28px;height:28px;background:#2A7DE1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">3</div>
+              <div style="font-family:Consolas,monospace;font-size:12px;font-weight:800;color:#2A7DE1;background:#EBF4FF;padding:3px 8px;border-radius:4px;display:inline-block;width:fit-content;">NotifierIT.xaml</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;">Notification Responsable IT</div>
+              <div style="font-size:11px;color:#64748b;line-height:1.5;font-weight:600;flex:1;">Prépare un email d'alerte détaillé (score, type, action KNN) et l'envoie au responsable IT via SMTP.</div>
+              <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:4px;background:#FFF4E5;color:#C2410C;width:fit-content;">Email SMTP</div>
+            </div>
+
+            <div style="display:flex;align-items:center;font-size:22px;color:#CBD5E1;font-weight:900;padding:0 8px;">→</div>
+
+            <div style="flex:1; background:#F8FAFC; border:1px solid #E4E6EB; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+              <div style="width:28px;height:28px;background:#2A7DE1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;">4</div>
+              <div style="font-family:Consolas,monospace;font-size:12px;font-weight:800;color:#2A7DE1;background:#EBF4FF;padding:3px 8px;border-radius:4px;display:inline-block;width:fit-content;">ConfirmerResolution.xaml</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;">Clôture &amp; Enrichissement LSTM</div>
+              <div style="font-size:11px;color:#64748b;line-height:1.5;font-weight:600;flex:1;">POST /api/alertes/&#123;id&#125;/cloturer pour clôturer l'alerte. Le ticket est ajouté à la base LSTM.</div>
+              <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:4px;background:#F3E8FF;color:#7C3AED;width:fit-content;">Base de Données</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Console -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Console d'Exécution RPA</div>
+            <div class="panel-subtitle">Dernier cycle d'exécution du robot UiPath</div>
+          </div>
+          <div style="background:#0F172A; border-radius:10px; padding:20px 24px; font-family:Consolas,'Courier New',monospace; font-size:12px; line-height:2; overflow-x:auto;">
+            <div style="color:#94A3B8; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:01</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(42,125,225,0.15);color:#60A5FA;">INFO</span> === DÉMARRAGE SYSTÈME RPA ATTIJARI BANK ===</div>
+            <div style="color:#94A3B8; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:01</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(42,125,225,0.15);color:#60A5FA;">INFO</span> [CheckAlerte] Étape 1 : Authentification JWT...</div>
+            <div style="color:#94A3B8; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:02</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(42,125,225,0.15);color:#60A5FA;">INFO</span> [CheckAlerte] Token JWT obtenu — robot&#64;attijaribank.tn</div>
+            <div style="color:#94A3B8; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:02</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(42,125,225,0.15);color:#60A5FA;">INFO</span> [CheckAlerte] Étape 2 : GET /api/alertes?seuil=0.75</div>
+            <div style="color:#FBBF24; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:03</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(245,166,35,0.15);color:#FBBF24;">WARN</span> [CheckAlerte] ALERTE CRITIQUE — Sécurité Opérationnelle | Score: 0.87</div>
+            <div style="color:#FBBF24; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:03</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(245,166,35,0.15);color:#FBBF24;">WARN</span> [CheckAlerte] PRIORITÉ 1 — Exécution RPA automatique sans validation</div>
+            <div style="color:#FBBF24; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:04</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(245,166,35,0.15);color:#FBBF24;">WARN</span> [NotifierIT] Envoi email à : responsable.it&#64;attijaribank.tn</div>
+            <div style="color:#94A3B8; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:04</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(42,125,225,0.15);color:#60A5FA;">INFO</span> [NotifierIT] Email simulé envoyé — statut: OK</div>
+            <div style="color:#34D399; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:05</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(40,199,138,0.15);color:#34D399;">INFO</span> [ConfirmerResolution] ✓ Alerte rec-secu-001 clôturée avec succès</div>
+            <div style="color:#34D399; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:05</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(40,199,138,0.15);color:#34D399;">INFO</span> [ConfirmerResolution] ✓ Ticket ajouté à la base d'apprentissage LSTM</div>
+            <div style="color:#34D399; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:06</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(40,199,138,0.15);color:#34D399;">INFO</span> [ConfirmerResolution] ✓ Réentraînement LSTM planifié : Lundi 02h00</div>
+            <div style="color:#94A3B8; white-space:nowrap;"><span style="color:#64748b;margin-right:10px;">01:46:06</span> <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:900;margin-right:8px;background:rgba(42,125,225,0.15);color:#60A5FA;">INFO</span> === CYCLE RPA TERMINÉ ===</div>
+          </div>
+        </div>
+
+        <!-- Config -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Configuration du Robot</div>
+            <div class="panel-subtitle">Paramètres de connexion et identifiants sécurisés</div>
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:16px;">
+            <div style="background:#F8FAFC;border:1px solid #E4E6EB;border-radius:8px;padding:16px;">
+              <div style="font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Compte Robot</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;font-family:Consolas,monospace;">robot&#64;attijaribank.tn</div>
+            </div>
+            <div style="background:#F8FAFC;border:1px solid #E4E6EB;border-radius:8px;padding:16px;">
+              <div style="font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Rôle</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;font-family:Consolas,monospace;">responsable_it</div>
+            </div>
+            <div style="background:#F8FAFC;border:1px solid #E4E6EB;border-radius:8px;padding:16px;">
+              <div style="font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Endpoint Auth</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;font-family:Consolas,monospace;">POST /auth/login</div>
+            </div>
+            <div style="background:#F8FAFC;border:1px solid #E4E6EB;border-radius:8px;padding:16px;">
+              <div style="font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Endpoint Alertes</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;font-family:Consolas,monospace;">GET /api/alertes</div>
+            </div>
+            <div style="background:#F8FAFC;border:1px solid #E4E6EB;border-radius:8px;padding:16px;">
+              <div style="font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Endpoint Clôture</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;font-family:Consolas,monospace;">POST /api/alertes/&#123;id&#125;/cloturer</div>
+            </div>
+            <div style="background:#F8FAFC;border:1px solid #E4E6EB;border-radius:8px;padding:16px;">
+              <div style="font-size:10px;font-weight:800;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Sécurité</div>
+              <div style="font-size:14px;font-weight:900;color:#1a1a2e;font-family:Consolas,monospace;">JWT HS256 — Durée 8h</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
       <div *ngIf="activeTab === 'audit'">
         <div class="panel-card">
           <div class="panel-header"><div class="panel-title">Audit Trail Système</div></div>

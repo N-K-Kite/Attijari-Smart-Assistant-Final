@@ -1,17 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Activity mc:Ignorable="sap sap2010" x:Class="CheckAlerte" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1"
-  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
-  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
-  xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib"
-  xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib"
-  xmlns:ui="http://schemas.uipath.com/workflow/activities"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="CheckAlerte" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
+      <x:String>GlobalConstantsNamespace</x:String>
+      <x:String>GlobalVariablesNamespace</x:String>
       <x:String>System</x:String>
       <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
       <x:String>System.Linq</x:String>
       <x:String>UiPath.Core</x:String>
       <x:String>UiPath.Core.Activities</x:String>
@@ -26,15 +20,12 @@
       <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-
   <Sequence DisplayName="Robot 1 — Vérification alertes API FastAPI" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <!-- Configuration API -->
       <Variable x:TypeArguments="x:String" Default="http://localhost:8000" Name="API_BASE_URL" />
       <Variable x:TypeArguments="x:String" Default="robot@attijaribank.tn" Name="API_USER" />
       <Variable x:TypeArguments="x:String" Default="Robot@2026!" Name="API_PASS" />
       <Variable x:TypeArguments="x:Double" Default="0.75" Name="SEUIL_RISQUE" />
-      <!-- Variables résultat -->
       <Variable x:TypeArguments="x:String" Name="strToken" />
       <Variable x:TypeArguments="x:String" Name="strLoginBody" />
       <Variable x:TypeArguments="x:String" Name="strLoginResponse" />
@@ -43,169 +34,166 @@
       <Variable x:TypeArguments="x:String" Name="strAlertesJson" />
       <Variable x:TypeArguments="x:Boolean" Default="False" Name="bAlerteDetectee" />
       <Variable x:TypeArguments="x:String" Name="strTypeOperation" />
-      <Variable x:TypeArguments="x:Double" Default="0.0" Name="dScoreRisque" />
+      <Variable x:TypeArguments="x:Double" Default="0" Name="dScoreRisque" />
       <Variable x:TypeArguments="x:String" Name="strActionRecommandee" />
       <Variable x:TypeArguments="x:String" Name="strAlertId" />
     </Sequence.Variables>
-
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-
-    <!-- LOG démarrage -->
-    <ui:LogMessage DisplayName="LOG - Démarrage CheckAlerte"
-      Level="Info"
-      Message="[&quot;[CheckAlerte] Démarrage — &quot; + DateTime.Now.ToString(&quot;HH:mm:ss&quot;)]" />
-
-    <!-- ══════════════════════════════════════════════════
-         ÉTAPE 1 : Authentification JWT
-         POST http://localhost:8000/auth/login
-    ════════════════════════════════════════════════════ -->
-    <ui:LogMessage DisplayName="LOG - Auth" Level="Info" Message="[&quot;[CheckAlerte] Étape 1 : Authentification JWT...&quot;]" />
-
-    <Assign DisplayName="Préparer body login">
-      <Assign.To><OutArgument x:TypeArguments="x:String">[strLoginBody]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">["username=" + API_USER + "&amp;password=" + API_PASS]</InArgument></Assign.Value>
+    <ui:LogMessage DisplayName="LOG - Démarrage CheckAlerte" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;[CheckAlerte] Démarrage — &quot; + DateTime.Now.ToString(&quot;HH:mm:ss&quot;)]" />
+    <ui:LogMessage DisplayName="LOG - Auth" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;[CheckAlerte] Étape 1 : Authentification JWT...&quot;]" />
+    <Assign DisplayName="Préparer body login" sap2010:WorkflowViewState.IdRef="Assign_1">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[strLoginBody]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">["username=" + API_USER + "&amp;password=" + API_PASS]</InArgument>
+      </Assign.Value>
     </Assign>
-
-    <!-- HTTP Request : POST /auth/login -->
-    <!-- DÉCOMMENTER quand l'API tourne : -->
-    <!--
-    <ui:HttpClientActivity DisplayName="POST /auth/login"
-      Endpoint="[API_BASE_URL + &quot;/auth/login&quot;]"
-      Method="POST"
-      Body="[strLoginBody]"
-      ContentType="application/x-www-form-urlencoded"
-      Response="{x:Reference strLoginResponse}" />
-
-    Extraire le token du JSON de réponse :
-    <Assign DisplayName="Extraire token">
-      <Assign.To><OutArgument x:TypeArguments="x:String">[strToken]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">["Bearer " + strLoginResponse.Split(new String(){&quot;\&quot;access_token\&quot;:&quot;&quot;}, StringSplitOptions.None)(1).Split(&quot;\&quot;&quot;)(0)]</InArgument></Assign.Value>
+    <ui:HttpClient ClientCertificate="{x:Null}" ClientCertificatePassword="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" FileAttachments="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" Password="{x:Null}" ResourcePath="{x:Null}" ResponseAttachment="{x:Null}" ResponseHeaders="{x:Null}" SecureClientCertificatePassword="{x:Null}" SecurePassword="{x:Null}" StatusCode="{x:Null}" Username="{x:Null}" AcceptFormat="ANY" AuthenticationType="None" Body="[strLoginBody]" BodyFormat="application/x-www-form-urlencoded" DisplayName="POST /auth/login" EnableSSLVerification="True" EndPoint="[API_BASE_URL + &quot;/auth/login&quot;]" sap2010:WorkflowViewState.IdRef="HttpClient_1" Method="POST" Result="[strLoginResponse]" TimeoutMS="6000">
+      <ui:HttpClient.Attachments>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Attachments>
+      <ui:HttpClient.Cookies>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Cookies>
+      <ui:HttpClient.Headers>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Headers>
+      <ui:HttpClient.Parameters>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Parameters>
+      <ui:HttpClient.UrlSegments>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.UrlSegments>
+    </ui:HttpClient>
+    <ui:LogMessage sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;[CheckAlerte] Réponse login : &quot; + strLoginResponse]" />
+    <Assign DisplayName="Extraire token" sap2010:WorkflowViewState.IdRef="Assign_2">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[strToken]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">["Bearer " + strLoginResponse.Split(New String() {"""access_token"":"""}, StringSplitOptions.None)(1).Split(""""c)(0)]</InArgument>
+      </Assign.Value>
     </Assign>
-    -->
-
-    <!-- [SIMULATION] Token JWT fictif pour les tests -->
-    <Assign DisplayName="[SIMULATION] Token JWT robot Attijari bank">
-      <Assign.To><OutArgument x:TypeArguments="x:String">[strToken]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.attijari_bank_robot_2026</InArgument></Assign.Value>
+    <ui:LogMessage DisplayName="LOG - Token OK" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Info" Message="[&quot;[CheckAlerte] Token JWT : &quot; + strToken]" />
+    <ui:LogMessage DisplayName="LOG - GET alertes" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Info" Message="[&quot;[CheckAlerte] Étape 2 : GET /api/alertes?seuil=&quot; + SEUIL_RISQUE.ToString()]" />
+    <Assign DisplayName="Construire URL alertes" sap2010:WorkflowViewState.IdRef="Assign_3">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[strAlertesUrl]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[API_BASE_URL + "/api/alertes?seuil=" + SEUIL_RISQUE.ToString()]</InArgument>
+      </Assign.Value>
     </Assign>
-
-    <ui:LogMessage DisplayName="LOG - Token OK" Level="Info" Message="[&quot;[CheckAlerte] Token JWT obtenu&quot;]" />
-
-    <!-- ══════════════════════════════════════════════════
-         ÉTAPE 2 : Récupérer alertes critiques
-         GET http://localhost:8000/api/alertes?seuil=0.75
-    ════════════════════════════════════════════════════ -->
-    <ui:LogMessage DisplayName="LOG - GET alertes" Level="Info"
-      Message="[&quot;[CheckAlerte] Étape 2 : GET /api/alertes?seuil=&quot; + SEUIL_RISQUE.ToString()]" />
-
-    <Assign DisplayName="Construire URL alertes">
-      <Assign.To><OutArgument x:TypeArguments="x:String">[strAlertesUrl]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">[API_BASE_URL + "/api/alertes?seuil=" + SEUIL_RISQUE.ToString()]</InArgument></Assign.Value>
-    </Assign>
-
-    <!-- HTTP Request GET alertes — DÉCOMMENTER quand API disponible -->
-    <!--
-    <ui:HttpClientActivity DisplayName="GET /api/alertes"
-      Endpoint="[strAlertesUrl]"
-      Method="GET"
-      Headers="[New Dictionary(Of String, String) From {{&quot;Authorization&quot;, strToken}}]"
-      Response="{x:Reference strAlertesJson}" />
-    -->
-
-    <!-- [SIMULATION] Réponse API avec données réelles Attijari bank -->
-    <Assign DisplayName="[SIMULATION] Alertes API données réelles">
-      <Assign.To><OutArgument x:TypeArguments="x:String">[strAlertesJson]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">["{""alertes"":[{""id"":""rec-secu-001"",""type_operation"":""Sécurité Opérationnelle"",""score_risque"":0.87,""priorite"":1,""action_recommandee"":""Nécessaire fait"",""statut"":""active""}],""total"":1,""source"":""Données réelles Attijari bank Fév-Mars 2026""}"]</InArgument></Assign.Value>
-    </Assign>
-
-    <!-- ══════════════════════════════════════════════════
-         ÉTAPE 3 : Décision sur les alertes
-    ════════════════════════════════════════════════════ -->
-    <If Condition="[strAlertesJson.Contains(&quot;score_risque&quot;) AndAlso Not strAlertesJson.Contains(&quot;&quot;&quot;total&quot;&quot;:0&quot;)]"
-        DisplayName="Y a-t-il des alertes critiques ?">
+    <ui:HttpClient Body="{x:Null}" ClientCertificate="{x:Null}" ClientCertificatePassword="{x:Null}" ConsumerKey="{x:Null}" ConsumerSecret="{x:Null}" ContinueOnError="{x:Null}" FileAttachments="{x:Null}" OAuth1Token="{x:Null}" OAuth1TokenSecret="{x:Null}" OAuth2Token="{x:Null}" Password="{x:Null}" ResourcePath="{x:Null}" ResponseAttachment="{x:Null}" ResponseHeaders="{x:Null}" SecureClientCertificatePassword="{x:Null}" SecurePassword="{x:Null}" StatusCode="{x:Null}" Username="{x:Null}" AcceptFormat="ANY" AuthenticationType="None" BodyFormat="application/xml" DisplayName="GET /api/alertes" EnableSSLVerification="True" EndPoint="[strAlertesUrl]" sap2010:WorkflowViewState.IdRef="HttpClient_2" Method="GET" Result="[strAlertesJson]" TimeoutMS="6000">
+      <ui:HttpClient.Attachments>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Attachments>
+      <ui:HttpClient.Cookies>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Cookies>
+      <ui:HttpClient.Headers>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Headers>
+      <ui:HttpClient.Parameters>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.Parameters>
+      <ui:HttpClient.UrlSegments>
+        <scg:Dictionary x:TypeArguments="x:String, InArgument(x:String)" />
+      </ui:HttpClient.UrlSegments>
+    </ui:HttpClient>
+    <ui:LogMessage sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[&quot;[CheckAlerte] Réponse alertes : &quot; + strAlertesJson]" />
+    <If Condition="[strAlertesJson.Contains(&quot;score_risque&quot;) AndAlso Not strAlertesJson.Contains(&quot;&quot;&quot;total&quot;&quot;:0&quot;)]" DisplayName="Y a-t-il des alertes critiques ?" sap2010:WorkflowViewState.IdRef="If_2">
       <If.Then>
-        <Sequence DisplayName="Traitement alertes critiques détectées">
-          <Assign DisplayName="Marquer alerte détectée">
-            <Assign.To><OutArgument x:TypeArguments="x:Boolean">[bAlerteDetectee]</OutArgument></Assign.To>
-            <Assign.Value><InArgument x:TypeArguments="x:Boolean">True</InArgument></Assign.Value>
+        <Sequence DisplayName="Traitement alertes critiques détectées" sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <Assign DisplayName="Marquer alerte détectée" sap2010:WorkflowViewState.IdRef="Assign_4">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Boolean">[bAlerteDetectee]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Boolean">True</InArgument>
+            </Assign.Value>
           </Assign>
-
-          <!-- Extraire les infos de la première alerte -->
-          <Assign DisplayName="Extraire type opération">
-            <Assign.To><OutArgument x:TypeArguments="x:String">[strTypeOperation]</OutArgument></Assign.To>
-            <Assign.Value><InArgument x:TypeArguments="x:String">["Sécurité Opérationnelle"]</InArgument></Assign.Value>
+          <Assign DisplayName="Extraire type opération" sap2010:WorkflowViewState.IdRef="Assign_5">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[strTypeOperation]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[strAlertesJson.Split(New String() {"""type_operation"":"""}, StringSplitOptions.None)(1).Split(""""c)(0)]</InArgument>
+            </Assign.Value>
           </Assign>
-
-          <Assign DisplayName="Extraire score risque">
-            <Assign.To><OutArgument x:TypeArguments="x:Double">[dScoreRisque]</OutArgument></Assign.To>
-            <Assign.Value><InArgument x:TypeArguments="x:Double">0.87</InArgument></Assign.Value>
+          <Assign DisplayName="Extraire score risque" sap2010:WorkflowViewState.IdRef="Assign_6">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:Double">[dScoreRisque]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:Double">[Double.Parse(strAlertesJson.Split(New String() {"""score_risque"":"}, StringSplitOptions.None)(1).Split(New String() {",", "}"}, StringSplitOptions.None)(0).Trim(), System.Globalization.CultureInfo.InvariantCulture)]</InArgument>
+            </Assign.Value>
           </Assign>
-
-          <Assign DisplayName="Extraire action recommandée">
-            <Assign.To><OutArgument x:TypeArguments="x:String">[strActionRecommandee]</OutArgument></Assign.To>
-            <Assign.Value><InArgument x:TypeArguments="x:String">["Nécessaire fait"]</InArgument></Assign.Value>
+          <Assign DisplayName="Extraire action recommandée" sap2010:WorkflowViewState.IdRef="Assign_7">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[strActionRecommandee]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[strAlertesJson.Split(New String() {"""action_recommandee"":"""}, StringSplitOptions.None)(1).Split(""""c)(0)]</InArgument>
+            </Assign.Value>
           </Assign>
-
-          <Assign DisplayName="ID alerte">
-            <Assign.To><OutArgument x:TypeArguments="x:String">[strAlertId]</OutArgument></Assign.To>
-            <Assign.Value><InArgument x:TypeArguments="x:String">["rec-secu-001"]</InArgument></Assign.Value>
+          <Assign DisplayName="ID alerte" sap2010:WorkflowViewState.IdRef="Assign_8">
+            <Assign.To>
+              <OutArgument x:TypeArguments="x:String">[strAlertId]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="x:String">[strAlertesJson.Split(New String() {"""id"":"""}, StringSplitOptions.None)(1).Split(""""c)(0)]</InArgument>
+            </Assign.Value>
           </Assign>
-
-          <ui:LogMessage DisplayName="LOG - Alerte critique"
-            Level="Warn"
-            Message="[&quot;[CheckAlerte] ALERTE CRITIQUE — &quot; + strTypeOperation + &quot; | Score: &quot; + dScoreRisque.ToString() + &quot; | Action: &quot; + strActionRecommandee]" />
-
-          <!-- Décision par priorité -->
-          <If Condition="[dScoreRisque >= 0.85]" DisplayName="Priorité 1 ou 2 ?">
+          <ui:LogMessage DisplayName="LOG - Alerte critique" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Warn" Message="[&quot;[CheckAlerte] ALERTE CRITIQUE — &quot; + strTypeOperation + &quot; | Score: &quot; + dScoreRisque.ToString() + &quot; | Action: &quot; + strActionRecommandee]" />
+          <If Condition="[dScoreRisque &gt;= 0.85]" DisplayName="Priorité 1 ou 2 ?" sap2010:WorkflowViewState.IdRef="If_1">
             <If.Then>
-              <!-- PRIORITÉ 1 : Action RPA automatique -->
-              <Sequence DisplayName="P1 — RPA automatique">
-                <ui:LogMessage Level="Warn"
-                  Message="[&quot;[CheckAlerte] PRIORITÉ 1 — Exécution RPA automatique sans validation&quot;]" />
-                <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Notifier IT"
-                  WorkflowFileName="NotifierIT.xaml" UnSafe="False">
+              <Sequence DisplayName="P1 — RPA automatique" sap2010:WorkflowViewState.IdRef="Sequence_2">
+                <ui:LogMessage sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Warn" Message="[&quot;[CheckAlerte] PRIORITÉ 1 — Exécution RPA automatique sans validation&quot;]" />
+                <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Notifier IT" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="NotifierIT.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
-                    <scg:Dictionary x:TypeArguments="x:String, Argument" />
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strTypeOperation">[strTypeOperation]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_dScoreRisque">[dScoreRisque]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strActionRecommandee">[strActionRecommandee]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="in_iPriorite">1</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strAlertId">[strAlertId]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                 </ui:InvokeWorkflowFile>
-                <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Confirmer résolution"
-                  WorkflowFileName="ConfirmerResolution.xaml" UnSafe="False">
+                <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Confirmer résolution" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="ConfirmerResolution.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
-                    <scg:Dictionary x:TypeArguments="x:String, Argument" />
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strToken">[strToken]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strAlertId">[strAlertId]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strActionEffectuee">[strActionRecommandee]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                 </ui:InvokeWorkflowFile>
               </Sequence>
             </If.Then>
             <If.Else>
-              <!-- PRIORITÉ 2 : Notification + attente validation -->
-              <Sequence DisplayName="P2 — Notification + attente validation">
-                <ui:LogMessage Level="Warn"
-                  Message="[&quot;[CheckAlerte] PRIORITÉ 2 — Notification IT, en attente de validation&quot;]" />
-                <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Notifier IT"
-                  WorkflowFileName="NotifierIT.xaml" UnSafe="False">
+              <Sequence DisplayName="P2 — Notification + attente validation" sap2010:WorkflowViewState.IdRef="Sequence_3">
+                <ui:LogMessage sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="Warn" Message="[&quot;[CheckAlerte] PRIORITÉ 2 — Notification IT, en attente de validation&quot;]" />
+                <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" DisplayName="Notifier IT" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="NotifierIT.xaml">
                   <ui:InvokeWorkflowFile.Arguments>
-                    <scg:Dictionary x:TypeArguments="x:String, Argument" />
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strTypeOperation">[strTypeOperation]</InArgument>
+                    <InArgument x:TypeArguments="x:Double" x:Key="in_dScoreRisque">[dScoreRisque]</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strActionRecommandee">[strActionRecommandee]</InArgument>
+                    <InArgument x:TypeArguments="x:Int32" x:Key="in_iPriorite">2</InArgument>
+                    <InArgument x:TypeArguments="x:String" x:Key="in_strAlertId">[strAlertId]</InArgument>
                   </ui:InvokeWorkflowFile.Arguments>
                 </ui:InvokeWorkflowFile>
               </Sequence>
             </If.Else>
           </If>
-
         </Sequence>
       </If.Then>
       <If.Else>
-        <ui:LogMessage DisplayName="LOG - Aucune alerte" Level="Info"
-          Message="[&quot;[CheckAlerte] Aucune alerte critique. Score moyen dans les normes.&quot;]" />
+        <ui:LogMessage DisplayName="LOG - Aucune alerte" sap2010:WorkflowViewState.IdRef="LogMessage_10" Level="Info" Message="[&quot;[CheckAlerte] Aucune alerte critique. Score moyen dans les normes.&quot;]" />
       </If.Else>
     </If>
-
-    <!-- LOG fin -->
-    <ui:LogMessage DisplayName="LOG - Fin CheckAlerte" Level="Info"
-      Message="[&quot;[CheckAlerte] Vérification terminée — Alerte: &quot; + bAlerteDetectee.ToString() + &quot; — &quot; + DateTime.Now.ToString(&quot;HH:mm:ss&quot;)]" />
-
+    <ui:LogMessage DisplayName="LOG - Fin CheckAlerte" sap2010:WorkflowViewState.IdRef="LogMessage_11" Level="Info" Message="[&quot;[CheckAlerte] Vérification terminée — Alerte: &quot; + bAlerteDetectee.ToString() + &quot; — &quot; + DateTime.Now.ToString(&quot;HH:mm:ss&quot;)]" />
   </Sequence>
 </Activity>

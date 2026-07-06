@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster PFE — Attijari Smart Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --gold: #C8A04A;
+            --gold-light: #E8C96A;
+            --dark: #1A1A2E;
+            --navy: #16213E;
+            --blue: #0F3460;
+            --accent: #E94560;
+            --surface: #FFFFFF;
+            --surface-alt: #F8F9FC;
+            --text: #1A1A2E;
+            --text2: #2D3748;
+            --text3: #718096;
+            --border: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: var(--text);
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .poster {
+            width: 210mm;
+            height: 297mm;
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ════════════ TOP BANNER (LOGOS) ════════════ */
+        .top-banner {
+            background: #ffffff;
+            padding: 2mm 10mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid var(--border);
+            height: 15mm;
+        }
+
+        .logo-img {
+            height: 10mm;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* ════════════ HEADER ════════════ */
+        .header {
+            background: linear-gradient(180deg, #1A1A2E 0%, #16213E 100%);
+            padding: 4mm 10mm 4mm;
+            position: relative;
+            height: 35mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #C8A04A, #E8C96A, #C8A04A);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(200, 160, 74, 0.15);
+            border: 1px solid rgba(200, 160, 74, 0.3);
+            border-radius: 3px;
+            padding: 1px 6px;
+            font-size: 7.5pt;
+            color: var(--gold-light);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 1mm;
+            align-self: flex-start;
+        }
+
+        .main-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 19pt;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 1mm;
+        }
+
+        .main-title .gold { color: var(--gold); }
+
+        .header-bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-sub {
+            font-size: 8.5pt;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.35;
+            max-width: 145mm;
+        }
+
+        .chips {
+            display: flex;
+            gap: 4px;
+        }
+
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 1.5px 5px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 7.5pt;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+        }
+
+        .chip .dot {
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+
+        /* ════════════ CONTENT GRID ════════════ */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr 1fr;
+            gap: 3.5mm;
+            padding: 3.5mm 8mm;
+            height: 235mm;
+        }
+
+        .full-row {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 3.5mm;
+            height: 38mm;
+        }
+
+        /* ════════════ CARDS ════════════ */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 3mm 3.5mm;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            height: 100%;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2.5px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .card.c-gold::before { background: linear-gradient(90deg, #C8A04A, #E8C96A); }
+        .card.c-blue::before { background: linear-gradient(90deg, #0F3460, #1A5276); }
+        .card.c-red::before { background: linear-gradient(90deg, #E94560, #FF6B6B); }
+        .card.c-green::before { background: linear-gradient(90deg, #27AE60, #2ECC71); }
+        .card.c-purple::before { background: linear-gradient(90deg, #8E44AD, #9B59B6); }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 10.5pt;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2mm;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-title .ico {
+            width: 18px; height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9pt;
+            flex-shrink: 0;
+        }
+
+        .ico-gold { background: rgba(200,160,74,0.1); }
+        .ico-blue { background: rgba(15,52,96,0.06); }
+        .ico-red { background: rgba(233,69,96,0.06); }
+        .ico-green { background: rgba(39,174,96,0.06); }
+        .ico-purple { background: rgba(142,68,173,0.06); }
+
+        .card-text {
+            font-size: 8.5pt;
+            line-height: 1.4;
+            color: var(--text2);
+        }
+
+        .card-text p {
+            margin-bottom: 1.5mm;
+        }
+        .card-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .card-text strong { color: var(--text); font-weight: 600; }
+
+        /* ════════════ PROBLEM LIST ════════════ */
+        .prob-list {
+            list-style: none;
+        }
+
+        .prob-list li {
+            font-size: 8.2pt;
+            line-height: 1.35;
+            color: var(--text2);
+            padding: 1mm 0 1mm 10px;
+            position: relative;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .prob-list li:last-child { border-bottom: none; }
+
+        .prob-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ════════════ ARCHITECTURE ════════════ */
+        .arch-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5mm;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .layer {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 1.5mm 2mm;
+            border-radius: 5px;
+            border: 1px solid;
+        }
+
+        .layer-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 6.5pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: white;
+            padding: 1px 3px;
+            border-radius: 2px;
+            writing-mode: vertical-lr;
+            transform: rotate(180deg);
+            text-align: center;
+            min-height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .layer-blocks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .l-block {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 3px;
+            padding: 1.5px 4px;
+            font-size: 7.2pt;
+            font-weight: 500;
+            color: var(--text);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.01);
+        }
+
+        .l-front { background: rgba(15,52,96,0.02); border-color: rgba(15,52,96,0.08); }
+        .l-front .layer-label { background: var(--blue); }
+
+        .l-back { background: rgba(200,160,74,0.02); border-color: rgba(200,160,74,0.12); }
+        .l-back .layer-label { background: var(--gold); }
+
+        .l-ai { background: rgba(142,68,173,0.02); border-color: rgba(142,68,173,0.08); }
+        .l-ai .layer-label { background: #8E44AD; }
+
+        .l-rpa { background: rgba(233,69,96,0.02); border-color: rgba(233,69,96,0.08); }
+        .l-rpa .layer-label { background: var(--accent); }
+
+        .l-data { background: rgba(39,174,96,0.02); border-color: rgba(39,174,96,0.08); }
+        .l-data .layer-label { background: #27AE60; }
+
+        .arch-arrow {
+            text-align: center;
+            color: var(--text3);
+            font-size: 7.5pt;
+            padding: 0;
+            letter-spacing: 0.5px;
+            line-height: 1;
+        }
+
+        /* ════════════ FLOW ════════════ */
+        .flow-bar {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-top: 2mm;
+            padding-top: 2mm;
+            border-top: 1px solid var(--border);
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            padding: 1.5px 1px;
+            border-radius: 3px;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+        }
+
+        .flow-step .num {
+            font-family: 'Outfit', sans-serif;
+            font-size: 9pt;
+            font-weight: 800;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .flow-step .label {
+            font-size: 7pt;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 1px;
+        }
+
+        .flow-step .desc {
+            font-size: 6pt;
+            color: var(--text3);
+        }
+
+        .flow-arr {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 8pt;
+            flex-shrink: 0;
+        }
+
+        /* ════════════ SOLUTIONS ════════════ */
+        .sol-item {
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .sol-item:last-child { border-bottom: none; }
+
+        .sol-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C8A04A, #E8C96A);
+            color: white;
+            font-size: 7pt;
+            font-weight: 700;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
+        .sol-title {
+            font-size: 8.5pt;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .sol-desc {
+            font-size: 8pt;
+            color: var(--text2);
+            line-height: 1.3;
+            margin-top: 1px;
+            padding-left: 15px;
+        }
+
+        /* ════════════ TECH GRID ════════════ */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            flex-grow: 1;
+        }
+
+        .tech-cat {
+            padding: 3px 5px;
+            border-radius: 4px;
+            background: var(--surface-alt);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tech-cat-title {
+            font-size: 8pt;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1px;
+        }
+
+        .tech-cat-list {
+            font-size: 7.5pt;
+            color: var(--text2);
+            line-height: 1.3;
+        }
+
+        /* ════════════ RESULTS ════════════ */
+        .results-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            margin-top: 1mm;
+        }
+
+        .res-card {
+            text-align: center;
+            padding: 4mm 2px;
+            border-radius: 4px;
+            background: var(--surface-alt);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .res-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+        }
+
+        .res-card:nth-child(1)::after { background: var(--gold); }
+        .res-card:nth-child(2)::after { background: var(--blue); }
+        .res-card:nth-child(3)::after { background: #27AE60; }
+        .res-card:nth-child(4)::after { background: var(--accent); }
+        .res-card:nth-child(5)::after { background: #8E44AD; }
+
+        .res-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15pt;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 1.5mm;
+        }
+
+        .res-card:nth-child(1) .res-val { color: var(--gold); }
+        .res-card:nth-child(2) .res-val { color: var(--blue); }
+        .res-card:nth-child(3) .res-val { color: #27AE60; }
+        .res-card:nth-child(4) .res-val { color: var(--accent); }
+        .res-card:nth-child(5) .res-val { color: #8E44AD; }
+
+        .res-label {
+            font-size: 7.2pt;
+            color: var(--text2);
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        /* ════════════ BENEFITS ════════════ */
+        .ben-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5mm 6mm;
+            padding-top: 1mm;
+        }
+
+        .ben-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 3px;
+            padding: 1px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .ben-item:last-child, .ben-item:nth-last-child(2) { border-bottom: none; }
+
+        .ben-check {
+            width: 11px; height: 11px;
+            border-radius: 50%;
+            background: rgba(39,174,96,0.1);
+            color: #27AE60;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6.5pt;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 0.5mm;
+        }
+
+        .ben-text {
+            font-size: 8pt;
+            color: var(--text2);
+            line-height: 1.3;
+        }
+
+        .ben-text strong { color: var(--text); font-weight: 600; }
+
+        /* ════════════ FOOTER ════════════ */
+        .footer {
+            background: linear-gradient(180deg, #1A1A2E, #16213E);
+            padding: 2mm 10mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            height: 12mm;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2.5px;
+            background: linear-gradient(90deg, #C8A04A, #E8C96A, #C8A04A);
+        }
+
+        .footer-left {
+            display: flex;
+            gap: 16mm;
+            align-items: center;
+        }
+
+        .footer-info {
+            font-size: 8pt;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.3;
+        }
+
+        .footer-info strong {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .footer-right {
+            font-family: 'Outfit', sans-serif;
+            font-size: 8.5pt;
+            font-weight: 600;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+<div class="poster">
+
+    <!-- ══════════ TOP BANNER (LOGOS) ══════════ -->
+    <div class="top-banner">
+        <img class="logo-img" src="attijari_logo.png" alt="Attijari Bank Logo">
+        <div class="badge">Projet de Fin d'Études 2025–2026 &nbsp;·&nbsp; Sujet 21 &nbsp;·&nbsp; Génie Logiciel</div>
+        <img class="logo-img" src="sesame logo.jpeg" alt="SESAME Logo">
+    </div>
+
+    <!-- ══════════ HEADER ══════════ -->
+    <header class="header">
+        <h1 class="main-title">
+            Système Intelligent de Détection d'Anomalies IT par <span class="gold">IA & RPA</span>
+        </h1>
+        <div class="header-bottom-row">
+            <p class="header-sub">
+                Plateforme intégrée combinant Deep Learning (LSTM), Machine Learning (KNN),
+                NLP et automatisation RPA (UiPath) pour la gestion proactive des incidents à Attijari bank.
+            </p>
+            <div class="chips">
+                <div class="chip"><div class="dot"></div> FastAPI · Angular 19 · UiPath</div>
+                <div class="chip"><div class="dot"></div> 1507 tickets</div>
+                <div class="chip"><div class="dot"></div> LSTM Accuracy : 87%</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══════════ CONTENT ══════════ -->
+    <div class="grid">
+
+        <!-- Column 1: Contexte + Problématique -->
+        <div style="display: flex; flex-direction: column; gap: 3.5mm; height: 180mm;">
+            <div class="card c-gold" style="flex: 1.15; height: 95mm;">
+                <div class="card-title"><div class="ico ico-gold">🏦</div> Contexte du Projet</div>
+                <div class="card-text">
+                    <p><strong>Attijari bank</strong> fait face à un volume croissant d'incidents IT critiques impactant la continuité de ses services bancaires.</p>
+                    <p>Ce projet conçoit un <strong>système intelligent</strong> de détection et résolution automatique des anomalies à partir de <strong>1 507 tickets réels</strong> (Février-Mars 2026).</p>
+                    <p>La solution couple l'IA (LSTM, NLP) avec le RPA (UiPath) pour un traitement <strong>proactif et automatisé en temps réel</strong>.</p>
+                </div>
+            </div>
+
+            <div class="card c-red" style="flex: 1; height: 81.5mm;">
+                <div class="card-title"><div class="ico ico-red">⚡</div> Problématique</div>
+                <ul class="prob-list">
+                    <li>Traitement <strong>manuel et réactif</strong> lent</li>
+                    <li>Absence de <strong>détection précoce</strong> d'anomalies</li>
+                    <li>Routage manuel des tickets complexe</li>
+                    <li><strong>Temps de résolution (MTTR) élevé</strong></li>
+                    <li>Besoin de <strong>suivi des KPI en temps réel</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Column 2: Architecture (Center) -->
+        <div class="card c-blue" style="height: 180mm;">
+            <div class="card-title"><div class="ico ico-blue">🏗️</div> Architecture du Système</div>
+            <div class="arch-layers">
+                <div class="layer l-front">
+                    <div class="layer-label">FRONT</div>
+                    <div class="layer-blocks">
+                        <div class="l-block">🅰️ Angular 19</div>
+                        <div class="l-block">📊 Chart.js</div>
+                        <div class="l-block">🔐 JWT Auth</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇⬆ &nbsp; REST API &nbsp; ⬇⬆</div>
+                <div class="layer l-back">
+                    <div class="layer-label">BACK</div>
+                    <div class="layer-blocks">
+                        <div class="l-block">⚡ FastAPI</div>
+                        <div class="l-block">🔑 bcrypt / AES</div>
+                        <div class="l-block">📧 SMTP Notif</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇⬆ &nbsp; Services IA &nbsp; ⬇⬆</div>
+                <div class="layer l-ai">
+                    <div class="layer-label">IA/ML</div>
+                    <div class="layer-blocks">
+                        <div class="l-block">🧠 LSTM (Tensorflow)</div>
+                        <div class="l-block">🎯 KNN (Similarité)</div>
+                        <div class="l-block">📖 NLP (spaCy)</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇⬆ &nbsp; RPA &nbsp; ⬇⬆</div>
+                <div class="layer l-rpa">
+                    <div class="layer-label">RPA</div>
+                    <div class="layer-blocks">
+                        <div class="l-block">🤖 UiPath Robot</div>
+                        <div class="l-block">🔍 CheckAlerte</div>
+                        <div class="l-block">✅ Clôture Auto</div>
+                    </div>
+                </div>
+                <div class="arch-arrow">⬇⬆ &nbsp; DATA &nbsp; ⬇⬆</div>
+                <div class="layer l-data">
+                    <div class="layer-label">DATA</div>
+                    <div class="layer-blocks">
+                        <div class="l-block">🐘 PostgreSQL</div>
+                        <div class="l-block">⚡ Redis Cache</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compact Flow -->
+            <div class="flow-bar">
+                <div class="flow-step"><div class="num">1</div><div class="label">Création</div><div class="desc">Ticket IT</div></div>
+                <div class="flow-arr">→</div>
+                <div class="flow-step"><div class="num">2</div><div class="label">NLP</div><div class="desc">spaCy</div></div>
+                <div class="flow-arr">→</div>
+                <div class="flow-step"><div class="num">3</div><div class="label">Risque</div><div class="desc">LSTM</div></div>
+                <div class="flow-arr">→</div>
+                <div class="flow-step"><div class="num">4</div><div class="label">RPA</div><div class="desc">UiPath</div></div>
+                <div class="flow-arr">→</div>
+                <div class="flow-step"><div class="num">5</div><div class="label">Confirm</div><div class="desc">Résolu</div></div>
+            </div>
+        </div>
+
+        <!-- Column 3: Solutions + Technologies -->
+        <div style="display: flex; flex-direction: column; gap: 3.5mm; height: 180mm;">
+            <div class="card c-gold" style="flex: 1.25; height: 98mm;">
+                <div class="card-title"><div class="ico ico-gold">💡</div> Solutions Proposées</div>
+                <div class="sol-item">
+                    <span class="sol-num">1</span>
+                    <span class="sol-title">Détection LSTM</span>
+                    <p class="sol-desc">Modèle prédictif estimant le niveau de risque des anomalies.</p>
+                </div>
+                <div class="sol-item">
+                    <span class="sol-num">2</span>
+                    <span class="sol-title">Recommandation KNN</span>
+                    <p class="sol-desc">Trouve des solutions sémantiques similaires (NLP + TF-IDF).</p>
+                </div>
+                <div class="sol-item">
+                    <span class="sol-num">3</span>
+                    <span class="sol-title">Robot RPA UiPath</span>
+                    <p class="sol-desc">Vérifie l'API, notifie par mail, et clôture automatiquement.</p>
+                </div>
+                <div class="sol-item">
+                    <span class="sol-num">4</span>
+                    <span class="sol-title">Dashboard Angular</span>
+                    <p class="sol-desc">Visualisation en temps réel des KPI, graphes et tickets.</p>
+                </div>
+            </div>
+
+            <div class="card c-purple" style="flex: 1; height: 78.5mm;">
+                <div class="card-title"><div class="ico ico-purple">🛠&nbsp;</div> Technologies</div>
+                <div class="tech-grid">
+                    <div class="tech-cat">
+                        <div class="tech-cat-title">🧠 IA & NLP</div>
+                        <div class="tech-cat-list">TensorFlow<br>scikit-learn · spaCy</div>
+                    </div>
+                    <div class="tech-cat">
+                        <div class="tech-cat-title">⚡ API & DB</div>
+                        <div class="tech-cat-list">FastAPI<br>PostgreSQL · Redis</div>
+                    </div>
+                    <div class="tech-cat">
+                        <div class="tech-cat-title">🎨 Front</div>
+                        <div class="tech-cat-list">Angular 19<br>TypeScript · Chart.js</div>
+                    </div>
+                    <div class="tech-cat">
+                        <div class="tech-cat-title">🤖 RPA & Infra</div>
+                        <div class="tech-cat-list">UiPath Studio<br>Docker</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 4 (Full Width): Résultats & Métriques + Bénéfices Clés -->
+        <div class="full-row">
+            <!-- Résultats -->
+            <div class="card c-green">
+                <div class="card-title"><div class="ico ico-green">📊</div> Résultats & Métriques</div>
+                <div class="results-row">
+                    <div class="res-card"><div class="res-val">87%</div><div class="res-label">Précision LSTM</div></div>
+                    <div class="res-card"><div class="res-val">0.91</div><div class="res-label">AUC-ROC</div></div>
+                    <div class="res-card"><div class="res-val">1507</div><div class="res-label">Tickets Réels</div></div>
+                    <div class="res-card"><div class="res-val">&lt;6s</div><div class="res-label">Temps RPA</div></div>
+                    <div class="res-card"><div class="res-val">20+</div><div class="res-label">Endpoints</div></div>
+                </div>
+            </div>
+
+            <!-- Bénéfices -->
+            <div class="card c-green">
+                <div class="card-title"><div class="ico ico-green">✅</div> Bénéfices Clés</div>
+                <div class="ben-grid">
+                    <div class="ben-item"><div class="ben-check">✓</div><div class="ben-text"><strong>Détection proactive</strong> avant impact</div></div>
+                    <div class="ben-item"><div class="ben-check">✓</div><div class="ben-text"><strong>MTTR réduit</strong> par RPA</div></div>
+                    <div class="ben-item"><div class="ben-check">✓</div><div class="ben-text"><strong>Apprentissage continu</strong> LSTM</div></div>
+                    <div class="ben-item"><div class="ben-check">✓</div><div class="ben-text"><strong>Human-in-the-Loop</strong></div></div>
+                    <div class="ben-item"><div class="ben-check">✓</div><div class="ben-text"><strong>Traçabilité</strong> (Audit trail)</div></div>
+                    <div class="ben-item"><div class="ben-check">✓</div><div class="ben-text"><strong>Scalabilité</strong> ready</div></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer class="footer">
+        <div class="footer-left">
+            <div class="footer-info">
+                <strong>Réalisé par :</strong> Nader Khaskhoussy
+            </div>
+            <div class="footer-info">
+                <strong>Encadrant Professionnel :</strong> M. Firas Elabed (Attijari bank)
+            </div>
+            <div class="footer-info">
+                <strong>Encadrant Académique :</strong> M. Wajih Ben Belgacem (SESAME)
+            </div>
+        </div>
+        <div class="footer-right">Année Universitaire 2025–2026</div>
+    </footer>
+
+</div>
+</body>
+</html>

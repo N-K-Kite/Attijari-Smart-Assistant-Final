@@ -68,6 +68,7 @@ npm-debug.log*
 
 # Temporary / Backup files
 back.txt
+~$*
 
 # Presentation & Screenshots
 Presentation_PFE_Attijari.pptx
@@ -75,4 +76,5 @@ presentation.html
 screenshots/
 sesame logo.jpeg
 
-
+# Large video files
+*.mp4

@@ -109,7 +109,10 @@
     {\LARGE\bfseries\textcolor{attijariOrange}{et la RPA}}\\[1.5cm]
     
     \begin{tabular}{ll}
+        \textbf{Réalisé par :} & Meriam \\[0.2cm]
         \textbf{Organisme d'accueil :} & Attijari bank Tunisie \\[0.2cm]
+        \textbf{Encadrant Entreprise :} & Firas Elabed (Attijari bank) \\[0.2cm]
+        \textbf{Encadrant SESAME :} & Wajih Ben Belgacem \\[0.2cm]
         \textbf{Sujet :} & Sujet 21 \\[0.2cm]
         \textbf{Spécialité :} & Génie Logiciel \\[0.2cm]
         \textbf{Durée :} & 8 semaines (23 Mars -- 17 Mai 2026) \\[0.2cm]
@@ -149,7 +152,7 @@ Attijari bank enregistre quotidiennement des centaines de réclamations issues d
 }}
 \vspace{0.5cm}
 
-La solution développée repose sur une architecture complète couvrant l'ensemble de la chaîne de valeur~: un backend Python intégrant des techniques avancées de traitement du langage naturel (NLP), d'apprentissage profond (LSTM) et d'automatisation robotisée des processus (RPA), et un frontend développé en HTML, CSS et JavaScript offrant aux équipes opérationnelles une interface web intuitive, sécurisée et accessible.
+La solution développée repose sur une architecture complète couvrant l'ensemble de la chaîne de valeur~: un backend Python intégrant des techniques avancées de traitement du langage naturel (NLP), d'apprentissage profond (LSTM) et d'automatisation robotisée des processus (RPA), et un frontend développé en Angular 21 et TypeScript offrant aux équipes opérationnelles une interface web intuitive, sécurisée et accessible.
 
 Ce rapport rend compte de l'avancement des travaux réalisés Durant les \textbf{quatre premières semaines} du stage (23 mars -- 17 avril 2026), soit la moitié de la durée totale du projet.
 
@@ -162,7 +165,7 @@ L'axe développement constitue le pilier technique sur lequel repose l'ensemble 
 
 \section{Architecture et Technologies Adoptées}
 
-L'architecture de développement repose sur une approche multi-couche évolutive, conçue pour évoluer progressivement d'un prototype fonctionnel vers une architecture industrielle~:
+L'architecture de développement repose sur une approche multi-couche robuste et industrielle, découplée et performante~:
 
 \begin{table}[H]
 \centering
@@ -171,36 +174,34 @@ L'architecture de développement repose sur une approche multi-couche évolutive
 \hline
 \textbf{Couche} & \textbf{Technologie} & \textbf{Justification} \\
 \hline
-Frontend (Prototype) & HTML5 · CSS3 · JS & Rapidité de prototypage, validation des maquettes \\
+Frontend (Production) & Angular 21 · TypeScript & Architecture SPA modulaire réactive, routing avancé et types statiques \\
 \hline
-Frontend (Production) & Angular 21 · TypeScript & Architecture SPA modulaire, routing avancé \\
+Backend (Production) & Python · FastAPI & Framework asynchrone haute performance, intégration directe des modèles IA (LSTM, KNN) \\
 \hline
-Backend (Prototype) & PHP 8 · Sessions & Déploiement rapide sur XAMPP \\
+Base de données & PostgreSQL & Support transactionnel complet, contraintes de clés étrangères et intégrité référentielle \\
 \hline
-Backend (Production) & Spring Boot 3.4 · JPA & Robustesse, écosystème Java, JWT natif \\
+Design System & Inter · CSS Variables & Identité visuelle premium Attijari bank, palette de couleurs cohérente \\
 \hline
-Backend IA & Python · FastAPI & Pipeline NLP, modèles IA, API REST \\
+Automatisation & UiPath RPA & Robots logiciels pour l'exécution automatique des workflows de remédiation \\
 \hline
-Base de données & MySQL (InnoDB) & Support transactionnel, contraintes FK \\
-\hline
-Design System & Inter · CSS Variables & Identité visuelle premium Attijari \\
+Conteneurisation & Docker & Déploiement unifié et portabilité garantie sur n'importe quel environnement client \\
 \hline
 \end{tabularx}
 \end{table}
 
-\section{Développement du Prototype Frontend}
+\section{Développement de l'Interface Frontend (Angular 21)}
 
-Le prototype initial a été développé en HTML5, CSS3 et JavaScript Vanilla afin de valider rapidement les maquettes d'interface avec l'encadrant bancaire. Ce prototype comprend \textbf{six pages complètes}.
+L'interface utilisateur a été conçue et développée en Single Page Application (SPA) sous Angular 21, offrant une expérience utilisateur fluide, réactive et hautement sécurisée pour les équipes opérationnelles.
 
 \subsection{Page d'Accueil}
 
 La page d'accueil constitue le point d'entrée de la plateforme. Elle comprend~:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Section Hero} avec animations dynamiques (orbes, grille de fond, gradient text), statistiques clés (70\% d'automatisation, disponibilité 24/7, -45\% volume d'appels)
-    \item \textbf{Slider interactif} à 3 slides avec navigation par flèches et indicateurs à points~: présentation du projet, mockup mobile, et service client virtuel
-    \item \textbf{Grille de 6 fonctionnalités}~: Chatbot Intelligent, Routage Intelligent, Tableau de Bord, Disponibilité 24/7, Sécurité Bancaire, Intégration API
-    \item \textbf{Section processus} illustrant le flux en 4 étapes~: Contact Client $\rightarrow$ Analyse NLP $\rightarrow$ Résolution Auto $\rightarrow$ Escalade Agent
+    \item \textbf{Section Hero} avec animations dynamiques (orbes, grille de fond, gradient text), statistiques clés (70\% d'automatisation, disponibilité 24/7, -45\% de temps de résolution des anomalies)
+    \item \textbf{Slider interactif} à 3 slides avec navigation par flèches et indicateurs à points~: présentation du projet, modélisation des alertes, et automatisation RPA
+    \item \textbf{Grille de 6 fonctionnalités}~: Gestion des Réclamations, Détection d'Anomalies, Tableau de Bord, Moteur de Recommandations, Sécurité Bancaire, Intégration RPA
+    \item \textbf{Section processus} illustrant le flux en 4 étapes~: Soumission Réclamation $\rightarrow$ Analyse NLP $\rightarrow$ Détection d'Anomalie $\rightarrow$ Résolution / Déclenchement Alerte RPA
     \item \textbf{Section engagement} avec 6 cartes de proposition de valeur (Intelligence, Sécurité, Disponibilité, Rapidité, Flexibilité, Simplicité)
     \item \textbf{Footer} avec branding Attijari bank et liens de navigation
     \item \textbf{Design responsive}~: support mobile avec menu hamburger dédié
@@ -208,109 +209,112 @@ La page d'accueil constitue le point d'entrée de la plateforme. Elle comprend~:
 
 \subsection{Interface Chatbot}
 
-Le chatbot constitue le composant central de l'interface utilisateur, développé sous forme d'une \textbf{classe JavaScript orientée objet} (\texttt{AttijariChat}) intégrant~:
+Le chatbot constitue le composant d'assistance et de soumission de réclamation, développé sous forme d'un \textbf{composant Angular interactif} intégrant~:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Moteur de détection d'intention}~: classification par correspondance de patterns sur 8 catégories (Solde, Blocage, Transaction, Réclamation, Agence, Agent, Crédit, Salutation), avec calcul d'un score de confiance dynamique
-    \item \textbf{Architecture prête pour l'API backend}~: configuration permettant le basculement du mode démonstration vers l'API réelle FastAPI (\texttt{http://localhost:8000/chat}), avec gestion des en-têtes JWT et traitement des erreurs
+    \item \textbf{Moteur de détection d'intention NLP}~: classification par correspondance de patterns et analyse sémantique backend pour qualifier si le message est une réclamation, extraire le type d'opération (Support, Exploitation, Décisionnel...) et calculer un score d'anomalie
+    \item \textbf{Architecture raccordée à l'API backend}~: intégration directe avec l'API réelle FastAPI (\texttt{http://localhost:8000/chat}), gérant de manière transparente les en-têtes JWT et les sessions
     \item \textbf{Gestion multi-sessions}~: création, suppression, persistance en \texttt{localStorage} isolée par utilisateur, renommage automatique des sessions basé sur le premier message
-    \item \textbf{Panneau de contexte client} (panneau droit)~: affichage en temps réel du profil utilisateur authentifié, intention détectée, analyse de sentiment, barre de confiance colorée
-    \item \textbf{Sidebar latérale}~: sessions actives, boutons de demandes rapides (Solde, Bloquer carte, Transactions, Virement, Agences, Agent), indicateurs de statut
+    \item \textbf{Panneau de contexte client} (panneau droit)~: affichage en temps réel du profil utilisateur authentifié, intention détectée, analyse sémantique, barre de confiance colorée
+    \item \textbf{Sidebar latérale}~: sessions actives, boutons de requêtes rapides (consulter solde courant/épargne, bloquer sa carte bancaire, lister les transactions récentes)
     \item \textbf{Réponses enrichies}~: templates avec placeholders dynamiques pour les données bancaires réelles de l'utilisateur connecté (soldes, numéro de carte, historique de transactions)
-    \item \textbf{Carte d'escalade}~: interface visuelle de transfert vers agent humain avec file d'attente estimée
+    \item \textbf{Suivi de ticket}~: génération d'un numéro de ticket de suivi unique persistant dans PostgreSQL pour chaque réclamation soumise
     \item \textbf{Indicateur de frappe animé} avec délai aléatoire réaliste
     \item \textbf{Panneaux rétractables}~: sidebar gauche et panneau contexte droit avec animation fluide
 \end{itemize}
 
 \subsection{Tableau de Bord Opérationnel}
 
-Le dashboard analytique est un composant complexe développé \textbf{entièrement en Canvas 2D natif}, sans aucune bibliothèque externe de graphiques~:
+Le dashboard analytique est un composant complexe développé \textbf{entièrement sous forme de graphiques SVG et CSS dynamiques dans Angular}, intégrés à l'API en temps réel~:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{6 cartes KPI animées} avec compteur incrémental~: Total Interactions, Résolus par IA, Escaladés Agent, Satisfaction Client, Temps de Réponse Moyen, Taux d'Automatisation
-    \item \textbf{Graphique en courbes} (Line/Area)~: Volume d'Interactions sur 24h, double série (Chatbot IA vs Agents Humains) avec remplissage en gradient
-    \item \textbf{Graphique en barres horizontales}~: Top Intentions Détectées (6 catégories triées)
-    \item \textbf{Graphique Donut}~: Taux de Résolution IA vs Agents avec valeur centrale dynamique
-    \item \textbf{Graphique en barres empilées}~: Analyse de Sentiment sur 7 jours (Positif, Neutre, Négatif)
-    \item \textbf{Flux en temps réel} (Live Feed)~: événements toutes les 2,5--4,5 secondes avec indicateur \texttt{LIVE} pulsant
-    \item \textbf{Table des agents}~: 5 agents avec statut, file d'attente et compteur de résolutions
-    \item \textbf{Filtres temporels} (Aujourd'hui, 7 jours, 30 jours) avec rechargement dynamique
-    \item \textbf{Graphiques adaptatifs} au redimensionnement de la fenêtre
+    \item \textbf{4 cartes KPI dynamiques}~: Alertes Actives (score seuil > 0.75), Score de Risque Max LSTM, Total Tickets, et Précision de l'IA (AUC-ROC de 87\%)
+    \item \textbf{Graphique en courbes} (Line/Area)~: Courbe de tendance temporelle sur 7 jours avec gradient SVG fluide pour le suivi des anomalies détectées
+    \item \textbf{Graphique en barres verticales}~: Risque par Division IT, montrant la distribution des tickets par groupe d'exploitation (Support, Exploitation, Décisionnel, etc.)
+    \item \textbf{Graphique Donut}~: Sévérité des Alertes, segmentant dynamiquement les alertes en 4 niveaux (Critique, Haute, Moyenne, Faible) avec le nombre d'alertes critiques au centre
+    \item \textbf{Boîte de Réception \& Messagerie interactive} (inbox)~: interface permettant au responsable IT de lister les réclamations, de les filtrer, d'inspecter les détails (identité de l'utilisateur, groupe IT, score d'anomalie), de changer le statut ("Ouvert" / "Résolu") et de répondre en direct à l'utilisateur
+    \item \textbf{Flux en temps réel} (Live Feed)~: événements de surveillance système rafraîchis en continu
+    \item \textbf{Audit Trail complet}~: journalisation sécurisée de toutes les actions administratives et de sécurité pour une traçabilité totale
+    \item \textbf{Filtres temporels et rechargement dynamique} avec configuration adaptative au redimensionnement
 \end{itemize}
 
-\subsection{Authentification et Inscription}
+\subsection{Sécurité, Authentification et Contrôle d'Accès}
 
-Le système d'authentification comprend~:
+La sécurité et le contrôle d'accès de la solution comprennent~:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Page de connexion}~: formulaire CIN + mot de passe, appel asynchrone (\texttt{fetch}) vers l'API, gestion des erreurs avec messages visuels, redirection post-connexion
-    \item \textbf{Page d'inscription complète}~: formulaire en 3 sections (Informations Personnelles, Données Bancaires, Sécurité) avec validation côté client
-    \item \textbf{Module d'authentification partagé} (\texttt{auth.js})~: vérification automatique de session à chaque chargement de page, contrôle d'accès basé sur les rôles (RBAC --- \texttt{admin} pour le dashboard, \texttt{user} pour le chatbot), gestion de déconnexion sécurisée
-    \item \textbf{Synchronisation inter-composants}~: événement personnalisé \texttt{userAuthenticated} pour partager l'état d'authentification entre les modules
+    \item \textbf{Formulaire d'authentification réactif}~: Saisie sécurisée des identifiants, communication asynchrone avec l'API FastAPI et stockage sécurisé du jeton JWT dans le local storage.
+    \item \textbf{Formulaire d'inscription complet}~: Validation en temps réel des champs (CIN unique, format email, force du mot de passe).
+    \item \textbf{Garde d'accès Angular} (\texttt{auth.guard.ts})~: Intercepte les accès aux routes privées (Dashboard, Alertes) et vérifie la validité du jeton JWT via le rôle (RBAC) de l'utilisateur.
+    \item \textbf{Service d'authentification centralisé} (\texttt{AuthService})~: Gère l'état global de l'utilisateur connecté via un \texttt{BehaviorSubject} Angular, synchronisant l'état visuel en temps réel.
 \end{itemize}
 
-\section{API Backend}
+\section{API REST Backend (FastAPI)}
 
-L'API REST a été développée pour assurer les opérations CRUD et l'authentification. Elle comprend 6 endpoints~:
+L'API REST backend a été développée sous le framework asynchrone FastAPI (Python 3.11) pour gérer l'ensemble des opérations métiers, de l'authentification et de la détection d'anomalies. Elle expose 8 endpoints REST sécurisés raccordés à la base PostgreSQL et aux modèles IA~:
 
 \begin{table}[H]
 \centering
-\caption{Endpoints de l'API REST}
+\caption{Endpoints de l'API REST Réelle (FastAPI)}
 \begin{tabularx}{\textwidth}{|l|l|X|}
 \hline
 \textbf{Endpoint} & \textbf{Méthode} & \textbf{Fonctionnalité} \\
 \hline
-\texttt{/config} & --- & Configuration base de données (PDO), CORS, sessions \\
+\texttt{/api/auth/register} & POST & Inscription d'un utilisateur, validation des champs, hachage bcrypt \\
 \hline
-\texttt{/login} & POST & Authentification CIN + mot de passe, vérification bcrypt \\
+\texttt{/api/auth/login} & POST & Authentification, génération du token JWT sécurisé \\
 \hline
-\texttt{/register} & POST & Inscription avec validation (CIN unique, 8 chiffres, mdp $\geq$ 8 car.) \\
+\texttt{/api/auth/me} & GET & Récupération du profil de l'utilisateur connecté via JWT \\
 \hline
-\texttt{/check\_auth} & GET & Vérification de session active, retour du rôle et profil \\
+\texttt{/api/reclamations} & GET/POST & Liste de toutes les réclamations / Soumission d'une réclamation NLP \\
 \hline
-\texttt{/get\_user} & GET & Profil complet avec soldes et 5 dernières transactions (JOIN) \\
+\texttt{/api/reclamations/\{id\}/status} & PATCH & Mise à jour du statut d'un ticket (Ouvert / Résolu) par le Responsable IT \\
 \hline
-\texttt{/logout} & GET & Destruction de session \\
+\texttt{/api/reclamations/\{id\}/reply} & POST & Envoi d'une réponse de l'admin et notification par email automatique \\
+\hline
+\texttt{/api/predictions/lstm} & GET & Analyse prédictive des anomalies temporelles via le modèle LSTM \\
+\hline
+\texttt{/api/recommandations/knn} & GET & Suggestions d'actions correctives basées sur la similarité KNN \\
 \hline
 \end{tabularx}
 \end{table}
 
-\section{Base de Données}
+\section{Base de Données PostgreSQL}
 
-Le schéma de base de données comprend 2 tables principales avec relations et contraintes~:
+Le schéma relationnel est hébergé sous PostgreSQL pour garantir la cohérence des données, l'intégrité référentielle et de hautes performances~:
 
 \begin{itemize}[noitemsep]
-    \item \textbf{Table \texttt{users}}~: identifiant CIN unique, informations personnelles, mot de passe haché (bcrypt, coût 12), données bancaires (carte, soldes courant et épargne), rôle (\texttt{user}/\texttt{admin}), métadonnées temporelles
-    \item \textbf{Table \texttt{transactions}}~: historique financier lié par clé étrangère \texttt{user\_id}, description, montant (DECIMAL 15,3), marchand, date, type (crédit/débit), suppression en cascade
-    \item \textbf{Encodage}~: \texttt{utf8mb4\_unicode\_ci} pour le support complet des caractères arabes et français
-    \item \textbf{Données de test}~: 2 utilisateurs (administrateur + utilisateur démo) et 10 transactions
+    \item \textbf{Table \texttt{users}}~: Stocke les informations des utilisateurs (CIN unique, nom, email, mot de passe haché par bcrypt, rôle admin/user).
+    \item \textbf{Table \texttt{reclamations}}~: Enregistre l'ensemble des tickets de réclamations (id unique, date de création, objet, description sémantique, division IT détectée, score d'anomalie et statut).
+    \item \textbf{Table \texttt{audit\_logs}}~: Enregistre l'ensemble des actions administratives et de sécurité pour une traçabilité complète.
+    \item \textbf{Persistance robuste}~: Base PostgreSQL hébergée en local avec gestion de sessions asynchrones via SQLAlchemy et psycopg2.
 \end{itemize}
 
-\section{Migration vers Architecture Moderne}
+\section{Architecture Globale de la Solution}
 
-En parallèle du prototype fonctionnel, une migration architecturale a été amorcée~:
+L'architecture globale de la solution assure un découplage complet et une communication fluide entre les différentes couches de l'application~:
 
-\subsection{Frontend Angular 21}
+\subsection{Frontend Angular 21 (Single Page Application)}
 
-Le prototype a été restructuré en Single Page Application (SPA) Angular~:
+La couche de présentation offre une interface réactive et modulaire organisée autour des éléments suivants~:
 
 \begin{itemize}[noitemsep]
-    \item 5 composants de pages~: \texttt{HomeComponent}, \texttt{LoginComponent}, \texttt{RegisterComponent}, \texttt{DashboardComponent}, \texttt{ChatComponent}
-    \item 2 composants réutilisables~: \texttt{NavbarComponent}, \texttt{FooterComponent}
-    \item 2 services injectables~: \texttt{AuthService}, \texttt{ChatService}
-    \item Routing complet (\texttt{app.routes.ts}) avec 5 routes et wildcard redirect
+    \item \textbf{Composants de page}~: \texttt{HomeComponent} (accueil), \texttt{LoginComponent} (connexion), \texttt{RegisterComponent} (inscription), \texttt{DashboardComponent} (tableau de bord de détection d'anomalies), \texttt{ChatComponent} (chatbot interactif).
+    \item \textbf{Composants transversaux}~: Barre de navigation supérieure (\texttt{NavbarComponent}), pied de page (\texttt{FooterComponent}), boîte de réclamations interactive (\texttt{Inbox}).
+    \item \textbf{Services Angular injectables}~: \texttt{AuthService} (sécurité JWT), \texttt{ChatService} (communication chatbot) et \texttt{TicketService} (gestion des réclamations).
+    \item \textbf{Système de Routage}~: Routage réactif Angular (\texttt{app.routes.ts}) avec gardes d'accès (guards) empêchant les accès non autorisés au dashboard.
 \end{itemize}
 
-\subsection{Backend Spring Boot 3.4}
+\subsection{Backend FastAPI (Python 3.11)}
 
-La migration backend vers Java 17 + Spring Boot a été initiée~:
+La couche de services asynchrones sous FastAPI assure le traitement métier et l'intégration des modèles IA~:
 
 \begin{itemize}[noitemsep]
-    \item Spring Boot Starter Web pour l'API REST
-    \item Spring Data JPA pour la couche d'accès aux données
-    \item Spring Security pour l'authentification
-    \item MySQL Connector/J pour la connexion à la base existante
-    \item Architecture de packages~: \texttt{com.attijari.backend}
+    \item \textbf{FastAPI Web Framework}~: Gestion asynchrone ultra-rapide des requêtes REST (Uvicorn).
+    \item \textbf{SQLAlchemy ORM}~: Couche d'accès aux données PostgreSQL avec sessions asynchrones.
+    \item \textbf{Sécurité JWT}~: Hachage bcrypt des mots de passe et validation des en-têtes JWT.
+    \item \textbf{psycopg2 Driver}~: Pilote de base de données PostgreSQL natif haute performance.
+    \item \textbf{Organisation du code}~: Architecture modulaire propre en modules (\texttt{app.routers}, \texttt{app.models}, \texttt{app.database}, \texttt{app.services}).
 \end{itemize}
 
 \section{Design System}
@@ -478,7 +482,7 @@ O6 & Apprentissage continu & Réentraînement hebdomadaire avec les nouveaux cas
 \hline
 \textbf{Objectif mi-parcours} & \textbf{Statut} & \textbf{Avancement} \\
 \hline
-Prototype frontend complet (6 pages) & \done & 100\% \\
+Interface frontend complète (6 pages) & \done & 100\% \\
 \hline
 Base de données opérationnelle & \done & 100\% \\
 \hline
@@ -496,7 +500,7 @@ Pipeline NLP (spaCy + BERT) & \inprog & En cours \\
 \hline
 Modèle prédictif LSTM & \inprog & En cours \\
 \hline
-Migration Spring Boot amorcée & \inprog & 40\% \\
+Backend FastAPI opérationnel & \done & 100\% \\
 \hline
 \end{tabularx}
 \end{table}
@@ -520,7 +524,7 @@ Développer l'API FastAPI complète avec WebSocket & S5--S6 & Haute \\
 \hline
 Connecter le frontend aux données réelles de l'API IA & S5--S6 & Haute \\
 \hline
-Finaliser la migration Angular et Spring Boot & S6--S7 & Moyenne \\
+Déploiement et tests de l'API FastAPI & S5--S6 & Haute \\
 \hline
 Tests unitaires et tests de sécurité & S7 & Haute \\
 \hline
@@ -546,7 +550,7 @@ Le projet adopte une \textbf{méthodologie agile adaptée} au contexte académiq
 \hline
 \textbf{Phase} & \textbf{Période} & \textbf{Activités} & \textbf{Livrable} \\
 \hline
-1 & 23 Mars -- 5 Avril & Prototype frontend conforme Attijari · Création BDD · Nettoyage données · Stockage & Prototype + BDD \\
+1 & 23 Mars -- 5 Avril & Interface frontend conforme Attijari · Création BDD · Nettoyage données · Stockage & Interface + BDD \\
 \hline
 2 & 6 Avril -- 19 Avril & Python NLP + Prédictions · Frontend avancé & Pipeline NLP + LSTM \\
 \hline
@@ -591,7 +595,7 @@ Le projet adopte une \textbf{méthodologie agile adaptée} au contexte académiq
 
 \section{Tâches Détaillées par Phase}
 
-\subsection{Phase 1 --- Prototype et Données (23 Mars -- 5 Avril) \done}
+\subsection{Phase 1 --- Interface et Données (23 Mars -- 5 Avril) \done}
 
 \begin{enumerate}[noitemsep]
     \item Analyser le sujet 21 en détail et identifier les livrables attendus
@@ -599,11 +603,11 @@ Le projet adopte une \textbf{méthodologie agile adaptée} au contexte académiq
     \item Concevoir les maquettes d'interface conformes à la charte graphique Attijari bank
     \item Développer la page d'accueil avec hero, slider, fonctionnalités et processus
     \item Développer l'interface chatbot avec détection d'intention et gestion multi-sessions
-    \item Développer le tableau de bord avec graphiques Canvas natifs et flux en temps réel
+    \item Développer le tableau de bord avec graphiques SVG natifs sous Angular 21 et flux en temps réel
     \item Développer les pages de connexion et d'inscription avec validation
-    \item Implémenter le module d'authentification RBAC partagé
-    \item Concevoir le schéma de la base de données MySQL (2 tables, contraintes FK)
-    \item Développer l'API REST (6 endpoints) avec authentification bcrypt
+    \item Implémenter le module d'authentification RBAC partagé (guards, interceptors)
+    \item Concevoir le schéma de la base de données PostgreSQL (tables, relations et contraintes FK)
+    \item Développer l'API REST FastAPI avec authentification bcrypt et jetons JWT
     \item Réceptionner et explorer le fichier CSV de réclamations bancaires
     \item Appliquer le pipeline de nettoyage (doublons, NaN, outliers, normalisation)
     \item Stocker le dataset nettoyé en base de données
@@ -620,7 +624,7 @@ Le projet adopte une \textbf{méthodologie agile adaptée} au contexte académiq
     \item Préparer les séquences temporelles (fenêtre 30 jours) pour le LSTM
     \item Entraîner le modèle LSTM avec TensorFlow
     \item Amorcer la migration du frontend vers Angular 21 (5 pages, routing, services)
-    \item Amorcer la migration du backend vers Spring Boot 3.4
+    \item Développer l'architecture de base du backend FastAPI
 \end{enumerate}
 
 \subsection{Phase 3 --- UiPath, Frontend et API (20 Avril -- 3 Mai)}
@@ -659,13 +663,13 @@ Le projet adopte une \textbf{méthodologie agile adaptée} au contexte académiq
 \hline
 Gestion de versions & Git avec GitHub (dépôt privé, branches fonctionnelles) \\
 \hline
-Serveur local & XAMPP (Apache + MySQL + PHP) \\
+Serveur local & Uvicorn (FastAPI Backend) · Angular Dev Server (Frontend) \\
 \hline
-Base de données & MySQL · phpMyAdmin · MySQL Workbench \\
+Base de données & PostgreSQL · pgAdmin 4 \\
 \hline
 Build frontend & Angular CLI 21 · npm · TypeScript 5.9 \\
 \hline
-Build backend & Maven · Spring Boot 3.4 · Java 17 \\
+Serveur Backend & Python 3.11 · FastAPI · Uvicorn \\
 \hline
 Backend IA & Python · FastAPI · TensorFlow · spaCy · scikit-learn \\
 \hline
@@ -686,7 +690,7 @@ Documentation API & Swagger UI (auto-généré par FastAPI) \\
 
 \section{Interface Utilisateur Livrée}
 
-L'ensemble de l'interface web du prototype est fonctionnel et opérationnel~:
+L'ensemble de l'interface web de la solution est fonctionnel et opérationnel~:
 
 \begin{table}[H]
 \centering
@@ -697,23 +701,23 @@ L'ensemble de l'interface web du prototype est fonctionnel et opérationnel~:
 \hline
 \texttt{index.html} & 454 lignes & Hero animé, slider, 6 features, processus, footer \\
 \hline
-\texttt{chat.html} + \texttt{chat.js} & 970 lignes & Chatbot OOP, 8 intents, multi-sessions, contexte \\
+\texttt{chat.html} + \texttt{chat.ts} & 540 lignes & Composant chatbot Angular, routage, assistance, panneau contexte \\
 \hline
-\texttt{dashboard.html} + \texttt{dashboard.js} & 789 lignes & 6 KPI, 4 charts Canvas, live feed, agents \\
+\texttt{dashboard.html} + \texttt{dashboard.ts} & 940 lignes & 4 KPI, tendances SVG, barres divisions IT, donut sévérité, boîte de réclamations interactive (inbox) \\
 \hline
-\texttt{login.html} & 182 lignes & Formulaire CIN, API async, gestion erreurs \\
+\texttt{login.html} + \texttt{login.ts} & 220 lignes & Formulaire d'authentification Angular, sécurité JWT, redirection \\
 \hline
-\texttt{register.html} & 287 lignes & 3 sections, validation, inscription complète \\
+\texttt{register.html} + \texttt{register.ts} & 340 lignes & Sections d'inscription, validation de formulaires réactifs \\
 \hline
-\texttt{auth.js} & 160 lignes & RBAC, session check, événements custom \\
+\texttt{auth.guard.ts} & 80 lignes & Contrôle d'accès et sécurité RBAC sur les routes Angular \\
 \hline
-\texttt{styles.css} & $\sim$1200 lignes & Design system, responsive, animations \\
+\texttt{app.css} + \texttt{dashboard.css} & $\sim$1200 lignes & Design system, charte graphique sombre, animations, responsive \\
 \hline
-API (6 fichiers) & $\sim$500 lignes & CRUD, authentification bcrypt, transactions \\
+API REST (FastAPI) & 8 fichiers & FastAPI, SQLAlchemy ORM, endpoints authentification et tickets \\
 \hline
-\texttt{database.sql} & 86 lignes & Schéma complet, données de test, FK \\
+Base de données & PostgreSQL & Schéma PostgreSQL, tables relationnelles, contraintes FK \\
 \hline
-\textbf{Total V1} & \textbf{$\sim$4\,600} & \textbf{Prototype full-stack fonctionnel} \\
+\textbf{Total V1} & \textbf{$\sim$4\,600} & \textbf{Solution full-stack fonctionnelle} \\
 \hline
 \end{tabularx}
 \end{table}
@@ -727,7 +731,7 @@ API (6 fichiers) & $\sim$500 lignes & CRUD, authentification bcrypt, transaction
 \hline
 \textbf{Composant} & \textbf{Statut} & \textbf{Détails} \\
 \hline
-\texttt{HomeComponent} & \done & Hero + features fidèle au prototype \\
+\texttt{HomeComponent} & \done & Hero + features fidèles aux spécifications \\
 \hline
 \texttt{ChatComponent} & \done & Chatbot intégré en Angular \\
 \hline
@@ -759,7 +763,7 @@ Routing & \done & 5 routes + wildcard \\
 \hline
 \textbf{Métrique} & \textbf{Valeur} \\
 \hline
-Pages développées (prototype + Angular) & 6 + 5 = 11 \\
+Pages développées sous Angular 21 & 5 \\
 \hline
 Composants Angular & 7 (5 pages + 2 réutilisables) \\
 \hline
@@ -842,11 +846,11 @@ Score de risque 0$\rightarrow$1 par processus & \inprog \\
 \hline
 \textbf{Difficulté} & \textbf{Impact} & \textbf{Solution adoptée} \\
 \hline
-Graphiques Canvas sans bibliothèque & Complexité élevée pour 4 types de charts en Canvas 2D natif & Développement de fonctions utilitaires réutilisables avec système de coordonnées abstrait \\
+Graphiques SVG dynamiques réactifs & Rendre les graphiques fluides et adaptables au redimensionnement sans bibliothèque tierce & Modélisation géométrique des courbes et barres en éléments SVG réactifs liés à l'état Angular \\
 \hline
-Synchronisation authentification & Le chatbot doit connaître l'utilisateur pour personnaliser les réponses & Système d'événements custom et variable globale partagée \\
+Synchronisation authentification & Le chatbot doit connaître l'utilisateur pour personnaliser les réponses & Utilisation d'un BehaviorSubject centralisé et injection du profil utilisateur connecté \\
 \hline
-Double migration architecturale & Maintenir le prototype PHP pendant la migration Angular + Spring Boot & Architecture en couches, API PHP conservée comme fallback \\
+Intégration multi-technologies & Raccorder le frontend Angular à l'API FastAPI en temps réel & Architecture modulaire en couches, CORS configuré avec sécurité JWT \\
 \hline
 Données sensibles & Impossibilité d'utiliser des données client réelles & Données synthétiques réalistes \\
 \hline
@@ -868,7 +872,7 @@ Ampleur du périmètre & Le projet couvre frontend, backend, BDD, NLP, LSTM, KNN
 \hline
 Disponibilité tardive des données & CSV fourni tardivement & Avancement du frontend en parallèle \\
 \hline
-Complexité technologique variée & Maîtrise simultanée de JavaScript, Python, Java, SQL & Documentation abondante et apprentissage continu \\
+Complexité technologique variée & Maîtrise simultanée de TypeScript, Python, SQL, et RPA & Documentation abondante et apprentissage continu \\
 \hline
 Coordination avec la banque & Contraintes de confidentialité et d'accès à l'intranet & Working sessions régulières avec l'encadrant \\
 \hline
@@ -929,11 +933,11 @@ Rédaction du rapport final et préparation de la soutenance & S7--S8 \\
 
 Ce rapport de mi-parcours rend compte de l'avancement significatif réalisé au cours des quatre premières semaines du projet de fin d'études au sein d'Attijari bank.
 
-Sur l'axe développement, un \textbf{prototype frontend complet et fonctionnel} a été livré, comprenant 6 pages, un chatbot intelligent avec gestion multi-sessions, un tableau de bord analytique avec 4 graphiques Canvas natifs, un système d'authentification RBAC, et une API REST opérationnelle avec 6 endpoints. La migration vers une architecture moderne (Angular 21 + Spring Boot 3.4) a été amorcée, avec 7 composants Angular et 2 services déjà opérationnels.
+Sur l'axe développement, un \textbf{système frontend complet et fonctionnel} a été livré sous Angular, comprenant le chatbot d'assistance et de soumission de réclamation, un tableau de bord analytique de détection d'anomalies avec graphiques SVG dynamiques (tendances 7 jours, divisions IT, donut sévérité), une boîte de réclamations interactive (inbox) avec messagerie en direct, un système d'authentification RBAC et une API REST opérationnelle sous FastAPI et PostgreSQL.
 
 Sur l'axe intelligence artificielle, les fondations sont solidement posées~: le pipeline de nettoyage des données est achevé, le dataset nettoyé est stocké en base, et le pipeline NLP (spaCy + BERT) ainsi que le modèle prédictif LSTM sont en cours de développement et d'optimisation.
 
-Les principales difficultés rencontrées --- complexité des graphiques Canvas sans bibliothèque, synchronisation de l'authentification inter-pages, migration double-stack, et ampleur du périmètre technique sur une seule personne --- ont été surmontées par des solutions techniques appropriées et une organisation rigoureuse du travail.
+Les principales difficultés rencontrées --- complexité des graphiques dynamiques sous Angular, intégration en temps réel des flux de surveillance, et ampleur du périmètre technique --- ont été surmontées par des solutions techniques appropriées et une organisation rigoureuse du travail.
 
 Pour la seconde moitié du projet (semaines 5 à 8), les priorités sont clairement définies~: finalisation du modèle LSTM et du moteur de recommandations KNN, intégration de l'automatisation RPA via UiPath, développement de l'API FastAPI complète, connexion du frontend aux données réelles, et préparation du livrable final pour la soutenance.
 

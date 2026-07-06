@@ -8,6 +8,13 @@
   xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib"
   xmlns:ui="http://schemas.uipath.com/workflow/activities"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_strTypeOperation" Type="InArgument(x:String)" />
+    <x:Property Name="in_dScoreRisque" Type="InArgument(x:Double)" />
+    <x:Property Name="in_strActionRecommandee" Type="InArgument(x:String)" />
+    <x:Property Name="in_iPriorite" Type="InArgument(x:Int32)" />
+    <x:Property Name="in_strAlertId" Type="InArgument(x:String)" />
+  </x:Members>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System</x:String>
@@ -29,12 +36,7 @@
       <Variable x:TypeArguments="x:String" Default="noreply@attijaribank.tn" Name="EMAIL_FROM" />
       <Variable x:TypeArguments="x:String" Default="smtp.attijaribank.tn" Name="SMTP_HOST" />
       <Variable x:TypeArguments="x:Int32"  Default="587" Name="SMTP_PORT" />
-      <!-- Infos alerte (reçues de CheckAlerte) -->
-      <Variable x:TypeArguments="x:String" Default="Sécurité Opérationnelle" Name="strTypeOperation" />
-      <Variable x:TypeArguments="x:Double" Default="0.87" Name="dScoreRisque" />
-      <Variable x:TypeArguments="x:String" Default="Nécessaire fait" Name="strActionRecommandee" />
-      <Variable x:TypeArguments="x:Int32"  Default="1" Name="iPriorite" />
-      <Variable x:TypeArguments="x:String" Default="rec-secu-001" Name="strAlertId" />
+      <!-- Infos alerte passées en arguments -->
       <!-- Email -->
       <Variable x:TypeArguments="x:String" Name="strSujet" />
       <Variable x:TypeArguments="x:String" Name="strCorps" />
@@ -51,7 +53,7 @@
     <!-- Préparer le sujet -->
     <Assign DisplayName="Préparer sujet email">
       <Assign.To><OutArgument x:TypeArguments="x:String">[strSujet]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">["[ALERTE P" + iPriorite.ToString() + "] Incident critique — " + strTypeOperation + " — Score: " + dScoreRisque.ToString("F2")]</InArgument></Assign.Value>
+      <Assign.Value><InArgument x:TypeArguments="x:String">["[ALERTE P" + in_iPriorite.ToString() + "] Incident critique — " + in_strTypeOperation + " — Score: " + in_dScoreRisque.ToString("F2")]</InArgument></Assign.Value>
     </Assign>
 
     <!-- Préparer le corps -->
@@ -62,20 +64,16 @@
 "══════════════════════════════════" + Environment.NewLine +
 "DÉTAILS DE L'ALERTE" + Environment.NewLine +
 "══════════════════════════════════" + Environment.NewLine +
-"Groupe concerné : " + strTypeOperation + Environment.NewLine +
-"Score de risque : " + dScoreRisque.ToString("F2") + " / 1.00" + Environment.NewLine +
-"Priorité        : P" + iPriorite.ToString() + Environment.NewLine +
-"ID alerte       : " + strAlertId + Environment.NewLine +
+"Groupe concerné : " + in_strTypeOperation + Environment.NewLine +
+"Score de risque : " + in_dScoreRisque.ToString("F2") + " / 1.00" + Environment.NewLine +
+"Priorité        : P" + in_iPriorite.ToString() + Environment.NewLine +
+"ID alerte       : " + in_strAlertId + Environment.NewLine +
 "Date/Heure      : " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + Environment.NewLine + Environment.NewLine +
 "══════════════════════════════════" + Environment.NewLine +
-"ACTION RECOMMANDÉE (KNN — données réelles Attijari bank)" + Environment.NewLine +
+"RÉSOLUTION AUTOMATIQUE APPLIQUÉE" + Environment.NewLine +
 "══════════════════════════════════" + Environment.NewLine +
-strActionRecommandee + Environment.NewLine + Environment.NewLine +
-"Cette action a été recommandée par le moteur KNN basé sur 1431 tickets historiques." + Environment.NewLine + Environment.NewLine +
-"Connectez-vous au dashboard pour valider :" + Environment.NewLine +
-"http://localhost:8080/dashboard" + Environment.NewLine + Environment.NewLine +
-"Cordialement," + Environment.NewLine +
-"Système IA Attijari bank — PFE 2026"]</InArgument></Assign.Value>
+"Le robot RPA a automatiquement préparé la résolution pour ce ticket." + Environment.NewLine + Environment.NewLine +
+"En attente de votre vérification et confirmation manuelle."]</InArgument></Assign.Value>
     </Assign>
 
     <!-- LOG email -->

@@ -37,14 +37,14 @@ VALUES
    'admin', 0.000, 0.000);
 
 -- ============================================================
--- DEMO USER: Nader K.
--- CIN: 12345678  |  Password: Nader@2026
+-- DEMO USER: Meriam K.
+-- CIN: 12345678  |  Password: Meriam@2026
 -- ============================================================
 INSERT INTO users
   (cin, first_name, last_name, password, card_number, card_expiry,
    card_type, role, compte_courant, compte_epargne)
 VALUES
-  ('12345678', 'Nader', 'K.',
+  ('12345678', 'Meriam', 'K.',
    '$2y$12$eImiTXuWVxfM37uY4JANjOezBHFb2VbKmVrexmyX6qNJ4kFxVfBmW',
    '4532 1234 5678 9012', '12/2027',
    'Visa Gold', 'user', 32000.000, 113000.000);
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================
--- SEED: 5 transactions for Nader K. (user_id = 2)
+-- SEED: 5 transactions for Meriam K. (user_id = 2)
 -- ============================================================
 INSERT INTO transactions (user_id, description, amount, merchant, date, type) VALUES
   (2, 'Virement salaire Mars 2026',     2300.000, 'Employeur SA',       '2026-03-28', 'credit'),

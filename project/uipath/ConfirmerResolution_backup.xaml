@@ -8,11 +8,6 @@
   xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib"
   xmlns:ui="http://schemas.uipath.com/workflow/activities"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <x:Members>
-    <x:Property Name="in_strToken" Type="InArgument(x:String)" />
-    <x:Property Name="in_strAlertId" Type="InArgument(x:String)" />
-    <x:Property Name="in_strActionEffectuee" Type="InArgument(x:String)" />
-  </x:Members>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System</x:String>
@@ -31,6 +26,8 @@
   <Sequence DisplayName="Robot 3 — Confirmer résolution et enrichir LSTM" sap2010:WorkflowViewState.IdRef="Sequence_3">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Default="http://localhost:8000" Name="API_BASE_URL" />
+      <Variable x:TypeArguments="x:String" Default="rec-secu-001" Name="strAlertId" />
+      <Variable x:TypeArguments="x:String" Default="Nécessaire fait" Name="strActionEffectuee" />
       <Variable x:TypeArguments="x:Boolean" Default="True" Name="bActionReussie" />
       <Variable x:TypeArguments="x:String" Name="strStatutFinal" />
       <Variable x:TypeArguments="x:String" Name="strPayload" />
@@ -51,19 +48,19 @@
 
     <ui:LogMessage DisplayName="LOG - Confirmation"
       Level="Info"
-      Message="[&quot;[ConfirmerResolution] ID: &quot; + in_strAlertId + &quot; | Statut: &quot; + strStatutFinal + &quot; | Action: &quot; + in_strActionEffectuee]" />
+      Message="[&quot;[ConfirmerResolution] ID: &quot; + strAlertId + &quot; | Statut: &quot; + strStatutFinal + &quot; | Action: &quot; + strActionEffectuee]" />
 
     <!-- Préparer payload JSON -->
     <Assign DisplayName="Préparer payload API">
       <Assign.To><OutArgument x:TypeArguments="x:String">[strPayload]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">["{""alerte_id"":""" + in_strAlertId + """,""action_effectuee"":""" + in_strActionEffectuee + """,""statut_final"":""" + strStatutFinal + """,""date_resolution"":""" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + """,""execute_par"":""robot_uipath""}"]</InArgument></Assign.Value>
+      <Assign.Value><InArgument x:TypeArguments="x:String">["{""alerte_id"":""" + strAlertId + """,""action_effectuee"":""" + strActionEffectuee + """,""statut_final"":""" + strStatutFinal + """,""date_resolution"":""" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + """,""execute_par"":""robot_uipath""}"]</InArgument></Assign.Value>
     </Assign>
 
     <!-- ══ Appel API pour clôturer l'alerte ══
          POST http://localhost:8000/api/alertes/{id}/cloturer
          DÉCOMMENTER quand API disponible :
     <ui:HttpClientActivity DisplayName="POST /api/alertes/cloturer"
-      Endpoint="[API_BASE_URL + &quot;/api/alertes/&quot; + in_strAlertId + &quot;/cloturer?action_effectuee=&quot; + in_strActionEffectuee + &quot;&amp;statut_final=&quot; + strStatutFinal]"
+      Endpoint="[API_BASE_URL + &quot;/api/alertes/&quot; + strAlertId + &quot;/cloturer?action_effectuee=&quot; + strActionEffectuee + &quot;&amp;statut_final=&quot; + strStatutFinal]"
       Method="POST"
       Body="[strPayload]"
       ContentType="application/json"
@@ -73,7 +70,7 @@
     <!-- [SIMULATION] Réponse API -->
     <Assign DisplayName="[SIMULATION] Réponse API clôture">
       <Assign.To><OutArgument x:TypeArguments="x:String">[strApiResponse]</OutArgument></Assign.To>
-      <Assign.Value><InArgument x:TypeArguments="x:String">["{""message"":""Alerte " + in_strAlertId + " clôturée"",""apprentissage"":""Ticket ajouté base LSTM"",""prochain_retrain"":""Lundi 02h00""}"]</InArgument></Assign.Value>
+      <Assign.Value><InArgument x:TypeArguments="x:String">["{""message"":""Alerte " + strAlertId + " clôturée"",""apprentissage"":""Ticket ajouté base LSTM"",""prochain_retrain"":""Lundi 02h00""}"]</InArgument></Assign.Value>
     </Assign>
 
     <!-- Vérifier résultat -->
@@ -82,7 +79,7 @@
       <If.Then>
         <Sequence DisplayName="Succès clôture">
           <ui:LogMessage Level="Info"
-            Message="[&quot;[ConfirmerResolution] ✓ Alerte &quot; + in_strAlertId + &quot; clôturée avec succès&quot;]" />
+            Message="[&quot;[ConfirmerResolution] ✓ Alerte &quot; + strAlertId + &quot; clôturée avec succès&quot;]" />
           <ui:LogMessage Level="Info"
             Message="[&quot;[ConfirmerResolution] ✓ Ticket ajouté à la base d'apprentissage LSTM&quot;]" />
           <ui:LogMessage Level="Info"

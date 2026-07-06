@@ -22,6 +22,10 @@ def ajouter_meriam():
         )
         cur = conn.cursor()
 
+        # Clean any conflicting user first
+        cur.execute("DELETE FROM utilisateurs WHERE id = 'user-003' OR email = 'nader@attijaribank.tn';")
+        conn.commit()
+
         query = """
             INSERT INTO utilisateurs (id, nom, email, mot_de_passe, role)
             VALUES (%s, %s, %s, %s, %s)

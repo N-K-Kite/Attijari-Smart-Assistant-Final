@@ -976,3 +976,223 @@
   color: #2A7DE1;
   font-weight: 900;
 }
+
+/* ═══ UiPath RPA TAB ═══ */
+
+.rpa-header-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 25px;
+}
+
+.rpa-status-card {
+  background: #ffffff;
+  border: 1px solid #E4E6EB;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rpa-status-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.rpa-status-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.rpa-icon-connected { background: #E7F3EF; color: #16A34A; }
+.rpa-icon-api { background: #EBF4FF; color: #2A7DE1; }
+.rpa-icon-seuil { background: #FFEBEB; color: #E05252; }
+.rpa-icon-auth { background: #FFF4E5; }
+
+.rpa-status-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.rpa-status-value {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.rpa-color-green { color: #16A34A; }
+.rpa-color-blue { color: #2A7DE1; }
+.rpa-color-red { color: #E05252; }
+
+/* Pipeline */
+.rpa-pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.rpa-pipeline-step {
+  flex: 1;
+  background: #F8FAFC;
+  border: 1px solid #E4E6EB;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rpa-pipeline-step:hover {
+  border-color: #2A7DE1;
+  box-shadow: 0 4px 16px rgba(42, 125, 225, 0.1);
+}
+
+.rpa-pipeline-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  color: #CBD5E1;
+  font-weight: 900;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.rpa-step-number {
+  width: 28px;
+  height: 28px;
+  background: #2A7DE1;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.rpa-step-file {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 800;
+  color: #2A7DE1;
+  background: #EBF4FF;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.rpa-step-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: #1a1a2e;
+}
+
+.rpa-step-desc {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.5;
+  font-weight: 600;
+  flex: 1;
+}
+
+.rpa-step-badge {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.rpa-badge-entry { background: #E7F3EF; color: #16A34A; }
+.rpa-badge-api { background: #EBF4FF; color: #2A7DE1; }
+.rpa-badge-email { background: #FFF4E5; color: #C2410C; }
+.rpa-badge-db { background: #F3E8FF; color: #7C3AED; }
+
+/* Console */
+.rpa-console {
+  background: #0F172A;
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.rpa-log {
+  white-space: nowrap;
+}
+
+.rpa-log-time {
+  color: #64748b;
+  margin-right: 10px;
+}
+
+.rpa-log-level {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 900;
+  margin-right: 8px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.rpa-level-info { background: rgba(42, 125, 225, 0.15); color: #60A5FA; }
+.rpa-level-warn { background: rgba(245, 166, 35, 0.15); color: #FBBF24; }
+.rpa-level-success { background: rgba(40, 199, 138, 0.15); color: #34D399; }
+
+.rpa-log-info { color: #94A3B8; }
+.rpa-log-warn { color: #FBBF24; }
+.rpa-log-success { color: #34D399; }
+
+/* Config Grid */
+.rpa-config-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.rpa-config-item {
+  background: #F8FAFC;
+  border: 1px solid #E4E6EB;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.rpa-config-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.rpa-config-value {
+  font-size: 14px;
+  font-weight: 900;
+  color: #1a1a2e;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
