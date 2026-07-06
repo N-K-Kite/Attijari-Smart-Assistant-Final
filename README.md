@@ -20,7 +20,6 @@
   <img src="https://img.shields.io/badge/UiPath-RPA-FA4616?logo=uipath&logoColor=white" alt="UiPath"/>
   <img src="https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" alt="Docker"/>
-  <img src="https://img.shields.io/badge/Grade-14.5%2F20-brightgreen" alt="Grade"/>
 </p>
 
 ---
